@@ -7,6 +7,8 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.jeanloth.project.android.kotlin.axounaut.ui.AddCommandDialogFragment
+import kotlinx.android.synthetic.main.activity_main.fab_add_command
 
 class MainActivity : AppCompatActivity() {
 
@@ -22,5 +24,9 @@ class MainActivity : AppCompatActivity() {
                 R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications))
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+        fab_add_command.setOnClickListener {
+            AddCommandDialogFragment.newInstance().show(supportFragmentManager, "dialog")
+        }
     }
 }

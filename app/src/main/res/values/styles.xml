@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="AppBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/AppModalStyle</item>
+    </style>
+
+    <style name="AppModalStyle"
+        parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/bottom_sheet_bg</item>
+        <item name="behavior_peekHeight">750dp</item>
+
+    </style>
+
+    <style name="CustomButton" parent="Widget.AppCompat.Button">
+        <item name="android:color">@color/salamander</item>
+        <item name="android:background">@color/salamander</item>
+    </style>
+</resources>

@@ -3,4 +3,12 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+
+
+
+    <string name="add_command_title">Ajouter une commande</string>
+    <string name="recap">Récapitulatif</string>
+
+    <string name="x_count">x %1$s</string>
+    <string name="total_price">Prix total : %1$s€</string>
 </resources>
