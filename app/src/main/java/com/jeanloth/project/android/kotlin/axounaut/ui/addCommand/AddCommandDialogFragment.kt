@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.*
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.jeanloth.project.android.kotlin.axounaut.R
@@ -70,6 +71,13 @@ class AddCommandDialogFragment : BottomSheetDialogFragment() {
             } else
                 changeEditModeDisplay()
         }
+
+        et_client.setOnEditorActionListener { v, actionId, event ->
+            if(actionId == EditorInfo.IME_ACTION_DONE){
+                et_client.clearFocus()
+            }
+            false
+        }
     }
 
     private fun changeEditModeDisplay() {
@@ -83,12 +91,14 @@ class AddCommandDialogFragment : BottomSheetDialogFragment() {
     private fun setupElements() {
         tv_add_command_title.text = getString(if(isEditMode) R.string.add_command_title else R.string.recap)
         et_client.visibility = if(isEditMode) VISIBLE else GONE
+        et_delivery_date.visibility = if(isEditMode) VISIBLE else GONE
         tv_client.visibility = if(isEditMode) GONE else VISIBLE
+        tv_delivery_date.visibility = if(isEditMode) GONE else VISIBLE
 
         Log.d("TAG", "${articlesActualized.filter { it.count > 0 }.map { it.count * it.totalArticleWrapperPrice }.sum()}")
 
         tv_total_price.visibility = if(isEditMode) GONE else VISIBLE
-        if(!isEditMode)  tv_total_price.text = getString(R.string.total_price, articlesActualized.filter { it.count > 0 }.map { it.count * it.totalArticleWrapperPrice }.sum().formatDouble())
+        if(!isEditMode)  tv_total_price.text = getString(R.string.total_price, articlesActualized.filter { it.count > 0 }.map { it.count * it.article.unitPrice }.sum().formatDouble())
     }
 
     private fun setupPreviousCloseButton() {
