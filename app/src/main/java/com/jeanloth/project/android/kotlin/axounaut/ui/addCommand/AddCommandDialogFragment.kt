@@ -1,24 +1,21 @@
-package com.jeanloth.project.android.kotlin.axounaut.ui
+package com.jeanloth.project.android.kotlin.axounaut.ui.addCommand
 
-import android.app.Dialog
 import android.os.Bundle
 import android.util.Log
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.*
 import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.jeanloth.project.android.kotlin.axounaut.R
 import com.jeanloth.project.android.kotlin.axounaut.adapters.ArticleAdapter
 import com.jeanloth.project.android.kotlin.axounaut.extensions.formatDouble
 import com.jeanloth.project.android.kotlin.axounaut.mock.DataMock
 import com.jeanloth.project.android.kotlin.domain.entities.Article
+import com.jeanloth.project.android.kotlin.domain.entities.ArticleWrapper
 import kotlinx.android.synthetic.main.fragment_add_command_dialog.*
 import java.time.LocalDate
-
-// TODO: Customize parameter argument names
-const val ARG_ITEM_COUNT = "item_count"
 
 /**
  *
@@ -31,7 +28,7 @@ const val ARG_ITEM_COUNT = "item_count"
  */
 class AddCommandDialogFragment : BottomSheetDialogFragment() {
 
-    var articlesActualized = listOf<Article>()
+    var articlesActualized = listOf<ArticleWrapper>()
     var isEditMode = true
     private lateinit var adapter: ArticleAdapter
 
@@ -47,7 +44,7 @@ class AddCommandDialogFragment : BottomSheetDialogFragment() {
 
         setupHeaders()
 
-        adapter = ArticleAdapter(DataMock.articles, true, requireContext()).apply {
+        adapter = ArticleAdapter(DataMock.articleWrappers, true, requireContext()).apply {
             onAddMinusClick = {
                 Log.d("ADD COMMAND", "  article : $it")
                 bt_next.visibility  = if(it.count { it.count > 0 } > 0) VISIBLE else INVISIBLE
@@ -67,9 +64,10 @@ class AddCommandDialogFragment : BottomSheetDialogFragment() {
         }
 
         bt_previous_or_close.setOnClickListener {
-            if (isEditMode)
+            if (isEditMode) {
+                articlesActualized = mutableListOf()
                 dismiss()
-            else
+            } else
                 changeEditModeDisplay()
         }
     }
@@ -87,12 +85,10 @@ class AddCommandDialogFragment : BottomSheetDialogFragment() {
         et_client.visibility = if(isEditMode) VISIBLE else GONE
         tv_client.visibility = if(isEditMode) GONE else VISIBLE
 
-        Log.d("TAG", "${articlesActualized.filter { it.count > 0 }}")
-        Log.d("TAG", "${articlesActualized.filter { it.count > 0 }.map { it.count * it.unitPrice }}")
-        Log.d("TAG", "${articlesActualized.filter { it.count > 0 }.map { it.count * it.unitPrice }.sum()}")
+        Log.d("TAG", "${articlesActualized.filter { it.count > 0 }.map { it.count * it.totalArticleWrapperPrice }.sum()}")
 
         tv_total_price.visibility = if(isEditMode) GONE else VISIBLE
-        if(!isEditMode)  tv_total_price.text = getString(R.string.total_price, articlesActualized.filter { it.count > 0 }.map { it.count * it.unitPrice }.sum().formatDouble())
+        if(!isEditMode)  tv_total_price.text = getString(R.string.total_price, articlesActualized.filter { it.count > 0 }.map { it.count * it.totalArticleWrapperPrice }.sum().formatDouble())
     }
 
     private fun setupPreviousCloseButton() {
@@ -110,7 +106,7 @@ class AddCommandDialogFragment : BottomSheetDialogFragment() {
     }
 
     private fun setupSelectedItems(article: Article) {
-        if (articlesActualized.map { it.name }.contains(article.name)) {
+        if (articlesActualized.map { it.article.name }.contains(article.name)) {
             if (article.count > 0) {
                 //articlesActualized[articlesActualized.map { it.name }.indexOf(article.name)] = article
             }

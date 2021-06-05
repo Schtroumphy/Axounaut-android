@@ -8,6 +8,9 @@
 
     <string name="add_command_title">Ajouter une commande</string>
     <string name="recap">Récapitulatif</string>
+    <string name="command_future">Commandes à venir</string>
+    <string name="command_to_do">Commandes à faire</string>
+    <string name="command_past">Commandes passées</string>
 
     <string name="x_count">x %1$s</string>
     <string name="total_price">Prix total : %1$s€</string>

@@ -11,15 +11,16 @@ import androidx.core.content.ContextCompat.getColor
 import androidx.recyclerview.widget.RecyclerView
 import com.jeanloth.project.android.kotlin.axounaut.R
 import com.jeanloth.project.android.kotlin.domain.entities.Article
+import com.jeanloth.project.android.kotlin.domain.entities.ArticleWrapper
 import kotlinx.android.synthetic.main.item_article.view.*
 
 class ArticleAdapter(
-    private var articleList : List<Article>,
+    private var articleList : List<ArticleWrapper>,
     private var isEditMode : Boolean = true,
     private val context : Context
 ) : RecyclerView.Adapter<ArticleAdapter.ArticleHolder>()  {
 
-    var onAddMinusClick : ((List<Article>) -> Unit)? = null
+    var onAddMinusClick : ((List<ArticleWrapper>) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArticleHolder {
         val itemView = LayoutInflater.from(parent.context)
@@ -28,7 +29,7 @@ class ArticleAdapter(
     }
 
     override fun onBindViewHolder(holder: ArticleHolder, position: Int) {
-        val article: Article = articleList[position]
+        val article: ArticleWrapper = articleList[position]
         holder.bind(article, position)
 
     }
@@ -37,7 +38,7 @@ class ArticleAdapter(
         return articleList.size
     }
 
-    fun setItems(articles : List<Article>, isEditMode : Boolean){
+    fun setItems(articles : List<ArticleWrapper>, isEditMode : Boolean){
         this.articleList = if(isEditMode) articles else articles.filter { it.count > 0 }
         this.isEditMode = isEditMode
         notifyDataSetChanged()
@@ -45,12 +46,12 @@ class ArticleAdapter(
 
     inner class ArticleHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
 
-        fun bind(article : Article, position : Int){
+        fun bind(articleWrapper : ArticleWrapper, position : Int){
 
             Log.d("Article adapter", "In Artcile Holder isEditMode : $isEditMode")
-            itemView.tv_name.text= article.name
+            itemView.tv_name.text= articleWrapper.article.name
 
-            val count = article.count
+            val count = articleWrapper.count
 
             setupElementVisibility(count.toString(), isEditMode)
 
@@ -64,14 +65,14 @@ class ArticleAdapter(
                 itemView.tv_count.setTextColor(getColor(context, if(count > 0) R.color.salamander else R.color.gray_1))
 
                 itemView.ib_add.setOnClickListener {
-                    article.count = count + 1
+                    articleWrapper.count = count + 1
                     onAddMinusClick?.invoke(articleList)
                     notifyDataSetChanged()
                 }
 
                 itemView.ib_minus.setOnClickListener {
                     if(count > 0) {
-                        article.count = count - 1
+                        articleWrapper.count = count - 1
                     }
                     onAddMinusClick?.invoke(articleList)
                     notifyItemChanged(position)
