@@ -1,0 +1,127 @@
+@startuml
+
+title Architecture
+skinparam object {
+          BackgroundColor Snow
+          BorderColor Green
+          ArrowColor Green
+}
+skinparam defaultTextAlignment center
+
+'COMMON
+'package "Common" {
+  'node Logging
+'}
+
+'PRESENTATION (Android Part)
+package "Presentation" {
+  node "Application"
+  node "Di"
+  node "Views"
+  node "Extensions"
+  node ViewModels
+}
+
+'DOMAIN MODEL
+package "Domain" {
+  () Command
+  () CommandStatus
+}
+
+'DATAS
+package "Data" {
+'LOCAL MODULE
+rectangle "LocalModule" {
+  node repositoriesLocal {
+    () CommandLocalDataSourceRepo
+  }
+
+    node localMapper
+  node contractsLocal {
+    () CommandLocalDataSourceContract
+  }
+}
+
+CommandLocalDataSourceRepo .up.> CommandLocalDataSourceContract #Red
+
+'EXTERNAL MODULE
+rectangle "ExternalModule" {
+  node apis {
+    () CommandService
+  }
+  node externalMapper
+  node repositoriesExternal {
+      () CommandExternalDataSourceRepo
+    }
+
+    node contractsExternal {
+      () CommandExternalDataSourceContract
+    }
+}
+CommandExternalDataSourceRepo .up.> CommandExternalDataSourceContract #Red : implements
+
+}
+
+'DOMAIN USE CASES
+package "Domain" {
+    node contracts {
+        () CommandDataSourceContract
+    }
+    node repositories{
+        () CommandRepo
+    }
+
+  node contractsDomain {
+      () CommandContract
+    }
+
+  node UseCases {
+    () getCommandsUseCase
+  }
+}
+CommandRepo .up.> CommandDataSourceContract #Red
+getCommandsUseCase .up.> CommandContract #Red
+
+
+'EXTERNAL DATA SOURCE
+rectangle API
+
+database "MySql" {
+  rectangle CommandDB
+  rectangle StockDB
+}
+
+'RELATIONS
+Views -down--> ViewModels
+ViewModels .down.> Command #blue
+ViewModels -right-> getCommandsUseCase
+getCommandsUseCase -right-> CommandRepo
+
+CommandRepo --> localMapper
+localMapper-down-> CommandLocalDataSourceRepo
+
+CommandRepo --> externalMapper
+externalMapper --> CommandExternalDataSourceRepo
+CommandExternalDataSourceRepo --> CommandService
+CommandService -down-> API
+API --> CommandDB
+
+
+'Come back
+CommandLocalDataSourceRepo --> localMapper #purple
+localMapper --> CommandRepo #purple
+CommandExternalDataSourceRepo --> externalMapper #purple
+externalMapper --> CommandRepo #purple
+CommandService --> CommandExternalDataSourceRepo #purple
+
+CommandRepo -left-> getCommandsUseCase #purple
+
+
+Views ..> Command #blue
+Views ..> Club #blue
+
+'Hidden relations
+CommandExternalDataSourceRepo -[hidden]down- CommandService
+UseCases -[hidden]- externalMapper
+
+@enduml
