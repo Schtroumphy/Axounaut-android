@@ -1,0 +1,117 @@
+@startuml
+
+skinparam object {
+    BackgroundColor Snow
+    BorderColor Purple
+    ArrowColor Purple
+}
+
+object PaymentType{
+    CARD,
+    CASH,
+    PAYPAL,
+    OTHER
+}
+
+object Command{
+    <u>idCommand</u> : Int auto_increment
+    deliveryDate : LocalDateTime?
+    status : CommandStatusType?
+    client : Client
+    totalPrice : Double
+    commandProducts : List<CommandProduct>
+    paymentAmount : Double
+    paymentType : PaymentType
+}
+
+object ArticleWrapper {
+    <u>idCommandProduct</u> : Int auto_increment
+    article : Article
+    count : Int
+    totalArticleWrapperPrice : Double
+    status : ArticleWrapperStatus
+}
+
+object Client{
+    <u>idClient</u> : Int auto_increment
+    firstname : String not null
+    lastname : String?
+    phoneNumber : Int?
+    fidelityPoint : Int default 0
+}
+
+object ArticleWrapperStatus{
+    IN_PROGRESS,
+    DONE,
+    CANCELED,
+}
+
+object CommandStatusType{
+    IN_PROGRESS,
+    DONE,
+    DELIVERED,
+    CANCELED,
+    PAYED
+}
+
+object Article{
+    <u>idArticle</u> : Int auto_increment
+    label : String
+    price : Double
+    composedProducts : List<Product>
+}
+
+object ArticleCategory {
+    SALTED,
+    SWEET,
+    OTHER
+}
+
+object ProductWrapper{
+    <u>idProductWrapper</u> : Int auto_increment
+    product : Product
+    quantity : Double
+    quantityType : QuantityType
+}
+
+object QuantityType {
+    ML,
+    L,
+    G,
+    KG
+}
+
+object Product{
+    <u>idArticle</u> : Int auto_increment
+    label : String
+    price : Double
+    provider : Provider
+}
+
+object Provider{
+    <u>idProvider</u> : Int auto_increment
+    label : String
+    localization : String?
+}
+
+object Stock{
+    <u>idStock</u> : Int auto_increment
+    inventoryDate : LocalDateTime
+    label : String (auto))
+    productAndQuantity : Map<Product, Int>
+}
+
+Command "1" -right- "1" PaymentType : a
+Command "1" --left- "1" Client : pour
+Command "1" --down- "1" ArticleWrapper : possède
+Command "1" --up- "1" CommandStatusType : a
+ArticleWrapper "1" --right- "1" ArticleWrapperStatus : a
+Article "1..n" -up- "1" ArticleCategory : est
+Article "1..n" -right- "1" ArticleWrapper : contient
+Article "1..n" -down- "1" ProductWrapper : contient
+Product "1..n" -right- "1" Provider : de
+ProductWrapper "1" -right- "1..n" Product : de
+Product "1..n" -down- "1..n" Stock : a
+
+@enduml
+
