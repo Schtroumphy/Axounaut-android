@@ -1,4 +1,4 @@
-package com.jeanloth.project.android.kotlin.axounaut.ui.addCommand
+package com.jeanloth.project.android.kotlin.axounaut.ui.commands
 
 import android.os.Bundle
 import android.util.Log

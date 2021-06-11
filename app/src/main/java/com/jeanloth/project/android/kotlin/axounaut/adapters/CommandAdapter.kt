@@ -40,6 +40,10 @@ class CommandAdapter(
 
         fun bind(command : Command, position : Int){
 
+            itemView.setOnClickListener {
+                onClick?.invoke(command)
+            }
+
             Log.d("Command adapter", "In Artcile Holder")
             itemView.tv_delivery_date.text= command.deliveryDate.toString()
             itemView.tv_client_name.text= command.client?.toNameString()
@@ -57,6 +61,7 @@ class CommandAdapter(
 
         override fun onClick(v: View) {
             Log.d("RecyclerView", "CLICK on !")
+
         }
 
     }

@@ -5,7 +5,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
-import com.jeanloth.project.android.kotlin.axounaut.ui.addCommand.AddCommandDialogFragment
+import com.jeanloth.project.android.kotlin.axounaut.ui.commands.AddCommandDialogFragment
 import kotlinx.android.synthetic.main.activity_main.fab_add_command
 
 class MainActivity : AppCompatActivity() {

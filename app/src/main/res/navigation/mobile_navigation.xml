@@ -9,7 +9,12 @@
         android:id="@+id/navigation_home"
         android:name="com.jeanloth.project.android.kotlin.axounaut.ui.home.HomeFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+
+        <action
+            android:id="@+id/action_nav_home_to_nav_command_details"
+            app:destination="@id/nav_command_details" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_dashboard"
@@ -22,4 +27,25 @@
         android:name="com.jeanloth.project.android.kotlin.axounaut.ui.notifications.NotificationsFragment"
         android:label="@string/title_notifications"
         tools:layout="@layout/fragment_notifications" />
+
+    <fragment
+        android:id="@+id/nav_command_list"
+        android:name="com.jeanloth.project.android.kotlin.axounaut.ui.CommandListFragment"
+        android:label="Liste commandes"
+        tools:layout="@layout/fragment_command_list" >
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_command_details"
+        android:name="com.jeanloth.project.android.kotlin.axounaut.ui.commands.CommandDetailFragment"
+        android:label="Détails commande"
+        tools:layout="@layout/fragment_command_detail" >
+
+        <argument
+            android:name="commandToDetail"
+            app:argType="com.jeanloth.project.android.kotlin.domain.entities.Command"
+            app:nullable="false" />
+
+    </fragment>
 </navigation>

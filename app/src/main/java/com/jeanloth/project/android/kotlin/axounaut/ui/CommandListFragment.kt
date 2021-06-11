@@ -1,15 +1,19 @@
 package com.jeanloth.project.android.kotlin.axounaut.ui
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import com.jeanloth.project.android.kotlin.axounaut.R
 import com.jeanloth.project.android.kotlin.axounaut.adapters.CommandAdapter
 import com.jeanloth.project.android.kotlin.axounaut.mock.DataMock
 import com.jeanloth.project.android.kotlin.axounaut.ui.dummy.DummyContent
+import com.jeanloth.project.android.kotlin.axounaut.ui.home.HomeFragmentDirections
+import com.jeanloth.project.android.kotlin.domain.entities.Command
 import kotlinx.android.synthetic.main.fragment_command_list.*
 import kotlinx.android.synthetic.main.fragment_command_list.view.*
 
@@ -56,9 +60,21 @@ class CommandListFragment(
         // Set the adapter
         rv_command_list.apply{
                 layoutManager = LinearLayoutManager(context)
-                adapter = CommandAdapter(listOf(DataMock.command1, DataMock.command2))
+                adapter = CommandAdapter(listOf(DataMock.command1, DataMock.command2)).apply {
+                    onClick = {
+                        // Command to detail
+                        goToCommandDetails(it)
+                    }
+                }
             }
         }
+
+    private fun goToCommandDetails(command: Command) {
+        Log.d("TAG", "Command : $command")
+        findNavController().navigate(HomeFragmentDirections.actionNavHomeToNavCommandDetails(
+            commandToDetail = command
+        ))
+    }
 
     companion object {
 

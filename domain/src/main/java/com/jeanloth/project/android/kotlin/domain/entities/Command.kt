@@ -1,5 +1,6 @@
 package com.jeanloth.project.android.kotlin.domain.entities
 
+import java.io.Serializable
 import java.time.LocalDate
 
 data class Command(
@@ -11,4 +12,4 @@ data class Command(
     var articleWrappers : List<ArticleWrapper>,
     var paymentAmount : Double? = null,
     var paymentType : PaymentType? = null
-)
+) : Serializable
