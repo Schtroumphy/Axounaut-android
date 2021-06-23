@@ -29,6 +29,11 @@
         tools:layout="@layout/fragment_notifications" />
 
     <fragment
+        android:id="@+id/navigation_settings"
+        android:name="com.jeanloth.project.android.kotlin.axounaut.ui.SettingsFragment"
+        android:label="Paramètres" />
+
+    <fragment
         android:id="@+id/nav_command_list"
         android:name="com.jeanloth.project.android.kotlin.axounaut.ui.CommandListFragment"
         android:label="Liste commandes"
