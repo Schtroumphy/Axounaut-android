@@ -3,6 +3,7 @@
     package="com.jeanloth.project.android.kotlin.axounaut">
 
     <application
+        android:name=".application.AxounautApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
