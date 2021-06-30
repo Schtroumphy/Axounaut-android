@@ -1,3 +1,5 @@
+include ':domain-models'
+include ':data'
 include ':local'
 include ':documentation'
 include ':domain'

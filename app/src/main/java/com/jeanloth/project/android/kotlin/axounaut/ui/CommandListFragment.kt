@@ -11,9 +11,8 @@ import androidx.navigation.fragment.findNavController
 import com.jeanloth.project.android.kotlin.axounaut.R
 import com.jeanloth.project.android.kotlin.axounaut.adapters.CommandAdapter
 import com.jeanloth.project.android.kotlin.axounaut.mock.DataMock
-import com.jeanloth.project.android.kotlin.axounaut.ui.dummy.DummyContent
 import com.jeanloth.project.android.kotlin.axounaut.ui.home.HomeFragmentDirections
-import com.jeanloth.project.android.kotlin.domain.entities.Command
+import com.jeanloth.project.android.kotlin.domain_models.entities.Command
 import kotlinx.android.synthetic.main.fragment_command_list.*
 import kotlinx.android.synthetic.main.fragment_command_list.view.*
 

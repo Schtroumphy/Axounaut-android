@@ -9,9 +9,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.jeanloth.project.android.kotlin.axounaut.R
-import com.jeanloth.project.android.kotlin.domain.entities.ArticleWrapper
-import com.jeanloth.project.android.kotlin.domain.entities.ArticleWrapperStatusType
-import com.jeanloth.project.android.kotlin.domain.entities.ItemList
+import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleWrapper
+import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleWrapperStatusType
 import kotlinx.android.synthetic.main.item_checkbox_list.view.*
 
 class CheckboxListAdapter(

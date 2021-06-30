@@ -9,9 +9,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.jeanloth.project.android.kotlin.axounaut.R
-import com.jeanloth.project.android.kotlin.domain.entities.ItemList
+import com.jeanloth.project.android.kotlin.domain_models.entities.ItemList
 import kotlinx.android.synthetic.main.item_article.view.*
-import kotlinx.android.synthetic.main.item_article.view.tv_name
 import kotlinx.android.synthetic.main.item_dot_list.view.*
 
 class SimpleListAdapter(

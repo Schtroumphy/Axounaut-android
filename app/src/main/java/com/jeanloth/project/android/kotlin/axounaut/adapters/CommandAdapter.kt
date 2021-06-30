@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.jeanloth.project.android.kotlin.axounaut.R
-import com.jeanloth.project.android.kotlin.domain.entities.*
+import com.jeanloth.project.android.kotlin.domain_models.entities.*
 import kotlinx.android.synthetic.main.item_command.view.*
 
 class CommandAdapter(

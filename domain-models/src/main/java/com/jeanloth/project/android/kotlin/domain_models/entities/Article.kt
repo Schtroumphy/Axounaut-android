@@ -1,4 +1,4 @@
-package com.jeanloth.project.android.kotlin.domain.entities
+package com.jeanloth.project.android.kotlin.domain_models.entities
 
 data class Article(
         val name : String,

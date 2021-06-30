@@ -1,10 +1,10 @@
 package com.jeanloth.project.android.kotlin.axounaut.mock
 
-import com.jeanloth.project.android.kotlin.domain.entities.Article
-import com.jeanloth.project.android.kotlin.domain.entities.ArticleWrapper
-import com.jeanloth.project.android.kotlin.domain.entities.ArticleWrapper.Companion.createWrapperList
-import com.jeanloth.project.android.kotlin.domain.entities.ArticleWrapperStatusType
-import com.jeanloth.project.android.kotlin.domain.entities.Command
+import com.jeanloth.project.android.kotlin.domain_models.entities.Article
+import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleWrapper
+import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleWrapper.Companion.createWrapperList
+import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleWrapperStatusType
+import com.jeanloth.project.android.kotlin.domain_models.entities.Command
 
 object DataMock {
 

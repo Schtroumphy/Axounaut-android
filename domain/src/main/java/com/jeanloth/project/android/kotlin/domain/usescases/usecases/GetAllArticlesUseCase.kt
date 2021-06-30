@@ -1,4 +1,4 @@
-package com.jeanloth.project.android.kotlin.domain.usescases
+package com.jeanloth.project.android.kotlin.domain.usescases.usecases
 
 import com.jeanloth.project.android.kotlin.data.contracts.ArticleContract
 

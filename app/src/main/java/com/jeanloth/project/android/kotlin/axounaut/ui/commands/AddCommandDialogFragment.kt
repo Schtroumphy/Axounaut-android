@@ -13,8 +13,8 @@ import com.jeanloth.project.android.kotlin.axounaut.R
 import com.jeanloth.project.android.kotlin.axounaut.adapters.ArticleAdapter
 import com.jeanloth.project.android.kotlin.axounaut.extensions.formatDouble
 import com.jeanloth.project.android.kotlin.axounaut.mock.DataMock
-import com.jeanloth.project.android.kotlin.domain.entities.Article
-import com.jeanloth.project.android.kotlin.domain.entities.ArticleWrapper
+import com.jeanloth.project.android.kotlin.domain_models.entities.Article
+import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleWrapper
 import kotlinx.android.synthetic.main.fragment_add_command_dialog.*
 import java.time.LocalDate
 
