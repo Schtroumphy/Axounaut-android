@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "1:474612300085983869",
-      "lastPropertyId": "4:3390431500996534402",
+      "lastPropertyId": "2:9143207142557765175",
       "name": "ArticleEntity",
       "properties": [
         {
@@ -18,18 +18,6 @@
           "id": "2:9143207142557765175",
           "name": "name",
           "type": 9
-        },
-        {
-          "id": "3:3605987420131221416",
-          "name": "count",
-          "type": 5,
-          "flags": 4
-        },
-        {
-          "id": "4:3390431500996534402",
-          "name": "unitPrice",
-          "type": 8,
-          "flags": 4
         }
       ],
       "relations": []

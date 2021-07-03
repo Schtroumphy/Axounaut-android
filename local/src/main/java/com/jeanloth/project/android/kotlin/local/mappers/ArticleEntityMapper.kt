@@ -8,6 +8,7 @@ class ArticleEntityMapper : Mapper<Article, ArticleEntity> {
 
     override fun from(t: ArticleEntity): Article {
         return Article(
+            id = t.id,
             name = t.name,
             category = ArticleCategory.SALTED,
             count = 0,
@@ -17,8 +18,10 @@ class ArticleEntityMapper : Mapper<Article, ArticleEntity> {
 
     override fun to(t: Article): ArticleEntity {
         return ArticleEntity(
-            id = 0,
-            name = t.name
+            id = 0L,
+            name = t.name,
+            count = 0,
+            unitPrice = 10.0
         )
     }
 }

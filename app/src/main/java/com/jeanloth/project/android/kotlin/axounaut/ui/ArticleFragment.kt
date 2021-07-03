@@ -1,12 +1,16 @@
 package com.jeanloth.project.android.kotlin.axounaut.ui
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.lifecycleScope
 import com.jeanloth.project.android.kotlin.axounaut.R
+import com.jeanloth.project.android.kotlin.axounaut.adapters.ArticleListAdapter
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.ArticleVM
+import kotlinx.android.synthetic.main.fragment_add_command_dialog.*
 import kotlinx.android.synthetic.main.fragment_article.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -18,6 +22,7 @@ import org.koin.android.viewmodel.ext.android.viewModel
 class ArticleFragment : Fragment() {
 
     private val articleVM : ArticleVM by viewModel()
+    private lateinit var adapter: ArticleListAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,8 +35,19 @@ class ArticleFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        articleVM.getAllArticles().toString()
-        articleVM.saveArticle()
+        adapter = ArticleListAdapter(emptyList(), requireContext())
+        rv_articles_fragment.adapter = adapter
+
+        fab_add_article.setOnClickListener{
+            articleVM.saveArticle()
+        }
+
+        lifecycleScope.launchWhenStarted {
+            articleVM.allArticlesLiveData().observe(viewLifecycleOwner){
+                Log.d("[Article Fragment", "Article observed : $it")
+                adapter.setItems(it)
+            }
+        }
 
     }
 

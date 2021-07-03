@@ -5,6 +5,8 @@ import com.jeanloth.project.android.kotlin.local.contracts.LocalArticleDatasourc
 import com.jeanloth.project.android.kotlin.local.database.ArticleDAO
 import com.jeanloth.project.android.kotlin.local.entities.ArticleEntity
 import com.jeanloth.project.android.kotlin.local.mappers.ArticleEntityMapper
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 class ArticleLocalDatasourceRepository(
     private val dao : ArticleDAO,
@@ -15,11 +17,23 @@ class ArticleLocalDatasourceRepository(
        return dao.all.map { mapper.from(it as ArticleEntity) }
     }
 
+    // put method returns id of the entity added
     override fun saveArticle(article: Article): Boolean {
         print("[ArticleLocalDSRepository] : Save article - Article : $article")
         print("[ArticleLocalDSRepository] : Save article - Article Entity: ${mapper.to(article)}")
-        val result = dao.box.put(mapper.to(article))
-        return result == 1L
+        dao.box.put(mapper.to(article))
+        return true
+    }
+
+    override fun observeAllArticles(): Flow<List<Article>> {
+        val result =  dao.observeAll{
+            it.filter { true }
+        }.map {
+            it.map {
+                mapper.from(it)
+            }
+        }
+        return result
     }
 
 

@@ -1,20 +1,36 @@
 package com.jeanloth.project.android.kotlin.axounaut.viewModels
 
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.jeanloth.project.android.kotlin.domain_models.entities.Article
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.GetAllArticlesUseCase
+import com.jeanloth.project.android.kotlin.domain.usescases.usecases.ObserveArticlesUseCase
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.SaveArticleUseCase
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 class ArticleVM (
     private val getAllArticlesUseCase : GetAllArticlesUseCase,
+    private val observeAllArticlesUseCase : ObserveArticlesUseCase,
     private val saveArticleUseCase: SaveArticleUseCase,
 ): ViewModel() {
 
     var articles : List<Article> = emptyList()
 
+    var allArticleMutableLiveData : MutableLiveData<List<Article>> = MutableLiveData(emptyList())
+    fun allArticlesLiveData() : LiveData<List<Article>> = allArticleMutableLiveData
+
     init {
 
+        viewModelScope.launch {
+            observeAllArticlesUseCase.invoke().collect {
+                Log.d("[ArticleVM]", " Articles observed : $it")
+                allArticleMutableLiveData.postValue(it)
+            }
+        }
     }
 
     fun getAllArticles(): List<Article> {

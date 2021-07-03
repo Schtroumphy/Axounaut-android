@@ -5,6 +5,7 @@ import com.jeanloth.project.android.kotlin.axounaut.viewModels.ArticleVM
 import com.jeanloth.project.android.kotlin.data.repositories.ArticleRepository
 import com.jeanloth.project.android.kotlin.data.contracts.ArticleContract
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.GetAllArticlesUseCase
+import com.jeanloth.project.android.kotlin.domain.usescases.usecases.ObserveArticlesUseCase
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.SaveArticleUseCase
 import com.jeanloth.project.android.kotlin.local.contracts.LocalArticleDatasourceContract
 import com.jeanloth.project.android.kotlin.local.database.ArticleDAO
@@ -18,15 +19,15 @@ import org.koin.dsl.module
 
 val appModule = module {
 
-    viewModel { ArticleVM( get(), get() ) }
+    viewModel { ArticleVM( get(), get(), get() ) }
 
     // Uses cases
     factory{ GetAllArticlesUseCase(get()) }
+    factory{ ObserveArticlesUseCase(get()) }
     factory{ SaveArticleUseCase(get()) }
 
     // Data repository
     single { ArticleRepository(get()) } bind ArticleContract::class
-
 
     // Mappers
     single{ ArticleEntityMapper() }
@@ -37,7 +38,6 @@ val appModule = module {
     single { ArticleLocalDatasourceRepository(get(), get())} bind LocalArticleDatasourceContract::class
 
     // Factory DAO
-
     factory { ArticleDAO(get()) }
 
 }
