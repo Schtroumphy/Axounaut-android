@@ -25,6 +25,13 @@ class ArticleLocalDatasourceRepository(
         return true
     }
 
+    override fun deleteArticle(article: Article): Boolean {
+        var result = dao.box.remove(mapper.to(article))
+        print("[ArticleLocalDSRepository] : Delete article result : $result")
+
+        return true
+    }
+
     override fun observeAllArticles(): Flow<List<Article>> {
         val result =  dao.observeAll{
             it.filter { true }

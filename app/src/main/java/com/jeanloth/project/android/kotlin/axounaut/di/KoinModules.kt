@@ -4,6 +4,7 @@ import android.content.Context
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.ArticleVM
 import com.jeanloth.project.android.kotlin.data.repositories.ArticleRepository
 import com.jeanloth.project.android.kotlin.data.contracts.ArticleContract
+import com.jeanloth.project.android.kotlin.domain.usescases.usecases.DeleteArticleUseCase
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.GetAllArticlesUseCase
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.ObserveArticlesUseCase
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.SaveArticleUseCase
@@ -19,12 +20,13 @@ import org.koin.dsl.module
 
 val appModule = module {
 
-    viewModel { ArticleVM( get(), get(), get() ) }
+    viewModel { ArticleVM( get(), get(), get(), get()) }
 
     // Uses cases
     factory{ GetAllArticlesUseCase(get()) }
     factory{ ObserveArticlesUseCase(get()) }
     factory{ SaveArticleUseCase(get()) }
+    factory{ DeleteArticleUseCase(get()) }
 
     // Data repository
     single { ArticleRepository(get()) } bind ArticleContract::class

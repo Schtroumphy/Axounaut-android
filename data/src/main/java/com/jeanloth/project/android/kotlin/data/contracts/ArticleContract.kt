@@ -10,4 +10,6 @@ interface ArticleContract {
     fun observeArticles() : Flow<List<Article>>
 
     fun saveArticle(article: Article) : Boolean
+
+    fun deleteArticle(article: Article) : Boolean
 }

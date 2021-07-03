@@ -2,17 +2,21 @@ package com.jeanloth.project.android.kotlin.axounaut.ui
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.appcompat.widget.PopupMenu
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.jeanloth.project.android.kotlin.axounaut.R
 import com.jeanloth.project.android.kotlin.axounaut.adapters.ArticleListAdapter
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.ArticleVM
+import com.jeanloth.project.android.kotlin.domain_models.entities.Article
 import kotlinx.android.synthetic.main.fragment_add_command_dialog.*
 import kotlinx.android.synthetic.main.fragment_article.*
 import org.koin.android.viewmodel.ext.android.viewModel
+
 
 /**
  * A simple [Fragment] subclass.
@@ -35,10 +39,17 @@ class ArticleFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = ArticleListAdapter(emptyList(), requireContext())
+        activity?.title = "Mes articles";
+
+
+        adapter = ArticleListAdapter(emptyList(), requireContext()).apply {
+            onMenuClick = { view, articleToDelete ->
+                openPopUpMenu(view, articleToDelete)
+            }
+        }
         rv_articles_fragment.adapter = adapter
 
-        fab_add_article.setOnClickListener{
+        bt_add_article.setOnClickListener{
             articleVM.saveArticle()
         }
 
@@ -49,6 +60,29 @@ class ArticleFragment : Fragment() {
             }
         }
 
+    }
+
+    private fun openPopUpMenu(view: View, articleToDelete: Article) {
+        view.setOnClickListener {
+            //Creating the instance of PopupMenu
+            val popup = PopupMenu(requireContext(), view)
+
+            //Inflating the Popup using xml file
+            popup.menuInflater.inflate(R.menu.popup_menu, popup.menu)
+
+            //registering popup with OnMenuItemClickListener
+            popup.setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+                    R.id.menu_delete ->  {
+                        Toast.makeText(requireContext(), "Suppression définitve de : ${articleToDelete.name}", Toast.LENGTH_SHORT).show()
+                        articleVM.deleteArticle(articleToDelete)
+                        true
+                    }
+                    else ->  false
+                }
+            }
+            popup.show() //showing popup menu
+        }
     }
 
 }

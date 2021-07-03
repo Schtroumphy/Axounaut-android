@@ -10,6 +10,8 @@ import com.jeanloth.project.android.kotlin.axounaut.R
 import com.jeanloth.project.android.kotlin.domain_models.entities.Article
 import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleWrapper
 import kotlinx.android.synthetic.main.item_article.view.*
+import kotlinx.android.synthetic.main.item_article.view.tv_name
+import kotlinx.android.synthetic.main.item_article_list.view.*
 
 class ArticleListAdapter(
     private var articleList : List<Article>,
@@ -17,6 +19,7 @@ class ArticleListAdapter(
 ) : RecyclerView.Adapter<ArticleListAdapter.ArticleHolder>()  {
 
     var onClick : ((List<ArticleWrapper>) -> Unit)? = null
+    var onMenuClick : ((View, Article) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArticleHolder {
         val itemView = LayoutInflater.from(parent.context)
@@ -43,6 +46,10 @@ class ArticleListAdapter(
 
         fun bind(article : Article){
             itemView.tv_name.text= article.name
+
+            itemView.bt_menu_more.setOnClickListener {
+                onMenuClick?.invoke(it, article)
+            }
         }
 
 

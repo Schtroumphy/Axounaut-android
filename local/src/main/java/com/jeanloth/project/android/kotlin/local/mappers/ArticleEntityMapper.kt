@@ -11,17 +11,17 @@ class ArticleEntityMapper : Mapper<Article, ArticleEntity> {
             id = t.id,
             name = t.name,
             category = ArticleCategory.SALTED,
-            count = 0,
-            unitPrice = 10.0
+            count = t.count,
+            unitPrice = t.unitPrice
         )
     }
 
     override fun to(t: Article): ArticleEntity {
         return ArticleEntity(
-            id = 0L,
+            id = t.id,
             name = t.name,
-            count = 0,
-            unitPrice = 10.0
+            count = t.count,
+            unitPrice = t.unitPrice
         )
     }
 }

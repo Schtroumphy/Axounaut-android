@@ -20,4 +20,8 @@ class ArticleRepository(
     override fun saveArticle(article: Article): Boolean {
         return localArticleDatasourceContract.saveArticle(article)
     }
+
+    override fun deleteArticle(article: Article): Boolean {
+        return localArticleDatasourceContract.deleteArticle(article)
+    }
 }

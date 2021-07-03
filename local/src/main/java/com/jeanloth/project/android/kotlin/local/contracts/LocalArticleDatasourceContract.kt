@@ -11,4 +11,6 @@ interface LocalArticleDatasourceContract {
     fun observeAllArticles() : Flow<List<Article>>
 
     fun saveArticle(article: Article) : Boolean
+
+    fun deleteArticle(article: Article) : Boolean
 }
