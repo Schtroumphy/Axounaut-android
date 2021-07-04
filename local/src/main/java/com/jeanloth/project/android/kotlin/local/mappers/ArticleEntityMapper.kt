@@ -10,9 +10,8 @@ class ArticleEntityMapper : Mapper<Article, ArticleEntity> {
         return Article(
             id = t.id,
             name = t.name,
-            category = ArticleCategory.SALTED,
-            count = t.count,
-            unitPrice = t.unitPrice
+            price = t.price,
+            category = t.category
         )
     }
 
@@ -20,8 +19,8 @@ class ArticleEntityMapper : Mapper<Article, ArticleEntity> {
         return ArticleEntity(
             id = t.id,
             name = t.name,
-            count = t.count,
-            unitPrice = t.unitPrice
+            price = t.price,
+            category = t.category
         )
     }
 }

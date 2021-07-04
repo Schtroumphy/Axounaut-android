@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "1:474612300085983869",
-      "lastPropertyId": "4:3390431500996534402",
+      "lastPropertyId": "6:7258122112516802047",
       "name": "ArticleEntity",
       "properties": [
         {
@@ -20,22 +20,63 @@
           "type": 9
         },
         {
-          "id": "3:3605987420131221416",
-          "name": "count",
+          "id": "5:5876382283187354600",
+          "name": "price",
+          "type": 8,
+          "flags": 4
+        },
+        {
+          "id": "6:7258122112516802047",
+          "name": "category",
+          "type": 9
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "2:599839949773774750",
+      "lastPropertyId": "6:4032181148535128098",
+      "name": "AppClientEntity",
+      "properties": [
+        {
+          "id": "1:8983043398021166404",
+          "name": "idClient",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:4309885138419959867",
+          "name": "firstname",
+          "type": 9
+        },
+        {
+          "id": "3:1568781114096060800",
+          "name": "lastname",
+          "type": 9
+        },
+        {
+          "id": "4:4958168533693504044",
+          "name": "phoneNumber",
+          "type": 5,
+          "flags": 2
+        },
+        {
+          "id": "5:1030559285792325623",
+          "name": "fidelityPoint",
           "type": 5,
           "flags": 4
         },
         {
-          "id": "4:3390431500996534402",
-          "name": "unitPrice",
-          "type": 8,
+          "id": "6:4032181148535128098",
+          "name": "isFavorite",
+          "type": 1,
           "flags": 4
         }
       ],
       "relations": []
     }
   ],
-  "lastEntityId": "1:474612300085983869",
+  "lastEntityId": "2:599839949773774750",
   "lastIndexId": "0:0",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
@@ -43,7 +84,10 @@
   "modelVersionParserMinimum": 5,
   "retiredEntityUids": [],
   "retiredIndexUids": [],
-  "retiredPropertyUids": [],
+  "retiredPropertyUids": [
+    3605987420131221416,
+    3390431500996534402
+  ],
   "retiredRelationUids": [],
   "version": 1
 }

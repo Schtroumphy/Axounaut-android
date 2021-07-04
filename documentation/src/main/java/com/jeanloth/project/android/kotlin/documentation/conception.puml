@@ -19,7 +19,7 @@ object Command{
     status : CommandStatusType?
     client : Client
     totalPrice : Double
-    commandProducts : List<CommandProduct>
+    articleWrappers : List<ArticleWrapper>
     paymentAmount : Double
     paymentType : PaymentType
 }

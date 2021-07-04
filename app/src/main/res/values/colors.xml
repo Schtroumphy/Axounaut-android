@@ -12,9 +12,14 @@
     <color name="ginger">#BE5504</color>
     <color name="sandstone">#D7722C</color>
 
+    <color name="marron_dark_1">#625337</color>
+    <color name="marron_light_1">#91AB8D53</color>
+
     <color name="see_green">#2E8B57</color>
     <color name="kelly_green">#4CBB17</color>
     <color name="apple_green">#8DB500</color>
+    <color name="green_light_1">#6D906A</color>
+    <color name="green_light_2">#6D906A</color>
 
     <color name="gray_1">#B3B5AE</color>
 </resources>

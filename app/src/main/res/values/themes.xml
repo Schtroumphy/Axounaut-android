@@ -6,9 +6,9 @@
         <item name="colorPrimaryVariant">@color/ginger</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/kelly_green</item>
-        <item name="colorSecondaryVariant">@color/see_green</item>
-        <item name="colorOnSecondary">@color/black</item>
+        <item name="colorSecondary">@color/green_light_1</item>
+        <item name="colorSecondaryVariant">@color/green_light_2</item>
+        <item name="colorOnSecondary">@color/ginger</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
@@ -19,9 +19,17 @@
     </style>
 
     <style name="App.custom.EditText" parent="@android:style/Widget.EditText">
-        <item name="android:width">250dp</item>
+        <item name="android:width">350dp</item>
+        <item name="android:paddingStart">15dp</item>
         <item name="android:background">@drawable/bg_edit_text</item>
         <item name="android:padding">6dp</item>
         <item name="android:gravity">center</item>
+    </style>
+
+    <style name="App.custom.ShortEditText" parent="@android:style/Widget.EditText">
+        <item name="android:width">70dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/bg_edit_text</item>
+        <item name="android:padding">6dp</item>
     </style>
 </resources>

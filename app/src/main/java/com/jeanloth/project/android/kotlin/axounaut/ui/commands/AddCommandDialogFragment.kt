@@ -15,6 +15,7 @@ import com.jeanloth.project.android.kotlin.axounaut.extensions.formatDouble
 import com.jeanloth.project.android.kotlin.axounaut.mock.DataMock
 import com.jeanloth.project.android.kotlin.domain_models.entities.Article
 import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleWrapper
+import com.jeanloth.project.android.kotlin.domain_models.entities.Command
 import kotlinx.android.synthetic.main.fragment_add_command_dialog.*
 import java.time.LocalDate
 
@@ -60,16 +61,11 @@ class AddCommandDialogFragment : BottomSheetDialogFragment() {
                 changeEditModeDisplay()
             else {
                 // Save command
+                    /*var commandToSave = Command(
+                        client =
+                    )*/
                 Log.d("ADD COMMAND", "Save command ")
             }
-        }
-
-        bt_previous_or_close.setOnClickListener {
-            if (isEditMode) {
-                articlesActualized = mutableListOf()
-                dismiss()
-            } else
-                changeEditModeDisplay()
         }
 
         et_client.setOnEditorActionListener { v, actionId, event ->
@@ -98,7 +94,7 @@ class AddCommandDialogFragment : BottomSheetDialogFragment() {
         Log.d("TAG", "${articlesActualized.filter { it.count > 0 }.map { it.count * it.totalArticleWrapperPrice }.sum()}")
 
         tv_total_price.visibility = if(isEditMode) GONE else VISIBLE
-        if(!isEditMode)  tv_total_price.text = getString(R.string.total_price, articlesActualized.filter { it.count > 0 }.map { it.count * it.article.unitPrice }.sum().formatDouble())
+        if(!isEditMode)  tv_total_price.text = getString(R.string.total_price, articlesActualized.filter { it.count > 0 }.map { it.count * it.article.price }.sum().formatDouble())
     }
 
     private fun setupPreviousCloseButton() {
@@ -117,19 +113,28 @@ class AddCommandDialogFragment : BottomSheetDialogFragment() {
 
     private fun setupSelectedItems(article: Article) {
         if (articlesActualized.map { it.article.name }.contains(article.name)) {
-            if (article.count > 0) {
+            /*if (article > 0) {
                 //articlesActualized[articlesActualized.map { it.name }.indexOf(article.name)] = article
             }
         } else {
             //articlesActualized.add(article)
+        }*/
+            //articlesActualized.removeIf { it.count == 0 }
+            Log.d("ADD COMMAND", "Selected items : $articlesActualized")
         }
-        //articlesActualized.removeIf { it.count == 0 }
-        Log.d("ADD COMMAND", "Selected items : $articlesActualized")
     }
 
     private fun setupHeaders() {
         Log.d("TEST", "${LocalDate.now()}")
         tv_delivery_date.text = LocalDate.now().toString()
+
+        bt_previous_or_close.setOnClickListener {
+            if (isEditMode) {
+                articlesActualized = mutableListOf()
+                dismiss()
+            } else
+                changeEditModeDisplay()
+        }
     }
 
     companion object {

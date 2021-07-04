@@ -1,12 +1,12 @@
-package com.jeanloth.project.android.kotlin.domain.usescases.usecases
+package com.jeanloth.project.android.kotlin.domain.usescases.usecases.article
 
 import com.jeanloth.project.android.kotlin.data.contracts.ArticleContract
 import com.jeanloth.project.android.kotlin.domain_models.entities.Article
 
-class SaveArticleUseCase(
+class DeleteArticleUseCase(
     private val articleContract : ArticleContract
 ) {
 
-    fun invoke(article : Article) = articleContract.saveArticle(article)
+    fun invoke(article : Article) = articleContract.deleteArticle(article)
 
 }

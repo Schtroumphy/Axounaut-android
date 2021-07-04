@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Axounaut</string>
     <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_stock">Stock</string>
+    <string name="title_articles">Articles</string>
 
 
     <string name="add_command_title">Ajouter une commande</string>
@@ -13,8 +13,14 @@
 
     <string name="x_count">x %1$s</string>
     <string name="total_price">Prix total : %1$s€</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Client Fragment -->
+    <string name="client_fidelity_label">%1$s points de fidélité</string>
+    <string name="client_name_label">%1$s %2$s</string>
+
+
+
+
     <!-- Preference Titles -->
     <string name="messages_header">Messages</string>
     <string name="sync_header">Sync</string>

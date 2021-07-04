@@ -9,12 +9,17 @@
     android:id="@+id/tl_command"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#ffffff"
     android:paddingTop="0dp"
+    app:tabMode="fixed"
+    app:tabIndicatorGravity="stretch"
+    app:tabIndicatorAnimationMode="elastic"
+    app:tabSelectedTextColor="@color/ginger"
     android:layout_marginTop="0dp"
+    app:tabIndicatorColor="@color/marron_light_1"
+    app:tabIndicator="@drawable/tab_indicator"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent"
-    app:tabTextColor="@color/see_green">
+    app:tabTextColor="@color/marron_dark_1">
 
 </com.google.android.material.tabs.TabLayout>
 

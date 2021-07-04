@@ -4,7 +4,7 @@ data class ArticleWrapper(
     val idCommandProduct : Long = 0,
     var article : Article,
     var count : Int = 0,
-    var totalArticleWrapperPrice : Double = count * article.unitPrice,
+    var totalArticleWrapperPrice : Double = count * article.price,
     var status : ArticleWrapperStatusType = ArticleWrapperStatusType.TO_DO
 
 )  {

@@ -1,4 +1,4 @@
-package com.jeanloth.project.android.kotlin.axounaut.ui
+package com.jeanloth.project.android.kotlin.axounaut.ui.article
 
 import android.os.Bundle
 import android.util.Log
@@ -6,15 +6,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.jeanloth.project.android.kotlin.axounaut.R
 import com.jeanloth.project.android.kotlin.axounaut.adapters.ArticleListAdapter
+import com.jeanloth.project.android.kotlin.axounaut.extensions.openPopUpMenu
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.ArticleVM
-import com.jeanloth.project.android.kotlin.domain_models.entities.Article
-import kotlinx.android.synthetic.main.fragment_add_command_dialog.*
+import com.jeanloth.project.android.kotlin.axounaut.viewModels.MainVM
 import kotlinx.android.synthetic.main.fragment_article.*
+import kotlinx.android.synthetic.main.layout_header.*
+import org.koin.android.viewmodel.ext.android.sharedViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
 
 
@@ -25,8 +27,14 @@ import org.koin.android.viewmodel.ext.android.viewModel
  */
 class ArticleFragment : Fragment() {
 
+    private val mainVM : MainVM by sharedViewModel()
     private val articleVM : ArticleVM by viewModel()
     private lateinit var adapter: ArticleListAdapter
+
+    enum class EArticleDisplayMode{
+        EDITION,
+        DETAILLED
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,22 +43,25 @@ class ArticleFragment : Fragment() {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_article, container, false)
     }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        activity?.title = "Mes articles";
-
+        mainVM.setHeaderTitle("Mes articles")
 
         adapter = ArticleListAdapter(emptyList(), requireContext()).apply {
             onMenuClick = { view, articleToDelete ->
-                openPopUpMenu(view, articleToDelete)
+                view.openPopUpMenu(requireContext(), R.menu.popup_menu, map = mapOf(
+                    R.id.menu_delete to {
+                        Toast.makeText(requireContext(), "Suppression définitive de : ${articleToDelete.name}", Toast.LENGTH_SHORT).show()
+                        articleVM.deleteArticle(articleToDelete)
+                    }
+                ))
             }
         }
         rv_articles_fragment.adapter = adapter
 
-        bt_add_article.setOnClickListener{
-            articleVM.saveArticle()
+        cl_add_article_btn.setOnClickListener{
+            goToArticleDetails()
         }
 
         lifecycleScope.launchWhenStarted {
@@ -62,27 +73,8 @@ class ArticleFragment : Fragment() {
 
     }
 
-    private fun openPopUpMenu(view: View, articleToDelete: Article) {
-        view.setOnClickListener {
-            //Creating the instance of PopupMenu
-            val popup = PopupMenu(requireContext(), view)
-
-            //Inflating the Popup using xml file
-            popup.menuInflater.inflate(R.menu.popup_menu, popup.menu)
-
-            //registering popup with OnMenuItemClickListener
-            popup.setOnMenuItemClickListener { item ->
-                when (item.itemId) {
-                    R.id.menu_delete ->  {
-                        Toast.makeText(requireContext(), "Suppression définitve de : ${articleToDelete.name}", Toast.LENGTH_SHORT).show()
-                        articleVM.deleteArticle(articleToDelete)
-                        true
-                    }
-                    else ->  false
-                }
-            }
-            popup.show() //showing popup menu
-        }
+    private fun goToArticleDetails() {
+        findNavController().navigate(ArticleFragmentDirections.actionNavArticleToNavArticleDetails())
     }
 
 }

@@ -46,6 +46,7 @@ class ArticleListAdapter(
 
         fun bind(article : Article){
             itemView.tv_name.text= article.name
+            itemView.tv_price.text= article.price.toString()
 
             itemView.bt_menu_more.setOnClickListener {
                 onMenuClick?.invoke(it, article)

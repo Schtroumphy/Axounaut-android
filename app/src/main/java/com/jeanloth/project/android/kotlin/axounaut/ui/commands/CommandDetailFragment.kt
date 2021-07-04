@@ -11,11 +11,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jeanloth.project.android.kotlin.axounaut.R
 import com.jeanloth.project.android.kotlin.axounaut.adapters.CheckboxListAdapter
-import com.jeanloth.project.android.kotlin.axounaut.adapters.CommandAdapter
-import com.jeanloth.project.android.kotlin.axounaut.mock.DataMock
 import kotlinx.android.synthetic.main.fragment_command_detail.*
-import kotlinx.android.synthetic.main.fragment_command_list.*
-import kotlinx.android.synthetic.main.fragment_command_list.rv_command_list
 import kotlinx.android.synthetic.main.layout_header.*
 
 /**

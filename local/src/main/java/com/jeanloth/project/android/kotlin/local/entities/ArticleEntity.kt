@@ -8,6 +8,6 @@ data class ArticleEntity(
     @Id
     var id: Long = 0,
     var name: String = "",
-    var count : Int = 0,
-    var unitPrice : Double = 10.0
+    var price : Double = 0.0,
+    val category : String? = ArticleCategory.SALTED.name
 ) : Entity
