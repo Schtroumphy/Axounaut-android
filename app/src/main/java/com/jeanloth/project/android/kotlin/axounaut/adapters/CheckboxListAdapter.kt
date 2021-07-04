@@ -46,6 +46,10 @@ class CheckboxListAdapter(
             itemView.tv_label.text= if(item.status != ArticleWrapperStatusType.DONE) item.article.name else stringBuilderLabel(item.article.name)
             itemView.cb_item.isChecked = item.status == ArticleWrapperStatusType.DONE
             itemView.cb_item.isEnabled = item.status != ArticleWrapperStatusType.DONE
+
+            itemView.tv_label.setOnClickListener {
+                itemView.cb_item.isChecked = !itemView.cb_item.isChecked
+            }
         }
     }
 

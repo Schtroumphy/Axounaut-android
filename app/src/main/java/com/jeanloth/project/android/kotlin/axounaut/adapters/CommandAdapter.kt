@@ -40,7 +40,7 @@ class CommandAdapter(
 
         fun bind(command : Command, position : Int){
 
-            itemView.setOnClickListener {
+            itemView.cv_command.setOnClickListener {
                 onClick?.invoke(command)
             }
 

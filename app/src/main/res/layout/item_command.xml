@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?android:attr/selectableItemBackground"
     android:orientation="horizontal">
 
     <com.google.android.material.card.MaterialCardView
@@ -12,10 +11,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="18dp"
-        android:elevation="20dp"
+        android:elevation="40dp"
         app:cardCornerRadius="15dp"
         app:contentPadding="5dp"
         app:strokeWidth="1dp"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:clickable="true"
         app:strokeColor="@color/salamander"
         app:cardUseCompatPadding="true"
         app:layout_constraintTop_toTopOf="parent"

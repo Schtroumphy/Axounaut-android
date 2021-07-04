@@ -7,7 +7,7 @@ data class Command(
     val idCommand : Long = 0L,
     val deliveryDate : LocalDate? = LocalDate.now(),
     var status : CommandStatusType = CommandStatusType.TO_DO,
-    var client : AppClient? = AppClient(),
+    var client : AppClient? = null,
     var totalPrice : Double? = null,
     var articleWrappers : List<ArticleWrapper>,
     var paymentAmount : Double? = null,

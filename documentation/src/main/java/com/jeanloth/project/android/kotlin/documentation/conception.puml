@@ -17,7 +17,7 @@ object Command{
     <u>idCommand</u> : Int auto_increment
     deliveryDate : LocalDateTime?
     status : CommandStatusType?
-    client : Client
+    clientId : Long
     totalPrice : Double
     articleWrappers : List<ArticleWrapper>
     paymentAmount : Double
@@ -33,7 +33,7 @@ object ArticleWrapper {
 }
 
 object Client{
-    <u>idClient</u> : Int auto_increment
+    <u>idClient</u> : Long auto_increment
     firstname : String not null
     lastname : String?
     phoneNumber : Int?

@@ -41,14 +41,13 @@ class AddCommandDialogFragment : BottomSheetDialogFragment() {
         return inflater.inflate(R.layout.fragment_add_command_dialog, container, false)
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         setupHeaders()
 
         adapter = ArticleAdapter(DataMock.articleWrappers, true, requireContext()).apply {
             onAddMinusClick = {
-                Log.d("ADD COMMAND", "  article : $it")
+                Log.d("ADD COMMAND", "  articles list : $it")
                 bt_next.visibility  = if(it.count { it.count > 0 } > 0) VISIBLE else INVISIBLE
                 articlesActualized = it
             }
@@ -135,6 +134,19 @@ class AddCommandDialogFragment : BottomSheetDialogFragment() {
             } else
                 changeEditModeDisplay()
         }
+    }
+
+    private fun saveCommand(){
+
+        /*val customer = Command(
+            clientId = 1,
+            totalPrice = 0,
+
+        )
+        customer.articleWrappers.add(Order(text = "Order 1"))
+        customer.articleWrappers.add(Order(text = "Order 2"))*/
+
+        // Call VM to save Command
     }
 
     companion object {
