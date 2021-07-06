@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.jeanloth.project.android.kotlin.axounaut.R
 import com.jeanloth.project.android.kotlin.domain_models.entities.*
+import com.jeanloth.project.android.kotlin.domain_models.entities.CommandStatusType.Companion.getCommandStatusByCode
 import kotlinx.android.synthetic.main.item_command.view.*
 
 class CommandAdapter(
@@ -31,7 +32,7 @@ class CommandAdapter(
         return commandList.size
     }
 
-    fun setItems(articles : List<Command>, statusToDisplay : List<CommandStatusType>){
+    fun setItems(articles : List<Command>){
         this.commandList =  articles
         notifyDataSetChanged()
     }
@@ -47,12 +48,13 @@ class CommandAdapter(
             Log.d("Command adapter", "In Artcile Holder")
             itemView.tv_delivery_date.text= command.deliveryDate.toString()
             itemView.tv_client_name.text= command.client?.toNameString()
+            itemView.tv_number.text= itemView.context.getString(R.string.number_label, 120 + command.idCommand)
 
             itemView.rv_articles_list.adapter = SimpleListAdapter(
                 convertArticleWrapperToItemList(command.articleWrappers)
             )
 
-            itemView.tv_status.text = command.status.label
+            itemView.tv_status.text = getCommandStatusByCode(command.statusCode).label
         }
 
         init {
@@ -72,7 +74,7 @@ class CommandAdapter(
             list.add(
                 ItemList(
                     it.article.name,
-                    isStriked = it.status == ArticleWrapperStatusType.DONE
+                    isStriked = it.statusCode == ArticleWrapperStatusType.DONE.code
                 )
             )
         }

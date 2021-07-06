@@ -11,10 +11,18 @@
     <string name="command_to_do">Commandes à faire</string>
     <string name="command_past">Commandes passées</string>
 
+    <!-- General labels -->
+    <string name="validate">Valider</string>
+    <string name="adding">Ajouter</string>
+    <string name="delete">Supprimer</string>
     <string name="x_count">x %1$s</string>
     <string name="total_price">Prix total : %1$s€</string>
 
+    <!-- Command List Fragment -->
+    <string name="number_label">N°%1$d</string>
+
     <!-- Client Fragment -->
+    <string name="add_client_label">Ajouter un client</string>
     <string name="client_fidelity_label">%1$s points de fidélité</string>
     <string name="client_name_label">%1$s %2$s</string>
 

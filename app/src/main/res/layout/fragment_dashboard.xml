@@ -19,4 +19,20 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+
+    <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+        android:id="@+id/ac_test"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="15dp"
+        android:textSize="14sp"
+        android:clickable="true"
+        android:hint="Choisir un client"
+        android:completionThreshold="1"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="45dp"
+        android:layout_marginStart="15dp"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

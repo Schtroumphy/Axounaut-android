@@ -4,8 +4,8 @@ data class ArticleWrapper(
     val articleWrapperId : Long = 0,
     var article : Article,
     var count : Int = 0,
-    var totalArticleWrapperPrice : Double = count * article.price,
-    var status : ArticleWrapperStatusType = ArticleWrapperStatusType.TO_DO
+    var totalArticleWrapperPrice : Double? = count * article.price,
+    var statusCode : Int = ArticleWrapperStatusType.TO_DO.code
 
 )  {
     companion object {

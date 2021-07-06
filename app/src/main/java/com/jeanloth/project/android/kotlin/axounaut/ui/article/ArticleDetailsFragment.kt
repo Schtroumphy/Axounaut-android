@@ -69,16 +69,16 @@ class ArticleDetailsFragment : Fragment() {
     private fun addArticle() {
         val articleName = et_article_name.text.toString()
         val articlePrice = et_article_price.text.toString()
-        val articleCategory = getArticleCategoryFromLabel(spinner_categories.selectedItem.toString()).name
+        val articleCategory = getArticleCategoryFromLabel(spinner_categories.selectedItem.toString())
 
-        if( articleName.isEmpty() || articlePrice.isEmpty() || articleCategory.isEmpty()) {
+        if( articleName.isEmpty() || articlePrice.isEmpty()) {
             Snackbar.make(requireView(), "Veuillez saisir des valeurs valides.",
                 Snackbar.LENGTH_LONG).show()
         } else {
             val articleToAdd = Article(
                 name = articleName,
                 price = articlePrice.toDouble(),
-                category = articleCategory
+                category = articleCategory.code
             )
             Log.d("[Article Details Fragment", "Article to add : $articleToAdd")
             articleVM.saveArticle(articleToAdd)

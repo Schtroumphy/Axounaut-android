@@ -1,9 +1,12 @@
 package com.jeanloth.project.android.kotlin.axounaut.extensions
 
+import android.app.Activity
 import android.content.Context
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
+import androidx.fragment.app.Fragment
 import com.jeanloth.project.android.kotlin.axounaut.R
 import com.jeanloth.project.android.kotlin.domain_models.entities.Article
 import java.text.DecimalFormat
@@ -11,10 +14,6 @@ import java.text.DecimalFormat
 
 fun Double.formatDouble() : String{
     return DecimalFormat("#.##").format(this.toFloat())
-}
-
-fun View.onClick() = this.setOnClickListener {
-
 }
 
 fun View.openPopUpMenu(context: Context, menu : Int, map : Map<Int, (() -> Unit)>) {
@@ -37,4 +36,17 @@ fun View.openPopUpMenu(context: Context, menu : Int, map : Map<Int, (() -> Unit)
         }
         popup.show() //showing popup menu
     }
+}
+
+fun Fragment.hideKeyboard() {
+    view?.let { activity?.hideKeyboard(it) }
+}
+
+fun Activity.hideKeyboard() {
+    hideKeyboard(currentFocus ?: View(this))
+}
+
+fun Context.hideKeyboard(view: View) {
+    val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+    inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
 }

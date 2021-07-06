@@ -7,10 +7,14 @@ data class AppClient(
     var phoneNumber : Int? = null,
     var fidelityPoint : Int = 0,
     var isFavorite : Boolean = false
-)
+) {
+    override fun toString(): String {
+        return this.toNameString()
+    }
+}
 
 fun AppClient.toNameString() : String{
-    return this.lastname?.toUpperCase() ?: "" + " " + this.firstname
+    return "${this.firstname} ${this.lastname?.toUpperCase()}"
 }
 
 fun List<AppClient>.getClientFromName(firstname : String, lastname : String) : AppClient? = this.firstOrNull { it.firstname == firstname && it.lastname == lastname  }

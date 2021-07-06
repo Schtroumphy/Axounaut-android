@@ -1,4 +1,5 @@
 package com.jeanloth.project.android.kotlin.axounaut.extensions
+import android.annotation.SuppressLint
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.util.*
@@ -6,9 +7,17 @@ import java.util.*
 /**
  * Pattern: yyyy-MM-dd HH:mm:ss
  */
-fun Date.formatToServerDateTimeDefaults(): String{
+fun Date.formatDateToOtherFormat(): String{
     val sdf= SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
     return sdf.format(this)
+}
+
+
+@SuppressLint("SimpleDateFormat")
+fun LocalDate.formatDateToOtherFormat(initDateFormat: String, endDateFormat: String): String? {
+    val initDate = SimpleDateFormat(initDateFormat).parse(this.toString())
+    val formatter = SimpleDateFormat(endDateFormat)
+    return formatter.format(initDate)
 }
 
 fun Date.formatToTruncatedDateTime(): String{
@@ -44,7 +53,22 @@ fun Date.formatToViewDateTimeDefaults(): String{
  * Pattern: dd/MM/yyyy
  */
 fun LocalDate.formatToShortDate(): String{
-    val sdf= SimpleDateFormat("yyy/MM/dd", Locale.getDefault())
+    val sdf= SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+    return sdf.format(this)
+}
+
+fun LocalDate.formatServerFormatToShortDate(): String{
+    val originalFormat = SimpleDateFormat("yyyy/MM/dd", Locale.ENGLISH)
+    val targetFormat = SimpleDateFormat("dd/MM/yyyy")
+    val date: Date? = originalFormat.parse(this.toString())
+    return targetFormat.format(date!!)
+}
+
+/**
+ * Pattern: dd/MM/yyyy
+ */
+fun Calendar.formatToShortDate(): String{
+    val sdf= SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
     return sdf.format(this)
 }
 

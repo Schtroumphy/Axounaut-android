@@ -7,14 +7,18 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.jeanloth.project.android.kotlin.axounaut.R
 import com.jeanloth.project.android.kotlin.axounaut.adapters.CommandAdapter
 import com.jeanloth.project.android.kotlin.axounaut.mock.DataMock
 import com.jeanloth.project.android.kotlin.axounaut.ui.home.HomeFragmentDirections
+import com.jeanloth.project.android.kotlin.axounaut.viewModels.CommandVM
 import com.jeanloth.project.android.kotlin.domain_models.entities.Command
+import com.jeanloth.project.android.kotlin.domain_models.entities.toNameString
 import kotlinx.android.synthetic.main.fragment_command_list.*
 import kotlinx.android.synthetic.main.fragment_command_list.view.*
+import org.koin.android.viewmodel.ext.android.viewModel
 
 /**
  * A fragment representing a list of Command.
@@ -22,6 +26,9 @@ import kotlinx.android.synthetic.main.fragment_command_list.view.*
 class CommandListFragment(
     var displayMode: CommandDisplayMode
     ) : Fragment() {
+
+    private val commandVM : CommandVM by viewModel()
+    private lateinit var commandAdapter: CommandAdapter
 
     enum class CommandDisplayMode{
         IN_PROGRESS,
@@ -56,17 +63,28 @@ class CommandListFragment(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
+
+        commandAdapter = CommandAdapter(listOf(DataMock.command1, DataMock.command2))
+
         // Set the adapter
         rv_command_list.apply{
                 layoutManager = LinearLayoutManager(context)
-                adapter = CommandAdapter(listOf(DataMock.command1, DataMock.command2)).apply {
+                adapter = commandAdapter.apply {
                     onClick = {
                         // Command to detail
                         goToCommandDetails(it)
                     }
                 }
             }
+
+        lifecycleScope.launchWhenStarted {
+            commandVM.allCommandsLiveData().observe(viewLifecycleOwner){
+                Log.d("[Article Fragment", "Article observed : $it")
+                commandAdapter.setItems(it)
+            }
         }
+    }
 
     private fun goToCommandDetails(command: Command) {
         Log.d("TAG", "Command : $command")

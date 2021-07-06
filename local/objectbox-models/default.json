@@ -28,7 +28,8 @@
         {
           "id": "6:7258122112516802047",
           "name": "category",
-          "type": 9
+          "type": 5,
+          "flags": 4
         }
       ],
       "relations": []
@@ -74,10 +75,108 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "3:1566633341899374880",
+      "lastPropertyId": "11:4853069881162893639",
+      "name": "ArticleWrapperEntity",
+      "properties": [
+        {
+          "id": "5:7466359123488286815",
+          "name": "commandId",
+          "indexId": "1:2970163691772182100",
+          "type": 11,
+          "flags": 1548,
+          "relationTarget": "CommandEntity"
+        },
+        {
+          "id": "6:5786864062697090936",
+          "name": "articleWrapperId",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "7:4635072239320311470",
+          "name": "count",
+          "type": 5,
+          "flags": 4
+        },
+        {
+          "id": "8:6516841837090673503",
+          "name": "totalArticleWrapperPrice",
+          "type": 8,
+          "flags": 2
+        },
+        {
+          "id": "10:2277333302652746765",
+          "name": "articleId",
+          "indexId": "2:5873975655316353978",
+          "type": 11,
+          "flags": 1548,
+          "relationTarget": "ArticleEntity"
+        },
+        {
+          "id": "11:4853069881162893639",
+          "name": "statusCode",
+          "type": 5,
+          "flags": 4
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "4:591053467257610499",
+      "lastPropertyId": "11:1705992252766511246",
+      "name": "CommandEntity",
+      "properties": [
+        {
+          "id": "3:3849604154912776078",
+          "name": "totalPrice",
+          "type": 8,
+          "flags": 2
+        },
+        {
+          "id": "4:7219265204955035074",
+          "name": "paymentAmount",
+          "type": 8,
+          "flags": 2
+        },
+        {
+          "id": "7:3316798442952377852",
+          "name": "idCommand",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "8:4761666705951499927",
+          "name": "deliveryDate",
+          "type": 9
+        },
+        {
+          "id": "9:1939635506350312874",
+          "name": "statusCode",
+          "type": 5,
+          "flags": 4
+        },
+        {
+          "id": "10:1369027946888028456",
+          "name": "paymentTypeCode",
+          "type": 9
+        },
+        {
+          "id": "11:1705992252766511246",
+          "name": "clientId",
+          "indexId": "3:2859684733600798343",
+          "type": 11,
+          "flags": 1548,
+          "relationTarget": "AppClientEntity"
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "2:599839949773774750",
-  "lastIndexId": "0:0",
+  "lastEntityId": "4:591053467257610499",
+  "lastIndexId": "3:2859684733600798343",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
@@ -86,7 +185,16 @@
   "retiredIndexUids": [],
   "retiredPropertyUids": [
     3605987420131221416,
-    3390431500996534402
+    3390431500996534402,
+    1895215544002334896,
+    7588906849169716240,
+    1592937249550271479,
+    5150172543924714532,
+    3331126271380054630,
+    348032214652240965,
+    904232837602124631,
+    1029198425942674685,
+    6621335919446060664
   ],
   "retiredRelationUids": [],
   "version": 1

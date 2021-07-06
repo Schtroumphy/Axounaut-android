@@ -2,6 +2,7 @@ package com.jeanloth.project.android.kotlin.local.mappers
 
 import com.jeanloth.project.android.kotlin.domain_models.entities.Article
 import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleCategory
+import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleCategory.Companion.getArticleCategoryFromLabel
 import com.jeanloth.project.android.kotlin.local.entities.ArticleEntity
 
 class ArticleEntityMapper : Mapper<Article, ArticleEntity> {

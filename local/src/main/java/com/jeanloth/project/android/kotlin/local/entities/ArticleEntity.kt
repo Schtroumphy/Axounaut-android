@@ -4,10 +4,10 @@ import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleCategor
 import io.objectbox.annotation.Id
 
 @io.objectbox.annotation.Entity
-data class ArticleEntity(
+class ArticleEntity(
     @Id
     var id: Long = 0,
     var name: String = "",
     var price : Double = 0.0,
-    val category : String? = ArticleCategory.SALTED.name
+    val category : Int = ArticleCategory.SALTED.code
 ) : Entity

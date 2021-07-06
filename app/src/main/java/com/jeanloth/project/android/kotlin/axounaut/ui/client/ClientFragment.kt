@@ -63,8 +63,6 @@ class ClientFragment : Fragment() {
             }
         }
 
-        setupHeader()
-
         cl_add_client_btn.setOnClickListener {
             // Go to ClientDetailFragment
             goToClientDetails()
@@ -74,15 +72,5 @@ class ClientFragment : Fragment() {
     private fun goToClientDetails() {
         findNavController().navigate(ClientFragmentDirections.actionNavClientsToNavClientsDetails())
     }
-
-    private fun setupHeader() {
-        tv_title.text = "Mes clients"
-        tv_subtitle.visibility = View.GONE
-
-        bt_previous_or_close.setOnClickListener {
-            findNavController().popBackStack()
-        }
-    }
-
 
 }

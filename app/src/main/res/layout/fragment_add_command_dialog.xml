@@ -59,17 +59,9 @@
             android:inputType="date"
             tools:text="" />
 
-        <TextView
-            android:id="@+id/tv_delivery_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:visibility="gone"
-            tools:text="Samedi 10 mai 2021" />
-
     </LinearLayout>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/ll_client"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -79,32 +71,36 @@
         app:layout_constraintTop_toBottomOf="@id/ll_delivery_date"
         app:layout_constraintStart_toStartOf="parent">
 
-        <androidx.appcompat.widget.AppCompatEditText
+        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
             android:id="@+id/et_client"
-            style="@style/App.custom.EditText"
+            style="@style/App.custom.MediumEditText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
+            android:layout_weight="2"
             android:paddingStart="15dp"
             android:textSize="14sp"
-            android:hint="Adrien Delonne"
+            android:clickable="true"
             android:drawableStart="@drawable/ic_add_user"
-            android:lines="1"
-            android:ems="10"
-            android:imeOptions="actionDone"
-            android:maxLines="1"
-            android:inputType="textAutoComplete"
-            tools:text="" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:hint="Choisir un client"
+            android:completionThreshold="1"
+            android:layout_marginStart="15dp"/>
 
-        <TextView
-            android:id="@+id/tv_client"
+        <ImageButton
+            android:id="@+id/ib_add_client"
+            android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:layout_marginStart="15dp"
-            android:text="Thessa JL" />
+            android:background="@drawable/ic_add"
+            android:foreground="?android:attr/selectableItemBackground"
+            app:layout_constraintStart_toEndOf="@+id/et_client"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/et_client"
+            app:layout_constraintBottom_toBottomOf="@+id/et_client"
+            android:backgroundTint="@color/ginger"/>
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <View
         android:id="@+id/divider"

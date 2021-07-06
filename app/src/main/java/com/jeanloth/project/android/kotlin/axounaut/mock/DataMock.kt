@@ -28,12 +28,12 @@ object DataMock {
     )
     val articleWrapper2 = ArticleWrapper(
         article = Article(name = "Rolls Kanèl", price = 10.0),
-        status = ArticleWrapperStatusType.DONE
+        statusCode = ArticleWrapperStatusType.DONE.code
     )
 
     val articleWrapper3 = ArticleWrapper(
         article = Article(name = "Chocolat", price = 12.0),
-        status = ArticleWrapperStatusType.DONE
+        statusCode = ArticleWrapperStatusType.DONE.code
     )
 
     val articleWrapper4 = ArticleWrapper(

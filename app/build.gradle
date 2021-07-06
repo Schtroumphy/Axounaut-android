@@ -37,6 +37,8 @@ android {
 
 dependencies {
     def koinVersion = '2.1.6'
+    def splitties_version = '3.0.0-alpha07'
+
     implementation project(':domain-models')
     implementation project(':domain')
     implementation project(':local')
@@ -75,6 +77,10 @@ dependencies {
     implementation "org.koin:koin-android-viewmodel:$koinVersion"
     implementation "org.koin:koin-android-scope:$koinVersion"
     implementation "org.koin:koin-test:$koinVersion"
+
+    // Splitties
+    implementation("com.louiscad.splitties:splitties-alertdialog-material:$splitties_version")
+    implementation("com.louiscad.splitties:splitties-views-dsl:$splitties_version") // Views
 
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'

@@ -65,6 +65,7 @@ class ArticleAdapter(
 
                 itemView.ib_add.setOnClickListener {
                     articleWrapper.count = count + 1
+                    articleWrapper.totalArticleWrapperPrice = articleWrapper.count * articleWrapper.article.price
                     onAddMinusClick?.invoke(articleList)
                     notifyDataSetChanged()
                 }

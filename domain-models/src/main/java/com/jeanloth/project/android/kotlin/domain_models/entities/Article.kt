@@ -4,5 +4,5 @@ data class Article(
         val id : Long = 0,
         val name : String,
         val price : Double = 0.0,
-        val category : String? = ArticleCategory.SALTED.name,
+        val category : Int = ArticleCategory.SALTED.code,
 )
