@@ -27,9 +27,15 @@ abstract class BaseDAO<TEntity : Entity>() {
     fun observeAll( filters : (QueryBuilder<TEntity>) -> (QueryBuilder<TEntity>)) : Flow<List<TEntity>> = apply(filters).subscribe().asFlow()
 
     /**
-     * Observe on all elements of the given filters
+     * Observe on first element of the given filters
      */
     fun observeFirst( filters : (QueryBuilder<TEntity>) -> (QueryBuilder<TEntity>)) : Flow<TEntity?> = apply(filters).subscribe().asFlowFirst()
+
+
+    /**
+     * Observe on unique or null element of the given filters
+     */
+    //fun observeUnique( filters : (QueryBuilder<TEntity>) -> (QueryBuilder<TEntity>)) : Flow<TEntity?> = apply(filters).subscribe().asFlowUnique()
 
 
     @ExperimentalCoroutinesApi

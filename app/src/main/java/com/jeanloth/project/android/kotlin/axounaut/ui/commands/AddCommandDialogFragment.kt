@@ -19,9 +19,11 @@ import com.jeanloth.project.android.kotlin.axounaut.R
 import com.jeanloth.project.android.kotlin.axounaut.adapters.ArticleAdapter
 import com.jeanloth.project.android.kotlin.axounaut.extensions.*
 import com.jeanloth.project.android.kotlin.axounaut.mock.DataMock
+import com.jeanloth.project.android.kotlin.axounaut.viewModels.ArticleVM
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.ClientVM
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.CommandVM
 import com.jeanloth.project.android.kotlin.domain_models.entities.*
+import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleWrapper.Companion.createWrapperList
 import kotlinx.android.synthetic.main.add_client_dialog.*
 import kotlinx.android.synthetic.main.add_client_dialog.view.*
 import kotlinx.android.synthetic.main.fragment_add_command_dialog.*
@@ -30,6 +32,7 @@ import kotlinx.android.synthetic.main.fragment_client_details.et_client_firstnam
 import kotlinx.android.synthetic.main.fragment_client_details.et_client_lastname
 import org.koin.android.viewmodel.ext.android.sharedViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 import splitties.alertdialog.appcompat.*
 import splitties.alertdialog.appcompat.messageResource
 import java.time.LocalDate
@@ -53,8 +56,13 @@ class AddCommandDialogFragment : BottomSheetDialogFragment() {
     var articlesActualized = listOf<ArticleWrapper>()
     var isEditMode = true
     private lateinit var adapter: ArticleAdapter
-    private val commandVM : CommandVM by viewModel()
     private val clientVM : ClientVM by sharedViewModel()
+    private val articleVM : ArticleVM by viewModel()
+    private val commandVM : CommandVM by viewModel{
+        parametersOf(
+            0L
+        )
+    }
     private var selectedClient : AppClient? = null
     private lateinit var datePickerDialog : DatePickerDialog
 
@@ -71,7 +79,9 @@ class AddCommandDialogFragment : BottomSheetDialogFragment() {
 
         Log.d("[Add command fragment]", "Clients : ${clientVM.allClientsMutableLiveData.value}")
 
-        adapter = ArticleAdapter(DataMock.articleWrappers, true, requireContext()).apply {
+        val articles = articleVM.getAllArticles()
+        tv_error_no_articles.visibility = if(articles.isEmpty()) VISIBLE else GONE
+        adapter = ArticleAdapter(createWrapperList(articles), true, requireContext()).apply {
             onAddMinusClick = {
                 Log.d("ADD COMMAND", "  articles list : $it")
                 bt_next.visibility  = if(it.count { it.count > 0 } > 0 && et_client.text.toString().isNotEmpty() && et_delivery_date.text.toString().isNotEmpty()) VISIBLE else INVISIBLE
@@ -80,7 +90,7 @@ class AddCommandDialogFragment : BottomSheetDialogFragment() {
         }
         rv_articles.adapter = adapter
 
-        bt_next.setOnClickListener {
+        bt_next.onClick {
             // Display previous button
             if(isEditMode)
                 changeEditModeDisplay()

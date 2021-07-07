@@ -42,7 +42,6 @@ class SimpleListAdapter(
 
         fun bind(item : ItemList){
 
-            Log.d("Article adapter", "In Artcile Holder isEditMode")
             itemView.tv_label.text= if(!item.isStriked) item.label else stringBuilderLabel(item.label)
         }
 

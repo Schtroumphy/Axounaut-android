@@ -17,6 +17,7 @@ class CheckboxListAdapter(
     private var items : List<ArticleWrapper>,
 ) : RecyclerView.Adapter<CheckboxListAdapter.ItemHolder>()  {
 
+    var onCheckedItem : ((ArticleWrapper, Boolean) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemHolder {
         val itemView = LayoutInflater.from(parent.context)
@@ -26,7 +27,7 @@ class CheckboxListAdapter(
 
     override fun onBindViewHolder(holder: ItemHolder, position: Int) {
         val itemLabel: ArticleWrapper = items[position]
-        holder.bind(itemLabel)
+        holder.bind(itemLabel, position)
     }
 
     override fun getItemCount(): Int {
@@ -40,16 +41,22 @@ class CheckboxListAdapter(
 
     inner class ItemHolder(view: View) : RecyclerView.ViewHolder(view) {
 
-        fun bind(item : ArticleWrapper){
+        fun bind(item : ArticleWrapper, position : Int){
 
-            Log.d("Article adapter", "In Article Holder isEditMode")
             itemView.tv_label.text= if(item.statusCode != ArticleWrapperStatusType.DONE.code) item.article.name else stringBuilderLabel(item.article.name)
             itemView.cb_item.isChecked = item.statusCode == ArticleWrapperStatusType.DONE.code
-            itemView.cb_item.isEnabled = item.statusCode != ArticleWrapperStatusType.DONE.code
+            //itemView.cb_item.isEnabled = item.statusCode != ArticleWrapperStatusType.DONE.code
 
             itemView.tv_label.setOnClickListener {
                 itemView.cb_item.isChecked = !itemView.cb_item.isChecked
             }
+
+            itemView.cb_item.setOnCheckedChangeListener{ buttonView, isChecked ->
+                item.statusCode = if(isChecked) ArticleWrapperStatusType.DONE.code else ArticleWrapperStatusType.IN_PROGRESS.code
+                onCheckedItem?.invoke(item, isChecked)
+                //notifyItemChanged(position)
+            }
+        }
         }
     }
 
@@ -65,5 +72,3 @@ class CheckboxListAdapter(
 
         }
     }
-
-}

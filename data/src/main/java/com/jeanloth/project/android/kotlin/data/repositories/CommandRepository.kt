@@ -20,6 +20,10 @@ class CommandRepository(
         return localCommandDatasourceRepository.observeAllCommands()
     }
 
+    override fun observeCommandById(commandId: Long): Flow<Command?> {
+        return localCommandDatasourceRepository.observeCommandById(commandId)
+    }
+
     override fun saveCommand(command: Command): Boolean {
         return localCommandDatasourceRepository.saveCommand(command)
     }

@@ -18,8 +18,15 @@
     <string name="x_count">x %1$s</string>
     <string name="total_price">Prix total : %1$s€</string>
 
+    <!-- Article List Fragment -->
+    <string name="no_articles_error">Aucun article n\'est enregistré.</string>
+
     <!-- Command List Fragment -->
+    <string name="no_loading_command_error">Aucune commande en cours.</string>
+    <string name="no_to_come_command_error">Aucune commande à venir.</string>
+    <string name="no_command_error">Aucune commande passée.</string>
     <string name="number_label">N°%1$d</string>
+    <string name="command_number_label">Commande n°%1$d</string>
 
     <!-- Client Fragment -->
     <string name="add_client_label">Ajouter un client</string>

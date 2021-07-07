@@ -45,7 +45,6 @@ class CommandAdapter(
                 onClick?.invoke(command)
             }
 
-            Log.d("Command adapter", "In Article Holder")
             itemView.tv_delivery_date.text= command.deliveryDate.toString()
             itemView.tv_client_name.text= command.client?.toNameString()
             itemView.tv_number.text= itemView.context.getString(R.string.number_label, 120 + command.idCommand)

@@ -1,26 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:layout_height="wrap_content">
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cv_command"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="18dp"
-        android:elevation="40dp"
+        android:layout_margin="12dp"
         app:cardCornerRadius="15dp"
         app:contentPadding="5dp"
         app:strokeWidth="1dp"
         android:foreground="?android:attr/selectableItemBackground"
         android:clickable="true"
         app:strokeColor="@color/salamander"
-        app:cardUseCompatPadding="true"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:cardUseCompatPadding="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -61,25 +57,30 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:paddingHorizontal="20dp"
+                android:paddingVertical="10dp"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_delivery_date"
-                tools:itemCount="3"
+                tools:itemCount="1"
                 tools:listitem="@layout/item_dot_list" />
 
-            <TextView
-                android:id="@+id/tv_status"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:paddingEnd="15dp"
-                android:text="En cours"
-                android:background="@color/white"
-                app:layout_constraintBottom_toBottomOf="@id/rv_articles_list"
-                app:layout_constraintEnd_toEndOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </com.google.android.material.card.MaterialCardView>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/tv_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:elevation="1dp"
+            android:padding="4dp"
+            android:text="En cours"
+            android:textColor="@color/white"
+            android:layout_marginEnd="25dp"
+            android:background="@color/salamander_attenue"
+            android:layout_alignEnd="@id/cv_command"
+            android:layout_alignBottom="@id/cv_command"
+            />
+
+    </RelativeLayout>

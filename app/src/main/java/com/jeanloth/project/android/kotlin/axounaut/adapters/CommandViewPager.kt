@@ -3,7 +3,7 @@ package com.jeanloth.project.android.kotlin.axounaut.adapters
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import com.jeanloth.project.android.kotlin.axounaut.ui.CommandListFragment
+import com.jeanloth.project.android.kotlin.axounaut.ui.commands.CommandListFragment
 
 class CommandViewPager(fm: FragmentManager) : FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 

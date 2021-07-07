@@ -5,17 +5,22 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.jeanloth.project.android.kotlin.domain.usescases.usecases.ObserveCommandByIdUseCase
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.article.ObserveCommandsUseCase
-import com.jeanloth.project.android.kotlin.domain.usescases.usecases.command.GetAllCommandsUseCase
+import com.jeanloth.project.android.kotlin.domain.usescases.usecases.command.SaveArticleWrapperUseCase
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.command.SaveCommandUseCase
+import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleWrapper
 import com.jeanloth.project.android.kotlin.domain_models.entities.Command
-import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import java.lang.Exception
 
 class CommandVM (
+    private val currentCommandId : Long = 0L,
     private val observeCommandsUseCase: ObserveCommandsUseCase,
+    private val observeCommandByIdUseCase: ObserveCommandByIdUseCase,
     private val saveCommandUseCase: SaveCommandUseCase,
+    private val saveArticleWrapperUseCase: SaveArticleWrapperUseCase,
 ): ViewModel() {
 
     var commands : List<Command> = emptyList()
@@ -23,24 +28,40 @@ class CommandVM (
     var allCommandMutableLiveData : MutableLiveData<List<Command>> = MutableLiveData(emptyList())
     fun allCommandsLiveData() : LiveData<List<Command>> = allCommandMutableLiveData
 
+    var currentCommandMutableLiveData : MutableLiveData<Command> = MutableLiveData()
+    fun currentCommandLiveData() : LiveData<Command> = currentCommandMutableLiveData
+
     init {
 
         viewModelScope.launch {
             observeCommandsUseCase.invoke().collect {
-                Log.d("[ArticleVM]", " Articles observed : $it")
+                //Log.d("[CommandVM]", "All Commands observed : $it")
                 allCommandMutableLiveData.postValue(it)
             }
         }
     }
 
-    /*fun getAllArticles(): List<Article> {
-        articles = getAllArticlesUseCase.invoke()
-        Log.d("[ArticleVM]", " Articles : $articles")
-        return articles
-    }*/
+    fun observeCurrentCommand(){
+        Log.d("[Command VM]", "observer current command id : $currentCommandId")
+        viewModelScope.launch {
+            try {
+                observeCommandByIdUseCase.invoke(currentCommandId).collect {
+                    Log.d("[CommandVM]", " Article wrappers observed : $it")
+                    currentCommandMutableLiveData.postValue(it)
+                }
+            } catch (e:Exception){
+                Log.d("[CommandVM]", " Exception command observed by id : $e")
+            }
+
+        }
+    }
 
     fun saveCommand(command: Command) {
         saveCommandUseCase.invoke(command)
+    }
+
+    fun saveArticleWrapper(articleWrapper : ArticleWrapper) {
+        saveArticleWrapperUseCase.invoke(articleWrapper)
     }
 
 }

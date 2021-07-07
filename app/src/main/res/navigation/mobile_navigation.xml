@@ -29,7 +29,7 @@
 
     <fragment
         android:id="@+id/nav_command_list"
-        android:name="com.jeanloth.project.android.kotlin.axounaut.ui.CommandListFragment"
+        android:name="com.jeanloth.project.android.kotlin.axounaut.ui.commands.CommandListFragment"
         android:label="Liste commandes"
         tools:layout="@layout/fragment_command_list" >
 
