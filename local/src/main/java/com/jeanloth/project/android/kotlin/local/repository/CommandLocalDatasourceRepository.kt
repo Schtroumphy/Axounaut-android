@@ -46,12 +46,10 @@ class CommandLocalDatasourceRepository(
         val commandEntity = mapper.to(command)
 
         //add each article wrapper to command entity
-        command.articleWrappers.forEach {
+        /*command.articleWrappers.forEach {
             val articleWrapperEntity = articleWrapperMapper.to(it)
-            articleWrapperDao.box.put(articleWrapperEntity)
-
             commandEntity.articleWrappers.add(articleWrapperEntity)
-        }
+        }*/
         // Associate command t one client by toOne relation
         commandEntity.client.target = clientMapper.to(command.client!!)
 
