@@ -12,7 +12,7 @@ interface CommandContract {
 
     fun observeCommandById(commandId : Long) : Flow<Command?>
 
-    fun saveCommand(command: Command) : Boolean
+    fun saveCommand(command: Command) : Long
 
     fun deleteCommand(command: Command) : Boolean
 }

@@ -2,6 +2,7 @@ package com.jeanloth.project.android.kotlin.domain_models.entities
 
 data class ArticleWrapper(
     val articleWrapperId : Long = 0,
+    var commandId : Long = 0,
     var article : Article,
     var count : Int = 0,
     var totalArticleWrapperPrice : Double? = count * article.price,

@@ -11,6 +11,7 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import com.jeanloth.project.android.kotlin.axounaut.R
 import com.jeanloth.project.android.kotlin.axounaut.adapters.CommandAdapter
 import com.jeanloth.project.android.kotlin.axounaut.extensions.convertToLocalDate
@@ -23,6 +24,7 @@ import kotlinx.android.synthetic.main.fragment_command_list.*
 import kotlinx.android.synthetic.main.fragment_command_list.view.*
 import org.koin.android.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
+import splitties.views.onClick
 
 /**
  * A fragment representing a list of Command.
@@ -97,10 +99,15 @@ class CommandListFragment(
                 )
             }
         }
+
+        tv_error_no_commands.onClick {
+            Snackbar.make(requireView(), "Test snackbar.",
+                Snackbar.LENGTH_SHORT).show()
+        }
     }
 
     private fun goToCommandDetails(command: Command) {
-        Log.d("TAG", "Command : $command")
+        Log.d("TAG", "Command to details : $command")
         findNavController().navigate(HomeFragmentDirections.actionNavHomeToNavCommandDetails(
             commandToDetail = command
         ))

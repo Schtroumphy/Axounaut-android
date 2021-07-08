@@ -19,6 +19,7 @@ import com.jeanloth.project.android.kotlin.domain.usescases.usecases.appClient.D
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.appClient.ObserveClientUseCase
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.appClient.SaveClientUseCase
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.article.*
+import com.jeanloth.project.android.kotlin.domain.usescases.usecases.command.DeleteCommandUseCase
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.command.GetAllCommandsUseCase
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.command.SaveArticleWrapperUseCase
 import com.jeanloth.project.android.kotlin.local.contracts.LocalAppClientDatasourceContract
@@ -50,7 +51,7 @@ val appModule = module {
     viewModel { ClientVM( get(), get(), get()) }
     viewModel { (currentCommandId : Long) -> CommandVM(
         currentCommandId = currentCommandId,
-        get(), get(), get(), get())
+        get(), get(), get(), get(), get())
     }
 
     // Uses cases
@@ -66,6 +67,7 @@ val appModule = module {
     factory{ SaveCommandUseCase(get()) }
     factory{ GetAllCommandsUseCase(get()) }
     factory{ ObserveCommandsUseCase(get()) }
+    factory{ DeleteCommandUseCase(get()) }
 
     factory{ SaveArticleWrapperUseCase(get()) }
     factory{ ObserveCommandByIdUseCase(get()) }
@@ -79,7 +81,7 @@ val appModule = module {
     // Mappers
     single{ ArticleEntityMapper() }
     single{ AppClientEntityMapper() }
-    single{ CommandEntityMapper( get(), get()) }
+    single{ CommandEntityMapper( get(), get(), get()) }
     single{ ArticleWrapperEntityMapper( get()) }
 
     single { provideBoxStore(get())}

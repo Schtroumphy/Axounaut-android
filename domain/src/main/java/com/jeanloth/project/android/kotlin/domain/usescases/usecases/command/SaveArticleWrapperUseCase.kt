@@ -1,13 +1,15 @@
 package com.jeanloth.project.android.kotlin.domain.usescases.usecases.command
 
+import com.jeanloth.project.android.kotlin.data.contracts.ArticleWrapperContract
 import com.jeanloth.project.android.kotlin.data.contracts.CommandContract
+import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleWrapper
 import com.jeanloth.project.android.kotlin.domain_models.entities.Command
 
-class SaveCommandUseCase(
-    private val commandContract : CommandContract
+class SaveArticleWrapperUseCase(
+    private val articleWrapperContract: ArticleWrapperContract
 ){
 
-    fun invoke(command: Command) : Boolean{
-        return commandContract.saveCommand(command)
+    fun invoke(articleWrapper: ArticleWrapper) : Boolean{
+        return articleWrapperContract.saveArticleWrapper(articleWrapper)
     }
 }

@@ -24,7 +24,7 @@ class CommandRepository(
         return localCommandDatasourceRepository.observeCommandById(commandId)
     }
 
-    override fun saveCommand(command: Command): Boolean {
+    override fun saveCommand(command: Command): Long {
         return localCommandDatasourceRepository.saveCommand(command)
     }
 

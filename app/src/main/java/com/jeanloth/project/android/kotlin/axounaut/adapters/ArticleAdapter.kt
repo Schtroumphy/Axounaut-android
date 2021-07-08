@@ -47,7 +47,6 @@ class ArticleAdapter(
 
         fun bind(articleWrapper : ArticleWrapper, position : Int){
 
-            Log.d("Article adapter", "In Artcile Holder isEditMode : $isEditMode")
             itemView.tv_name.text= articleWrapper.article.name
 
             val count = articleWrapper.count
@@ -77,8 +76,6 @@ class ArticleAdapter(
                     onAddMinusClick?.invoke(articleList)
                     notifyItemChanged(position)
                 }
-            } else {
-                Log.d("ADAPTER", " : $count")
             }
         }
 

@@ -14,6 +14,7 @@
     <!-- General labels -->
     <string name="validate">Valider</string>
     <string name="adding">Ajouter</string>
+    <string name="cancel">Annuler</string>
     <string name="delete">Supprimer</string>
     <string name="x_count">x %1$s</string>
     <string name="total_price">Prix total : %1$s€</string>
@@ -21,10 +22,12 @@
     <!-- Article List Fragment -->
     <string name="no_articles_error">Aucun article n\'est enregistré.</string>
 
-    <!-- Command List Fragment -->
+    <!-- Command Fragment -->
     <string name="no_loading_command_error">Aucune commande en cours.</string>
     <string name="no_to_come_command_error">Aucune commande à venir.</string>
     <string name="no_command_error">Aucune commande passée.</string>
+    <string name="delete_dialog_title">Suppression de commande</string>
+    <string name="delete_dialog_content">Etes-vous sûr de vouloir supprimer cette commande ?</string>
     <string name="number_label">N°%1$d</string>
     <string name="command_number_label">Commande n°%1$d</string>
 

@@ -244,7 +244,6 @@ class AddCommandDialogFragment : BottomSheetDialogFragment() {
     }
 
     private fun saveCommand(){
-        //Log.d("[AddCommand Fragment]", "Articles wrappers $articlesActualized")
         val command = Command(
             deliveryDate = et_delivery_date.text.toString(),
             client = selectedClient,

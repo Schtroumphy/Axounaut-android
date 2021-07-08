@@ -2,11 +2,16 @@ package com.jeanloth.project.android.kotlin.local.mappers
 
 import com.jeanloth.project.android.kotlin.domain_models.entities.*
 import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleCategory.Companion.getArticleCategoryFromLabel
+import com.jeanloth.project.android.kotlin.local.database.CommandDAO
 import com.jeanloth.project.android.kotlin.local.entities.ArticleEntity
 import com.jeanloth.project.android.kotlin.local.entities.CommandEntity
 import java.time.LocalDate
 
-class CommandEntityMapper(private val articleWrapperMapper: ArticleWrapperEntityMapper, val clientMapper : AppClientEntityMapper) :
+class CommandEntityMapper(
+    private val articleWrapperMapper: ArticleWrapperEntityMapper,
+    val clientMapper : AppClientEntityMapper,
+    val commandDao : CommandDAO
+    ) :
     Mapper<Command, CommandEntity> {
 
     override fun from(t: CommandEntity): Command {
@@ -39,6 +44,9 @@ class CommandEntityMapper(private val articleWrapperMapper: ArticleWrapperEntity
             paymentAmount = t.paymentAmount,
             paymentTypeCode = t.paymentTypeCode
         )
+        // Attach entity first
+        commandDao.box.attach(commandEntity)
+
         // Add article wrappers converted
         t.articleWrappers.map { articleWrapperMapper.to(it) }.forEach {
             commandEntity.articleWrappers.add(it)

@@ -43,7 +43,7 @@ class CommandLocalDatasourceRepository(
         }
     }
 
-    override fun saveCommand(command: Command): Boolean {
+    override fun saveCommand(command: Command): Long {
         print("[CommandLocalDSRepository] : Save command - Command : $command")
         print("[CommandLocalDSRepository] : Save command - Command Entity: ${mapper.to(command)}")
 
@@ -53,8 +53,7 @@ class CommandLocalDatasourceRepository(
         commandEntity.client.target = clientMapper.to(command.client!!)
 
         // Save the command entity
-        dao.box.put(commandEntity)
-        return true
+        return dao.box.put(commandEntity)
     }
 
     override fun deleteCommand(command: Command): Boolean {

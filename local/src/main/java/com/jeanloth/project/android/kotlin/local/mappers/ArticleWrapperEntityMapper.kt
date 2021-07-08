@@ -10,6 +10,7 @@ class ArticleWrapperEntityMapper(val articleMapper : ArticleEntityMapper) : Mapp
 
         return ArticleWrapper(
             articleWrapperId = t.articleWrapperId,
+            commandId = t.command.targetId,
             article = articleMapper.from(t.article.target),
             count = t.count,
             totalArticleWrapperPrice = t.totalArticleWrapperPrice,
@@ -24,6 +25,7 @@ class ArticleWrapperEntityMapper(val articleMapper : ArticleEntityMapper) : Mapp
             totalArticleWrapperPrice = t.totalArticleWrapperPrice,
             statusCode = t.statusCode
         )
+        articleWrapperEntity.command.targetId = t.commandId
         articleWrapperEntity.article.target = articleMapper.to(t.article)
         return articleWrapperEntity
     }

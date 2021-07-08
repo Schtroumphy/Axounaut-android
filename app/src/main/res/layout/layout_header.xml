@@ -46,5 +46,16 @@
         android:layout_marginTop="2dp"
         android:text="Subtitle" />
 
+    <ImageButton
+        android:id="@+id/ic_delete"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:visibility="gone"
+        android:layout_marginEnd="25dp"
+        android:background="@drawable/ic_dustbin"
+        app:layout_constraintBottom_toBottomOf="@id/tv_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tv_title" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
