@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.jeanloth.project.android.kotlin.domain.usescases.usecases.ObserveArticleWrappersByCommandIdUseCase
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.ObserveCommandByIdUseCase
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.article.ObserveCommandsUseCase
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.command.DeleteCommandUseCase
@@ -19,7 +20,7 @@ import java.lang.Exception
 class CommandVM (
     private val currentCommandId : Long = 0L,
     private val observeCommandsUseCase: ObserveCommandsUseCase,
-    private val observeCommandByIdUseCase: ObserveCommandByIdUseCase,
+    private val observeArticleWrappersByCommandIdUseCase: ObserveArticleWrappersByCommandIdUseCase,
     private val saveCommandUseCase: SaveCommandUseCase,
     private val deleteCommandUseCase: DeleteCommandUseCase,
     private val saveArticleWrapperUseCase: SaveArticleWrapperUseCase,
@@ -33,11 +34,13 @@ class CommandVM (
     var currentCommandMutableLiveData : MutableLiveData<Command?> = MutableLiveData()
     fun currentCommandLiveData() : LiveData<Command?> = currentCommandMutableLiveData
 
+    var currentAWMutableLiveData : MutableLiveData<List<ArticleWrapper>?> = MutableLiveData()
+    fun currentAWLiveData() : LiveData<List<ArticleWrapper>?> = currentAWMutableLiveData
+
     init {
 
         viewModelScope.launch {
             observeCommandsUseCase.invoke().collect {
-                //Log.d("[CommandVM]", "All Commands observed : $it")
                 allCommandMutableLiveData.postValue(it)
             }
         }
@@ -45,19 +48,24 @@ class CommandVM (
         viewModelScope.launch {
             if(currentCommandId != 0L) {
                 try {
-                    observeCommandByIdUseCase.invoke(currentCommandId).collect {
-                        Log.d("[CommandVM]", " Current command observed : $it")
-                        currentCommandMutableLiveData.postValue(it)
+                    observeArticleWrappersByCommandIdUseCase.invoke(currentCommandId).collect {
+                        Log.d("[CommandVM]", " Current AWs from command Id $currentCommandId observed : $it")
+                        currentAWMutableLiveData.postValue(it)
                     }
                 } catch (e:Exception){
-                    Log.d("[CommandVM]", " Exception command observed by id : $e")
+                    Log.d("[CommandVM]", " Exception AWs from command Id $currentCommandId observed : $e")
                 }
             }
         }
     }
 
     fun saveCommand(command: Command){
-        saveCommandUseCase.invoke(command)
+        val commandID = saveCommandUseCase.invoke(command)
+
+        command.articleWrappers.forEach {
+            it.commandId = commandID
+            saveArticleWrapper(it)
+        }
     }
 
     fun removeCommand(command: Command){

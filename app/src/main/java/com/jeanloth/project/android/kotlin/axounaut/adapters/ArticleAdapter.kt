@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.jeanloth.project.android.kotlin.axounaut.R
 import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleWrapper
 import kotlinx.android.synthetic.main.item_article.view.*
+import splitties.views.verticalPadding
 
 class ArticleAdapter(
     private var articleList : List<ArticleWrapper>,

@@ -67,12 +67,12 @@ class CommandDetailFragment : Fragment() {
             adapter = checkboxListAdapter
         }
 
-        commandVM.currentCommandLiveData().observe(viewLifecycleOwner){
+        commandVM.currentAWLiveData().observe(viewLifecycleOwner){
             Log.d("[Command details]", "current commend observed for id ${args.commandToDetail.idCommand} : $it")
             if(it == null) {// Has been deleted
                 goBack()
             }
-            checkboxListAdapter.setItems(it?.articleWrappers ?: emptyList())
+            checkboxListAdapter.setItems(it ?: emptyList())
         }
 
         ic_delete.onClick {

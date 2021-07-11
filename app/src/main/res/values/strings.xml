@@ -21,6 +21,7 @@
 
     <!-- Article List Fragment -->
     <string name="no_articles_error">Aucun article n\'est enregistré.</string>
+    <string name="article_name_count">%1$s x %2$d</string>
 
     <!-- Command Fragment -->
     <string name="no_loading_command_error">Aucune commande en cours.</string>

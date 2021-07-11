@@ -45,12 +45,13 @@ class CommandEntityMapper(
             paymentTypeCode = t.paymentTypeCode
         )
         // Attach entity first
-        commandDao.box.attach(commandEntity)
+        //commandDao.box.attach(commandEntity)
 
         // Add article wrappers converted
-        t.articleWrappers.map { articleWrapperMapper.to(it) }.forEach {
+        /*t.articleWrappers.map { articleWrapperMapper.to(it) }.forEach {
+            it.command.targetId = t.idCommand
             commandEntity.articleWrappers.add(it)
-        }
+        }*/
         // Associate the client
         commandEntity.client.target = clientMapper.to(t.client!!)
 

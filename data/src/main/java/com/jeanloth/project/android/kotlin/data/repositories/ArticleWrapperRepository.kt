@@ -21,6 +21,10 @@ class ArticleWrapperRepository(
         return localArticleWrapperDatasourceContract.observeAllArticleWrappers()
     }
 
+    override fun observeArticleWrappersByCommandId(commandId: Long): Flow<List<ArticleWrapper>> {
+        return localArticleWrapperDatasourceContract.observeArticleWrappersByCommandId(commandId)
+    }
+
     override fun saveArticleWrapper(articleWrapper: ArticleWrapper): Boolean {
         return localArticleWrapperDatasourceContract.saveArticleWrapper(articleWrapper)
     }

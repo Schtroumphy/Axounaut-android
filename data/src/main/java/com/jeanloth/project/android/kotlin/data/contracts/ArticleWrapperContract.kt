@@ -9,6 +9,8 @@ interface ArticleWrapperContract {
 
     fun observeArticleWrappers() : Flow<List<ArticleWrapper>>
 
+    fun observeArticleWrappersByCommandId(commandId: Long): Flow<List<ArticleWrapper>>
+
     fun saveArticleWrapper(articleWrapper: ArticleWrapper) : Boolean
 
     fun deleteArticleWrapper(articleWrapper: ArticleWrapper) : Boolean

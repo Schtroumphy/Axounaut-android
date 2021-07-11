@@ -13,6 +13,7 @@ import com.jeanloth.project.android.kotlin.data.contracts.CommandContract
 import com.jeanloth.project.android.kotlin.data.repositories.AppClientRepository
 import com.jeanloth.project.android.kotlin.data.repositories.ArticleWrapperRepository
 import com.jeanloth.project.android.kotlin.data.repositories.CommandRepository
+import com.jeanloth.project.android.kotlin.domain.usescases.usecases.ObserveArticleWrappersByCommandIdUseCase
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.ObserveCommandByIdUseCase
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.command.SaveCommandUseCase
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.appClient.DeleteClientUseCase
@@ -68,9 +69,10 @@ val appModule = module {
     factory{ GetAllCommandsUseCase(get()) }
     factory{ ObserveCommandsUseCase(get()) }
     factory{ DeleteCommandUseCase(get()) }
+    factory{ ObserveCommandByIdUseCase(get()) }
 
     factory{ SaveArticleWrapperUseCase(get()) }
-    factory{ ObserveCommandByIdUseCase(get()) }
+    factory{ ObserveArticleWrappersByCommandIdUseCase(get()) }
 
     // Data repository
     single { ArticleRepository(get()) } bind ArticleContract::class
@@ -89,7 +91,7 @@ val appModule = module {
     // Local repository
     single { ArticleLocalDatasourceRepository(get(), get())} bind LocalArticleDatasourceContract::class
     single { AppClientLocalDatasourceRepository(get(), get()) } bind LocalAppClientDatasourceContract::class
-    single { CommandLocalDatasourceRepository(get(), get(), get()) } bind LocalCommandDatasourceContract::class
+    single { CommandLocalDatasourceRepository(get(), get(), get(), get()) } bind LocalCommandDatasourceContract::class
     single { ArticleWrapperLocalDatasourceRepository(get(), get()) } bind LocalArticleWrapperDatasourceContract::class
 
     // Factory DAO

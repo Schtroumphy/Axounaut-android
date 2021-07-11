@@ -12,4 +12,6 @@ interface LocalArticleWrapperDatasourceContract {
     fun saveArticleWrapper(articleWrapper: ArticleWrapper) : Boolean
 
     fun deleteArticleWrapper(articleWrapper: ArticleWrapper) : Boolean
+
+    fun observeArticleWrappersByCommandId(commandId: Long): Flow<List<ArticleWrapper>>
 }

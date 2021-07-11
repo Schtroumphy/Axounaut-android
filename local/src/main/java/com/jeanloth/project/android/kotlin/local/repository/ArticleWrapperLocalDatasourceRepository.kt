@@ -4,6 +4,7 @@ import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleWrapper
 import com.jeanloth.project.android.kotlin.local.contracts.LocalArticleWrapperDatasourceContract
 import com.jeanloth.project.android.kotlin.local.database.ArticleWrapperDAO
 import com.jeanloth.project.android.kotlin.local.entities.ArticleWrapperEntity
+import com.jeanloth.project.android.kotlin.local.entities.ArticleWrapperEntity_
 import com.jeanloth.project.android.kotlin.local.mappers.ArticleWrapperEntityMapper
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -41,6 +42,15 @@ class ArticleWrapperLocalDatasourceRepository(
         var result = dao.box.remove(mapper.to(articleWrapper))
         print("[ArticleWrapperLocalDSRepository] : delete AticleWrapper result : $result")
         return true
+    }
+
+    override fun observeArticleWrappersByCommandId(commandId: Long): Flow<List<ArticleWrapper>> {
+        var result = dao.observeAll{ it.equal(ArticleWrapperEntity_.commandId, commandId)}.map {
+            it.map {
+                mapper.from(it)
+            }
+        }
+        return result
     }
 
 

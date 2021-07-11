@@ -1,7 +1,9 @@
 package com.jeanloth.project.android.kotlin.local.repository
 
+import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleWrapper
 import com.jeanloth.project.android.kotlin.domain_models.entities.Command
 import com.jeanloth.project.android.kotlin.local.contracts.LocalCommandDatasourceContract
+import com.jeanloth.project.android.kotlin.local.database.ArticleWrapperDAO
 import com.jeanloth.project.android.kotlin.local.database.CommandDAO
 import com.jeanloth.project.android.kotlin.local.entities.CommandEntity
 import com.jeanloth.project.android.kotlin.local.entities.CommandEntity_
@@ -14,6 +16,7 @@ import kotlinx.coroutines.flow.map
 
 class CommandLocalDatasourceRepository(
     private val dao: CommandDAO,
+    private val awDao: ArticleWrapperDAO,
     private val mapper: CommandEntityMapper,
     private val clientMapper: AppClientEntityMapper,
 ) : LocalCommandDatasourceContract {
@@ -47,7 +50,18 @@ class CommandLocalDatasourceRepository(
         print("[CommandLocalDSRepository] : Save command - Command : $command")
         print("[CommandLocalDSRepository] : Save command - Command Entity: ${mapper.to(command)}")
 
-        val commandEntity = mapper.to(command)
+        var commandEntity = mapper.to(command)
+
+        // If command already exists
+        dao.box.query().equal(CommandEntity_.idCommand, command.idCommand).build().findUnique()?.let{
+
+            commandEntity.idCommand = it.idCommand
+
+            // Remove all articleWrappers
+            it.articleWrappers.forEach {
+                awDao.box.remove(it)
+            }
+        }
 
         // Associate command t one client by toOne relation
         commandEntity.client.target = clientMapper.to(command.client!!)
