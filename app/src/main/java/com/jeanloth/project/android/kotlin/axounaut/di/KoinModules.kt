@@ -13,6 +13,7 @@ import com.jeanloth.project.android.kotlin.data.contracts.CommandContract
 import com.jeanloth.project.android.kotlin.data.repositories.AppClientRepository
 import com.jeanloth.project.android.kotlin.data.repositories.ArticleWrapperRepository
 import com.jeanloth.project.android.kotlin.data.repositories.CommandRepository
+import com.jeanloth.project.android.kotlin.domain.usescases.usecases.GetCommandByIdUseCase
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.ObserveArticleWrappersByCommandIdUseCase
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.ObserveCommandByIdUseCase
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.command.SaveCommandUseCase
@@ -52,7 +53,7 @@ val appModule = module {
     viewModel { ClientVM( get(), get(), get()) }
     viewModel { (currentCommandId : Long) -> CommandVM(
         currentCommandId = currentCommandId,
-        get(), get(), get(), get(), get())
+        get(), get(), get(), get(), get(), get(), get())
     }
 
     // Uses cases
@@ -67,6 +68,7 @@ val appModule = module {
 
     factory{ SaveCommandUseCase(get()) }
     factory{ GetAllCommandsUseCase(get()) }
+    factory{ GetCommandByIdUseCase(get()) }
     factory{ ObserveCommandsUseCase(get()) }
     factory{ DeleteCommandUseCase(get()) }
     factory{ ObserveCommandByIdUseCase(get()) }
@@ -92,7 +94,7 @@ val appModule = module {
     single { ArticleLocalDatasourceRepository(get(), get())} bind LocalArticleDatasourceContract::class
     single { AppClientLocalDatasourceRepository(get(), get()) } bind LocalAppClientDatasourceContract::class
     single { CommandLocalDatasourceRepository(get(), get(), get(), get()) } bind LocalCommandDatasourceContract::class
-    single { ArticleWrapperLocalDatasourceRepository(get(), get()) } bind LocalArticleWrapperDatasourceContract::class
+    single { ArticleWrapperLocalDatasourceRepository(get(), get(), get()) } bind LocalArticleWrapperDatasourceContract::class
 
     // Factory DAO
     factory { ArticleDAO(get()) }

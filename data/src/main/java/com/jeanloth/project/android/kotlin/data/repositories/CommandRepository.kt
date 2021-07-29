@@ -24,6 +24,10 @@ class CommandRepository(
         return localCommandDatasourceRepository.observeCommandById(commandId)
     }
 
+    override fun getCommandById(commandId: Long): Command? {
+        return localCommandDatasourceRepository.getCommandById(commandId)
+    }
+
     override fun saveCommand(command: Command): Long {
         return localCommandDatasourceRepository.saveCommand(command)
     }

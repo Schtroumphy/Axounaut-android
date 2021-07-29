@@ -46,6 +46,10 @@ class CommandLocalDatasourceRepository(
         }
     }
 
+    override fun getCommandById(commandId: Long): Command? {
+        return mapper.from(dao.box.get(commandId))
+    }
+
     override fun saveCommand(command: Command): Long {
         print("[CommandLocalDSRepository] : Save command - Command : $command")
         print("[CommandLocalDSRepository] : Save command - Command Entity: ${mapper.to(command)}")

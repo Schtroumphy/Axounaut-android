@@ -16,4 +16,6 @@ interface LocalCommandDatasourceContract {
     fun saveCommand(command: Command) : Long
 
     fun deleteCommand(command: Command) : Boolean
+
+    fun getCommandById(commandId: Long): Command?
 }

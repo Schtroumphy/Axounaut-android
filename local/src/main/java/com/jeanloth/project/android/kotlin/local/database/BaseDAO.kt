@@ -17,9 +17,19 @@ abstract class BaseDAO<TEntity : Entity>() {
 
     val all : List<Entity> get() = box.query().build().find()
 
+    val get : List<Entity> get() = box.query().build().find()
+
+    val first get() = box.query().build().findFirst()
+
+    val last get() = box.query().build().find().lastOrNull()
+
     private fun apply(filters : (QueryBuilder<TEntity>) -> (QueryBuilder<TEntity>)) : Query<TEntity> {
         return filters(box.query()).build()
     }
+
+    fun get(id : Long) = box.get(id)
+
+    fun getAll(filters : (QueryBuilder<TEntity>) -> (QueryBuilder<TEntity>)) : List<TEntity> = apply(filters).find()
 
     /**
      * Observe on all elements of the given filters

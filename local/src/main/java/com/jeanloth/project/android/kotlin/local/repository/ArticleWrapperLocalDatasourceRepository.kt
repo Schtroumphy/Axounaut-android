@@ -3,6 +3,7 @@ package com.jeanloth.project.android.kotlin.local.repository
 import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleWrapper
 import com.jeanloth.project.android.kotlin.local.contracts.LocalArticleWrapperDatasourceContract
 import com.jeanloth.project.android.kotlin.local.database.ArticleWrapperDAO
+import com.jeanloth.project.android.kotlin.local.database.CommandDAO
 import com.jeanloth.project.android.kotlin.local.entities.ArticleWrapperEntity
 import com.jeanloth.project.android.kotlin.local.entities.ArticleWrapperEntity_
 import com.jeanloth.project.android.kotlin.local.mappers.ArticleWrapperEntityMapper
@@ -11,6 +12,7 @@ import kotlinx.coroutines.flow.map
 
 class ArticleWrapperLocalDatasourceRepository(
     private val dao : ArticleWrapperDAO,
+    private val commandDao : CommandDAO,
     private val mapper : ArticleWrapperEntityMapper,
 ) : LocalArticleWrapperDatasourceContract {
 
@@ -28,13 +30,15 @@ class ArticleWrapperLocalDatasourceRepository(
     }
 
     override fun saveArticleWrapper(articleWrapper: ArticleWrapper): Boolean {
-        print("[ArticleWrapperLocalDSRepository] : Save AW  : $articleWrapper")
-        print("[ArticleWrapperLocalDSRepository] : Save AW Entity: ${mapper.to(articleWrapper)}")
-
         val articleWrapperEntity = mapper.to(articleWrapper)
 
         // Save the articleWrapperEntity entity
         dao.box.put(articleWrapperEntity)
+
+        val parent = commandDao.get(articleWrapperEntity.command.targetId)
+        parent.articleWrappers.add(articleWrapperEntity)
+        commandDao.box.put(parent)
+
         return true
     }
 

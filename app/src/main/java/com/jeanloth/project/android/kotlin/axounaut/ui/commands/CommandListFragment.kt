@@ -66,7 +66,7 @@ class CommandListFragment(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        commandAdapter = CommandAdapter(listOf(DataMock.command1, DataMock.command2))
+        commandAdapter = CommandAdapter(listOf(DataMock.command1, DataMock.command2), requireContext())
 
         // Set the adapter
         rv_command_list.apply{

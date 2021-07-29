@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
@@ -16,6 +17,7 @@ import com.jeanloth.project.android.kotlin.axounaut.R
 import com.jeanloth.project.android.kotlin.axounaut.adapters.CheckboxListAdapter
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.CommandVM
 import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleWrapperStatusType
+import com.jeanloth.project.android.kotlin.domain_models.entities.CommandStatusType
 import com.jeanloth.project.android.kotlin.domain_models.entities.toNameString
 import kotlinx.android.synthetic.main.fragment_command_detail.*
 import kotlinx.android.synthetic.main.layout_header.*
@@ -52,6 +54,8 @@ class CommandDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        commandVM.observeCurrentCommand()
+
         setupHeader()
 
         checkboxListAdapter = CheckboxListAdapter(args.commandToDetail.articleWrappers).apply {
@@ -67,12 +71,50 @@ class CommandDetailFragment : Fragment() {
             adapter = checkboxListAdapter
         }
 
-        commandVM.currentAWLiveData().observe(viewLifecycleOwner){
+        /*commandVM.currentAWLiveData().observe(viewLifecycleOwner){
+            Log.d("[Command details]", "current AWs observed for command id ${args.commandToDetail.idCommand} : $it")
+            checkboxListAdapter.setItems(it ?: emptyList())
+
+            if(it?.all { it.statusCode == ArticleWrapperStatusType.DONE.code} == true){
+                commandVM.updateStatusCommand(CommandStatusType.DONE)
+            }
+        }*/
+
+        commandVM.updatedCommandMutableLiveData.observe(viewLifecycleOwner){
+            Log.d("[Command details]", "Command MLD observed for id ${args.commandToDetail.idCommand} : $it")
+        }
+
+        commandVM.currentCommandLiveData().observe(viewLifecycleOwner){
             Log.d("[Command details]", "current commend observed for id ${args.commandToDetail.idCommand} : $it")
             if(it == null) {// Has been deleted
                 goBack()
+            } else {
+                Log.d("[Command details]", "current command AWs observed for command id ${args.commandToDetail.idCommand} : ${it.articleWrappers}")
+                checkboxListAdapter.setItems(it.articleWrappers)
+
+                if(it?.articleWrappers.all { it.statusCode == ArticleWrapperStatusType.DONE.code} == true){
+                    commandVM.updateStatusCommand(CommandStatusType.DONE)
+                }
+
+                when(it.statusCode){
+                    CommandStatusType.TO_DO.code -> Log.d("[Command details]","TODO")
+                    CommandStatusType.IN_PROGRESS.code -> Log.d("[Command details]","In progress")
+                    CommandStatusType.DONE.code -> {
+                        Log.d("[Command details]","Terminé")
+                    }
+                    CommandStatusType.DELIVERED.code -> {
+                        Log.d("[Command details]","Livré")
+                        bt_delivered.visibility = GONE
+                        bt_pay.visibility = VISIBLE
+
+                    }
+                    CommandStatusType.PAYED.code -> {
+                        Log.d("[Command details]","Payé")
+
+                    }
+                    CommandStatusType.CANCELED.code -> Log.d("[Command details]","Cancel")
+                }
             }
-            checkboxListAdapter.setItems(it ?: emptyList())
         }
 
         ic_delete.onClick {
@@ -85,7 +127,7 @@ class CommandDetailFragment : Fragment() {
             title = getString(R.string.delete_dialog_title)
             message = getString(R.string.delete_dialog_content)
             positiveButton(R.string.delete) {
-                commandVM.removeCommand(commandVM.currentCommandMutableLiveData.value!!)
+                commandVM.removeCommand()
                 Snackbar.make(requireView(), "La commande a bien été supprimée.",
                     Snackbar.LENGTH_LONG).show()
                 goBack()
