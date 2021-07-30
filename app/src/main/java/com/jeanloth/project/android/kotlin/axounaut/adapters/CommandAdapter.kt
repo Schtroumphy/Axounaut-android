@@ -57,6 +57,14 @@ class CommandAdapter(
             )
 
             itemView.tv_status.text = getCommandStatusByCode(command.statusCode).label
+            itemView.tv_status.background.setTint(getColor(context,
+                when(command.statusCode){
+                    CommandStatusType.IN_PROGRESS.code -> R.color.salamander
+                    CommandStatusType.DONE.code -> R.color.kelly_green
+                    CommandStatusType.DELIVERED.code -> R.color.gray_2
+                    else -> android.R.color.transparent
+                }))
+
             itemView.cv_command.strokeColor = getColor(context, when(command.statusCode){
                 CommandStatusType.IN_PROGRESS.code -> R.color.salamander
                 CommandStatusType.DONE.code -> R.color.kelly_green

@@ -92,10 +92,6 @@ class CommandDetailFragment : Fragment() {
                 Log.d("[Command details]", "current command AWs observed for command id ${args.commandToDetail.idCommand} : ${it.articleWrappers}")
                 checkboxListAdapter.setItems(it.articleWrappers)
 
-                if(it?.articleWrappers.all { it.statusCode == ArticleWrapperStatusType.DONE.code} == true){
-                    commandVM.updateStatusCommand(CommandStatusType.DONE)
-                }
-
                 when(it.statusCode){
                     CommandStatusType.TO_DO.code -> Log.d("[Command details]","TODO")
                     CommandStatusType.IN_PROGRESS.code -> Log.d("[Command details]","In progress")
@@ -106,7 +102,6 @@ class CommandDetailFragment : Fragment() {
                         Log.d("[Command details]","Livré")
                         bt_delivered.visibility = GONE
                         bt_pay.visibility = VISIBLE
-
                     }
                     CommandStatusType.PAYED.code -> {
                         Log.d("[Command details]","Payé")

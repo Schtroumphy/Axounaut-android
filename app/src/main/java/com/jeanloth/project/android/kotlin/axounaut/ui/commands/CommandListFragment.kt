@@ -41,19 +41,9 @@ class CommandListFragment(
     private lateinit var commandAdapter: CommandAdapter
 
     enum class CommandDisplayMode(val statusCode : List<Int>){
-        IN_PROGRESS(listOf(CommandStatusType.IN_PROGRESS.code)),
+        IN_PROGRESS(listOf(CommandStatusType.IN_PROGRESS.code, CommandStatusType.DONE.code)),
         TO_COME(listOf(CommandStatusType.TO_DO.code)),
-        PAST(listOf(CommandStatusType.DONE.code, CommandStatusType.PAYED.code, CommandStatusType.CANCELED.code, CommandStatusType.DELIVERED.code)),
-    }
-
-    private var columnCount = 1
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        arguments?.let {
-            columnCount = it.getInt(ARG_COLUMN_COUNT)
-        }
+        PAST(listOf( CommandStatusType.PAYED.code, CommandStatusType.CANCELED.code, CommandStatusType.DELIVERED.code)),
     }
 
     override fun onCreateView(
@@ -66,7 +56,7 @@ class CommandListFragment(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        commandAdapter = CommandAdapter(listOf(DataMock.command1, DataMock.command2), requireContext())
+        commandAdapter = CommandAdapter(emptyList(), requireContext())
 
         // Set the adapter
         rv_command_list.apply{
@@ -111,20 +101,5 @@ class CommandListFragment(
         findNavController().navigate(HomeFragmentDirections.actionNavHomeToNavCommandDetails(
             commandToDetail = command
         ))
-    }
-
-    companion object {
-
-        // TODO: Customize parameter argument names
-        const val ARG_COLUMN_COUNT = "column-count"
-
-        // TODO: Customize parameter initialization
-        @JvmStatic
-        fun newInstance(columnCount: Int) =
-            CommandListFragment(CommandDisplayMode.IN_PROGRESS).apply {
-                arguments = Bundle().apply {
-                    putInt(ARG_COLUMN_COUNT, columnCount)
-                }
-            }
     }
 }
