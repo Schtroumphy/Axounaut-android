@@ -66,6 +66,14 @@ class CommandVM (
                     observeCommandByIdUseCase.invoke(currentCommandId).collect {
                         Log.d("[CommandVM]", " Current AWs from command Id $currentCommandId observed : $it")
                         currentCommandMutableLiveData.postValue(it)
+
+                        if(it?.articleWrappers?.all { it.statusCode == ArticleWrapperStatusType.DONE.code} == true ){
+                            updateStatusCommand(CommandStatusType.DONE)
+                        } else {
+                            if(it?.statusCode == CommandStatusType.DONE.code){
+                                updateStatusCommand(CommandStatusType.TO_DO)
+                            }
+                        }
                     }
                 } catch (e:Exception){
                     Log.d("[CommandVM]", " Exception AWs from command Id $currentCommandId observed : $e")
