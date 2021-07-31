@@ -11,6 +11,7 @@ import com.jeanloth.project.android.kotlin.axounaut.R
 import com.jeanloth.project.android.kotlin.domain_models.entities.*
 import com.jeanloth.project.android.kotlin.domain_models.entities.CommandStatusType.Companion.getCommandStatusByCode
 import kotlinx.android.synthetic.main.item_command.view.*
+import splitties.views.textColorResource
 
 class CommandAdapter(
     private var commandList : List<Command>,
@@ -28,7 +29,6 @@ class CommandAdapter(
     override fun onBindViewHolder(holder: ArticleHolder, position: Int) {
         val article: Command = commandList[position]
         holder.bind(article, position)
-
     }
 
     override fun getItemCount(): Int {
@@ -50,24 +50,23 @@ class CommandAdapter(
 
             itemView.tv_delivery_date.text= command.deliveryDate.toString()
             itemView.tv_client_name.text= command.client?.toNameString()
-            itemView.tv_number.text= itemView.context.getString(R.string.number_label, command.idCommand)
 
             itemView.rv_articles_list.adapter = SimpleListAdapter(
                 convertArticleWrapperToItemList(command.articleWrappers)
             )
 
             itemView.tv_status.text = getCommandStatusByCode(command.statusCode).label
-            itemView.tv_status.background.setTint(getColor(context,
+            itemView.tv_status.setTextColor(getColor(context,
                 when(command.statusCode){
                     CommandStatusType.IN_PROGRESS.code -> R.color.salamander
-                    CommandStatusType.DONE.code -> R.color.kelly_green
+                    CommandStatusType.DONE.code -> R.color.green_dark_1
                     CommandStatusType.DELIVERED.code -> R.color.gray_2
                     else -> android.R.color.transparent
                 }))
 
             itemView.cv_command.strokeColor = getColor(context, when(command.statusCode){
                 CommandStatusType.IN_PROGRESS.code -> R.color.salamander
-                CommandStatusType.DONE.code -> R.color.kelly_green
+                CommandStatusType.DONE.code -> R.color.green_dark_1
                 CommandStatusType.DELIVERED.code -> R.color.gray_2
                 else -> android.R.color.transparent
             })

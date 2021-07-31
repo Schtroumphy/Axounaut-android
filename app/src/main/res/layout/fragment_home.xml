@@ -8,8 +8,7 @@
 <com.google.android.material.tabs.TabLayout
     android:id="@+id/tl_command"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingTop="0dp"
+    android:layout_height="35dp"
     app:tabMode="fixed"
     app:tabIndicatorGravity="stretch"
     app:tabIndicatorAnimationMode="elastic"

@@ -16,4 +16,10 @@
         <item name="android:color">@color/salamander</item>
         <item name="android:background">@color/salamander</item>
     </style>
+
+    <style name="TitleStyle" parent="@android:style/TextAppearance">
+        <item name="android:color">@color/marron_dark_1</item>
+        <item name="android:fontFamily">@font/rosario_wght</item>
+        <item name="android:textSize">30sp</item>
+    </style>
 </resources>

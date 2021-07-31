@@ -13,6 +13,7 @@
         app:cardCornerRadius="15dp"
         app:contentPadding="5dp"
         app:strokeWidth="1dp"
+        android:elevation="0dp"
         android:foreground="?android:attr/selectableItemBackground"
         android:clickable="true"
         app:strokeColor="@color/salamander"
@@ -22,14 +23,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/tv_delivery_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/text_margin"
-                android:text="20/12/2021"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/tv_client_name"
@@ -37,19 +30,22 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/text_margin"
                 android:text="Adrien DELONNE"
-                app:layout_constraintBottom_toBottomOf="@id/tv_delivery_date"
-                app:layout_constraintEnd_toStartOf="@id/tv_number"
-                app:layout_constraintStart_toEndOf="@+id/tv_delivery_date"
-                app:layout_constraintTop_toTopOf="@id/tv_delivery_date" />
+                android:textFontWeight="500"
+                android:textColor="@color/black"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
 
             <TextView
-                android:id="@+id/tv_number"
+                android:id="@+id/tv_delivery_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/text_margin"
-                tools:text="N°12345"
+                android:text="20/12/2021"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintBottom_toBottomOf="@id/tv_client_name"
+                app:layout_constraintTop_toTopOf="@id/tv_client_name"
+                 />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_articles_list"
@@ -64,25 +60,21 @@
                 tools:itemCount="1"
                 tools:listitem="@layout/item_dot_list" />
 
+            <TextView
+                android:id="@+id/tv_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="9dp"
+                android:paddingVertical="5dp"
+                android:text="En cours"
+                android:textColor="@color/black"
+                app:layout_constraintBottom_toBottomOf="@+id/rv_articles_list"
+                app:layout_constraintEnd_toEndOf="@id/tv_delivery_date"
+                />
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </com.google.android.material.card.MaterialCardView>
-
-        <TextView
-            android:id="@+id/tv_status"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:elevation="1dp"
-            android:paddingHorizontal="9dp"
-            android:paddingVertical="5dp"
-            android:text="En cours"
-            android:textColor="@color/white"
-            android:layout_marginEnd="25dp"
-            android:backgroundTint="@color/gray_1"
-            android:background="@drawable/bg_rounded"
-            android:layout_alignEnd="@id/cv_command"
-            android:layout_alignBottom="@id/cv_command"
-            />
 
     </RelativeLayout>
