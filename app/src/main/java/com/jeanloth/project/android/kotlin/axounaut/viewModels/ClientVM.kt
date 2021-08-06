@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.jeanloth.project.android.kotlin.domain.usescases.usecases.appClient.DeleteClientUseCase
+import com.jeanloth.project.android.kotlin.domain.usescases.usecases.appClient.DeleteClientsUseCase
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.appClient.ObserveClientUseCase
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.appClient.SaveClientUseCase
 import com.jeanloth.project.android.kotlin.domain_models.entities.AppClient
@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 class ClientVM (
     private val observeClientUseCase: ObserveClientUseCase,
     private val saveClientUseCase: SaveClientUseCase,
-    private val deleteClientUseCase: DeleteClientUseCase,
+    private val deleteClientsUseCase: DeleteClientsUseCase,
 ): ViewModel() {
 
     var clients : List<AppClient> = emptyList()
@@ -38,8 +38,8 @@ class ClientVM (
         saveClientUseCase.invoke(client)
     }
 
-    fun deleteClient(client : AppClient) {
-        deleteClientUseCase.invoke(client)
+    fun deleteClients(clients : List<AppClient>) {
+        deleteClientsUseCase.invoke(clients)
     }
 
 

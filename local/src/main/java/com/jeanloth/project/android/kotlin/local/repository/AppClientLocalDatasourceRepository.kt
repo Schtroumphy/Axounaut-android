@@ -38,9 +38,11 @@ class AppClientLocalDatasourceRepository(
         return true
     }
 
-    override fun deleteClient(client: AppClient): Boolean {
-        val result = dao.box.remove(mapper.to(client))
-        print("[AppClientLocalDSRepository] : Delete client result : $result")
+    override fun deleteClients(clients: List<AppClient>): Boolean {
+        clients.forEach {
+            dao.box.remove(mapper.to(it))
+        }
+        print("[AppClientLocalDSRepository] : Delete clients")
 
         return true
     }

@@ -5,18 +5,25 @@ import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.internal.VisibilityAwareImageButton
+import com.google.android.material.snackbar.Snackbar
+import com.jeanloth.project.android.kotlin.axounaut.MainActivity
 import com.jeanloth.project.android.kotlin.axounaut.R
 import com.jeanloth.project.android.kotlin.axounaut.adapters.ClientAdapter
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.ClientVM
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.MainVM
+import com.jeanloth.project.android.kotlin.domain_models.entities.AppClient
 import kotlinx.android.synthetic.main.fragment_article.*
 import kotlinx.android.synthetic.main.fragment_client.*
 import kotlinx.android.synthetic.main.layout_header.*
 import org.koin.android.viewmodel.ext.android.sharedViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
+import splitties.views.onClick
 
 
 /**
@@ -30,6 +37,8 @@ class ClientFragment : Fragment() {
     private val clientVM : ClientVM by viewModel()
     private lateinit var clientAdapter: ClientAdapter
 
+    private var clientListSelected : MutableList<AppClient> = mutableListOf()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -42,10 +51,12 @@ class ClientFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         mainVM.setHeaderTitle("Clients")
+        (activity as MainActivity).hideOrShowMenuButton(true)
 
         clientAdapter = ClientAdapter(emptyList(), requireContext()).apply {
-            onClick = {
-                // Go to client details
+            onCheckboxClick = { client, isSelected ->
+                // Update selected clients list
+                updateSelectedClientList(client, isSelected)
             }
 
             onFavoriteClick = {
@@ -60,6 +71,8 @@ class ClientFragment : Fragment() {
             clientVM.allClientsLiveData().observe(viewLifecycleOwner){
                 Log.d("[Client Fragment", "Client observed : $it")
                 clientAdapter.setItems(it)
+
+                tv_no_client_error.visibility = if(it.isNullOrEmpty()) VISIBLE else GONE
             }
         }
 
@@ -67,6 +80,30 @@ class ClientFragment : Fragment() {
             // Go to ClientDetailFragment
             goToClientDetails()
         }
+
+        bt_btn_delete_client.onClick {
+            clientVM.deleteClients(clientListSelected)
+            Snackbar.make(requireView(), resources.getQuantityString(R.plurals.adding_client_toast, clientListSelected.size, clientListSelected.size),
+                Snackbar.LENGTH_LONG).show()
+            clientListSelected.clear()
+        }
+    }
+
+    private fun updateSelectedClientList(client: AppClient, selected: Boolean) {
+        if(selected){
+            if(!clientListSelected.contains(client)){
+                clientListSelected.add(client)
+            }
+        } else {
+            if(clientListSelected.contains(client)){
+                clientListSelected.remove(client)
+            }
+        }
+        Log.d("[Client Fragment]", "Clients selected : $clientListSelected")
+
+        bt_btn_delete_client.visibility =  if(clientListSelected.isEmpty()) GONE else VISIBLE
+        tv_btn_add_client.visibility =  if(clientListSelected.isEmpty()) VISIBLE else GONE
+
     }
 
     private fun goToClientDetails() {

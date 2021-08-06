@@ -12,5 +12,5 @@ interface AppClientContract {
 
     fun saveClient(client: AppClient) : Boolean
 
-    fun deleteClient(client: AppClient) : Boolean
+    fun deleteClients(client: List<AppClient>) : Boolean
 }

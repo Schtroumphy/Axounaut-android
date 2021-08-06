@@ -36,20 +36,21 @@
 
     <Button
         android:id="@+id/bt_delivered"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/CustomButton"
         android:text="Livrer"
-        android:layout_margin="25dp"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />
 
     <Button
         android:id="@+id/bt_pay"
+        style="@style/CustomButton"
+        android:backgroundTint="@color/green_light_1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Payer"
         android:visibility="gone"
-        android:layout_margin="25dp"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />
 

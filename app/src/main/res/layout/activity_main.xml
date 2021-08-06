@@ -9,17 +9,16 @@
     <LinearLayout
         android:id="@+id/ll_home_title"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="70dp"
         android:gravity="center_vertical"
-        android:paddingStart="15dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingStart="15dp">
 
         <ImageView
             android:id="@+id/iv_header_logo"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:src="@drawable/logo_kb_001"
-            />
+            android:src="@drawable/logo_kb_001" />
 
         <TextView
             android:id="@+id/tv_header_title"
@@ -31,65 +30,79 @@
 
     </LinearLayout>
 
+
     <ImageButton
         android:id="@+id/bt_tb_menu_more"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="?android:attr/selectableItemBackground"
-        android:src="@drawable/ic_more"
-        android:layout_marginTop="35dp"
-        android:padding="5dp"
         android:layout_gravity="end"
-        android:layout_marginEnd="15dp" />
-
-
-    <com.google.android.material.bottomappbar.BottomAppBar
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:id="@+id/bottomAppBar"
-        app:contentInsetLeft="0dp"
-        app:contentInsetStart="0dp"
-        app:contentInsetRight="0dp"
-        app:contentInsetEnd="0dp"
-        app:elevation="8dp"
-        app:layout_scrollFlags="enterAlways"
-        app:fabCradleMargin="10dp"
-        app:fabCradleRoundedCornerRadius="20dp">
-
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/bottom_nav_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:menu="@menu/bottom_nav_menu"
-            android:elevation="0dp"
-            android:background="#ffffff"/>
-
-    </com.google.android.material.bottomappbar.BottomAppBar>
-
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_add_command"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"
-        android:layout_marginEnd="12dp"
-        android:tint="@color/white"
-        android:backgroundTint="@color/white"
-        android:src="@android:drawable/ic_input_add"
-        app:layout_anchor="@id/bottomAppBar"
-        />
-
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="15dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:padding="5dp"
+        android:src="@drawable/ic_more" />
 
     <fragment
         android:id="@+id/nav_host_fragment"
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="75dp"
         app:defaultNavHost="true"
-        android:layout_marginTop="105dp"
-        android:layout_marginBottom="?attr/actionBarSize"
-        app:navGraph="@navigation/mobile_navigation" />
+        app:navGraph="@navigation/mobile_navigation"
+        tools:layout="@layout/fragment_command_list" />
 
+    <com.nambimobile.widgets.efab.ExpandableFabLayout
+        android:id="@+id/fab_menu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="end|bottom"
+        android:paddingEnd="@dimen/activity_horizontal_margin">
+
+        <com.nambimobile.widgets.efab.Overlay
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:overlay_alpha="0.5"
+            app:overlay_orientation="portrait" />
+
+        <com.nambimobile.widgets.efab.ExpandableFab
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_marginBottom="@dimen/activity_horizontal_margin"
+            app:efab_icon="@drawable/ic_more"
+            app:efab_orientation="portrait" />
+
+        <com.nambimobile.widgets.efab.FabOption
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="navigateToAnalysis"
+            app:fab_icon="@drawable/pie_chart"
+            app:label_backgroundColor="#FFFFFF"
+            app:label_text="Analyses"
+            app:label_textColor="@color/salamander" />
+
+        <com.nambimobile.widgets.efab.FabOption
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="navigateToStock"
+            app:fab_icon="@drawable/ic_boxes"
+            app:tint="@color/white"
+            app:label_backgroundColor="#FFFFFF"
+            app:label_text="Stock"
+            app:label_textColor="@color/salamander" />
+
+        <com.nambimobile.widgets.efab.FabOption
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="navigateToCommands"
+            app:fab_icon="@drawable/list"
+            app:label_backgroundColor="#FFFFFF"
+            app:label_text="Commandes"
+            app:label_textColor="@color/salamander" />
+
+    </com.nambimobile.widgets.efab.ExpandableFabLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

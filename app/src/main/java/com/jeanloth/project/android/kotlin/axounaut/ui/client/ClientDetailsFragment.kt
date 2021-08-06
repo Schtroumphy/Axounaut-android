@@ -5,18 +5,16 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.EditorInfo
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
+import com.jeanloth.project.android.kotlin.axounaut.MainActivity
 import com.jeanloth.project.android.kotlin.axounaut.R
 import com.jeanloth.project.android.kotlin.axounaut.extensions.isPhoneValid
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.ClientVM
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.MainVM
 import com.jeanloth.project.android.kotlin.domain_models.entities.AppClient
 import kotlinx.android.synthetic.main.fragment_client_details.*
-import kotlinx.android.synthetic.main.layout_header.*
 import org.koin.android.viewmodel.ext.android.sharedViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -41,14 +39,10 @@ class ClientDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        mainVM.setHeaderTitle("Détails client")
+        val test = requireActivity() as MainActivity
+        test.hideOrShowMenuButton(false)
 
-        bt_previous_or_close.background = AppCompatResources.getDrawable(
-            requireContext(),
-            R.drawable.ic_left_arrow
-        )
-
-        setupHeader()
+        mainVM.setHeaderTitle("Ajouter un client")
 
         bt_add_client.setOnClickListener {
             addClient()
@@ -75,15 +69,6 @@ class ClientDetailsFragment : Fragment() {
             clientVM.saveClient(clientToAdd)
             Snackbar.make(requireView(), "Client ajouté avec succès.",
                 Snackbar.LENGTH_SHORT).show()
-            findNavController().popBackStack()
-        }
-    }
-
-    private fun setupHeader() {
-        tv_title.text = "Ajouter un client"
-        tv_subtitle.visibility = View.GONE
-
-        bt_previous_or_close.setOnClickListener {
             findNavController().popBackStack()
         }
     }

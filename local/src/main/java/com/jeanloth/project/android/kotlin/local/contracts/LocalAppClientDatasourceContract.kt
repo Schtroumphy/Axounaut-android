@@ -11,7 +11,7 @@ interface LocalAppClientDatasourceContract {
 
     fun observeAllClients() : Flow<List<AppClient>>
 
-    fun saveClient(article: AppClient) : Boolean
+    fun saveClient(client: AppClient) : Boolean
 
-    fun deleteClient(article: AppClient) : Boolean
+    fun deleteClients(clients: List<AppClient>) : Boolean
 }

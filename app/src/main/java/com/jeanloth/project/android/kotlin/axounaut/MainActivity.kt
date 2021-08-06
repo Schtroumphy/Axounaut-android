@@ -6,18 +6,19 @@ import android.util.Log
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
-import androidx.navigation.ui.setupWithNavController
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.jeanloth.project.android.kotlin.axounaut.ui.commands.AddCommandDialogFragment
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.MainVM
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.viewmodel.ext.android.viewModel
+import splitties.views.onClick
 
 
 class MainActivity : AppCompatActivity() {
@@ -25,17 +26,18 @@ class MainActivity : AppCompatActivity() {
     private lateinit var navController : NavController
     private val mainVM : MainVM by viewModel()
 
+    private val rotateOpen : Animation by lazy { AnimationUtils.loadAnimation(this, R.anim.rotate_open_anim) }
+    private val rotateClose : Animation by lazy { AnimationUtils.loadAnimation(this, R.anim.rotate_close_anim) }
+    private val fromBottom : Animation by lazy { AnimationUtils.loadAnimation(this, R.anim.from_bottom_anim) }
+    private val toBottom : Animation by lazy { AnimationUtils.loadAnimation(this, R.anim.to_bottom_anim) }
+
+    private var clicked = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val navView: BottomNavigationView = findViewById(R.id.bottom_nav_view)
 
         navController = findNavController(R.id.nav_host_fragment)
-        navView.setupWithNavController(navController)
-
-        fab_add_command.setOnClickListener {
-            AddCommandDialogFragment.newInstance().show(supportFragmentManager, "dialog")
-        }
 
         mainVM.headerTitleLiveData().observe(this, {
             Log.d("[Main Activity]", "Title observed : $it")
@@ -48,13 +50,9 @@ class MainActivity : AppCompatActivity() {
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             if(destination.id == R.id.nav_article_details) {
-                bottomAppBar.visibility = GONE
-                fab_add_command.visibility = GONE
-                bottom_nav_view.visibility = GONE
+                //fab_menu.visibility = GONE
             } else {
-                bottomAppBar.visibility = VISIBLE
-                fab_add_command.visibility = VISIBLE
-                bottom_nav_view.visibility = VISIBLE
+                //fab_menu.visibility = VISIBLE
             }
         }
 
@@ -64,7 +62,18 @@ class MainActivity : AppCompatActivity() {
             mainVM.setHeaderTitle("Kreyol Baker")
         }
 
+    }
 
+    fun navigateToCommands(view : View){
+        navController.navigate(R.id.navigation_home)
+    }
+
+    fun navigateToStock(view : View){
+        navController.navigate(R.id.navigation_dashboard)
+    }
+
+    fun navigateToAnalysis(view : View){
+        navController.navigate(R.id.navigation_dashboard)
     }
 
     fun hideKeyboard(activity: Activity) {
@@ -92,7 +101,6 @@ class MainActivity : AppCompatActivity() {
             popup.setOnMenuItemClickListener { item ->
                 when (item.itemId) {
                     R.id.menu_clients -> {
-                        Toast.makeText(this, "Ouvrir l'onglet clients", Toast.LENGTH_SHORT).show()
                         navController.navigateUp() // to clear previous navigation history
                         navController.navigate(R.id.nav_clients)
                     }
@@ -105,4 +113,10 @@ class MainActivity : AppCompatActivity() {
             popup.show() //showing popup menu
         }
     }
+
+    fun hideOrShowMenuButton(makeVisible : Boolean){
+        fab_menu.visibility = if(makeVisible) VISIBLE else GONE
+    }
+
+
 }

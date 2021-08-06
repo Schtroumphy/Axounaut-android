@@ -3,14 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:theme="@style/TextInputLayoutStyle"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.article.ArticleDetailsFragment">
-
-    <include
-        android:id="@+id/header"
-        layout="@layout/layout_header"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
 
     <LinearLayout
         android:id="@+id/ll_article_name"
@@ -18,109 +13,195 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="vertical"
-        android:layout_marginHorizontal="25dp"
-        android:layout_marginVertical="65dp"
-        app:layout_constraintTop_toBottomOf="@id/header"
+        android:layout_margin="25dp"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/et_client_firstname"
-            style="@style/App.custom.EditText"
-            android:layout_width="wrap_content"
-            android:layout_height="45dp"
-            android:layout_marginStart="15dp"
-            android:lines="1"
-            android:textSize="14sp"
-            android:imeOptions="actionNext"
-            android:hint="Prénom"
-            android:textAlignment="textStart"
-            android:ems="10"
-            android:maxLines="1"
-            android:inputType="text"
-            tools:text="" />
-
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/et_client_lastname"
-            style="@style/App.custom.EditText"
-            android:layout_width="wrap_content"
-            android:layout_height="45dp"
-            android:layout_marginStart="15dp"
-            android:lines="1"
-            android:textSize="14sp"
-            android:layout_marginTop="20dp"
-            android:imeOptions="actionNext"
-            android:hint="Nom"
-            android:textAlignment="textStart"
-            android:ems="10"
-            android:maxLines="1"
-            android:inputType="text"
-            tools:text="" />
-
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/et_client_phone_number"
-            style="@style/App.custom.EditText"
-            android:layout_width="wrap_content"
-            android:layout_height="45dp"
-            android:layout_marginStart="15dp"
-            android:lines="1"
-            android:textSize="14sp"
-            android:layout_marginTop="20dp"
-            android:imeOptions="actionNext"
-            android:hint="Numéro de téléphone"
-            android:textAlignment="textStart"
-            android:ems="10"
-            android:maxLines="1"
-            android:inputType="phone"
-            tools:text="" />
-
-    </LinearLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/ll_article_price"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:layout_marginHorizontal="25dp"
-        android:layout_marginVertical="25dp"
-        app:layout_constraintTop_toBottomOf="@id/ll_article_name"
-        app:layout_constraintStart_toStartOf="parent">
-
-
-        <TextView
-            android:id="@+id/tv_client_fidelity_label"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_client_firstname"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="25dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:text="Points de fidélité : " />
+            android:layout_gravity="center"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:hint="Prénom"
+            app:hintAnimationEnabled="true"
+            app:hintTextColor="@color/green_light_1"
+            app:boxCornerRadiusBottomStart="20dp"
+            app:boxCornerRadiusBottomEnd="20dp"
+            app:boxCornerRadiusTopEnd="20dp"
+            app:boxCornerRadiusTopStart="20dp"
+            app:boxStrokeColor="@color/apple_green"
+            app:boxStrokeWidth="1dp"
+            app:boxStrokeWidthFocused="1.5dp"
+            app:boxStrokeErrorColor="@color/salamander"
+            >
 
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/et_client_fidelity"
-            style="@style/App.custom.ShortEditText"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_client_firstname"
+                android:layout_width="350dp"
+                android:layout_height="45dp"
+                android:lines="1"
+                android:textSize="14sp"
+                android:imeOptions="actionNext"
+                android:textAlignment="textStart"
+                android:inputType="textCapWords"
+                android:maxLines="1"
+                tools:text=""
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_client_lastname"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_marginStart="10dp"
-            android:lines="1"
-            android:textSize="14sp"
-            android:imeOptions="actionDone"
-            android:hint="10 "
-            android:maxLines="1"
-            app:layout_constraintStart_toEndOf="@id/tv_client_fidelity_label"
-            app:layout_constraintTop_toTopOf="parent"
-            android:inputType="numberDecimal"
-            tools:text="0" />
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:hint="Nom"
+            app:hintAnimationEnabled="true"
+            app:hintTextColor="@color/green_light_1"
+            app:boxCornerRadiusBottomStart="20dp"
+            app:boxCornerRadiusBottomEnd="20dp"
+            app:boxCornerRadiusTopEnd="20dp"
+            app:boxCornerRadiusTopStart="20dp"
+            app:boxStrokeColor="@color/apple_green"
+            app:boxStrokeWidth="1dp"
+            app:boxStrokeWidthFocused="1.5dp"
+            app:boxStrokeErrorColor="@color/salamander"
+            >
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_client_lastname"
+                android:layout_width="350dp"
+                android:layout_height="45dp"
+                android:lines="1"
+                android:textSize="14sp"
+                android:imeOptions="actionNext"
+                android:textAlignment="textStart"
+                android:ems="10"
+                app:textAllCaps="true"
+                android:maxLines="1"
+                tools:text=""
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_client_phone_number"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:hint="Numéro de téléphone"
+            app:hintAnimationEnabled="true"
+            app:hintTextColor="@color/green_light_1"
+            app:boxCornerRadiusBottomStart="20dp"
+            app:boxCornerRadiusBottomEnd="20dp"
+            app:boxCornerRadiusTopEnd="20dp"
+            app:boxCornerRadiusTopStart="20dp"
+            app:boxStrokeColor="@color/apple_green"
+            app:boxStrokeWidth="1dp"
+            app:boxStrokeWidthFocused="1.5dp"
+            app:boxStrokeErrorColor="@color/salamander"
+            >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_client_phone_number"
+                android:layout_width="350dp"
+                android:layout_height="45dp"
+                android:lines="1"
+                android:textSize="14sp"
+                android:imeOptions="actionNext"
+                android:textAlignment="textStart"
+                android:ems="10"
+                android:textAllCaps="true"
+                android:maxLines="1"
+                android:inputType="phone"
+                tools:text=""
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_client_fidelity"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:hint="Points de fidélité"
+            app:hintAnimationEnabled="true"
+            app:hintTextColor="@color/green_light_1"
+            app:boxCornerRadiusBottomStart="20dp"
+            app:boxCornerRadiusBottomEnd="20dp"
+            app:boxCornerRadiusTopEnd="20dp"
+            app:boxCornerRadiusTopStart="20dp"
+            app:boxStrokeColor="@color/apple_green"
+            app:boxStrokeWidth="1dp"
+            app:boxStrokeWidthFocused="1.5dp"
+            app:boxStrokeErrorColor="@color/salamander"
+            >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_client_fidelity"
+                android:layout_width="350dp"
+                android:layout_height="45dp"
+                android:lines="1"
+                android:textSize="14sp"
+                android:imeOptions="actionDone"
+                android:textAlignment="textStart"
+                android:ems="10"
+                android:maxLength="3"
+                android:maxLines="1"
+                android:inputType="number"
+                tools:text=""
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_client_comment"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:hint="Commentaire"
+            app:hintAnimationEnabled="true"
+            app:hintTextColor="@color/green_light_1"
+            app:boxCornerRadiusBottomStart="20dp"
+            app:boxCornerRadiusBottomEnd="20dp"
+            app:boxCornerRadiusTopEnd="20dp"
+            app:boxCornerRadiusTopStart="20dp"
+            app:boxStrokeColor="@color/apple_green"
+            app:boxStrokeWidth="1dp"
+            app:boxStrokeWidthFocused="1.5dp"
+            app:boxStrokeErrorColor="@color/salamander"
+            >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_client_comment"
+                android:layout_width="350dp"
+                android:layout_height="100dp"
+                android:lines="1"
+                android:textSize="14sp"
+                android:imeOptions="actionDone"
+                android:textAlignment="textStart"
+                android:ems="10"
+                android:maxLines="3"
+                android:inputType="textLongMessage"
+                tools:text=""
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="10sp"
+            android:textStyle="italic"
+            android:text="Le commentaire n'est pour l'instant pas prs en compte dans l'enregistrement d'un client." />
+    </LinearLayout>
 
     <Button
         android:id="@+id/bt_add_client"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/CustomButton"
         android:text="Ajouter"
-        android:layout_margin="20dp"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />
 

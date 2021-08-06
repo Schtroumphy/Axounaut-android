@@ -2,7 +2,7 @@
     <!-- Base application theme. -->
     <style name="Theme.Axounaut" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/salamander</item>
+        <item name="colorPrimary">@color/orange_002</item>
         <item name="colorPrimaryVariant">@color/ginger</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
@@ -16,6 +16,7 @@
         <item name="android:buttonStyle">@style/CustomButton</item>
         <item name="android:fontFamily">@font/noto_sans_regular</item>
 
+
     </style>
 
     <!-- Override listChoiceBackgroundIndicator. -->
@@ -27,9 +28,7 @@
     <style name="App.custom.EditText" parent="@android:style/Widget.EditText">
         <item name="android:width">350dp</item>
         <item name="android:background">@drawable/bg_edit_text</item>
-        <item name="android:paddingStart">15dp</item>
         <item name="android:padding">6dp</item>
-        <item name="android:gravity">center</item>
     </style>
 
     <style name="App.custom.MediumEditText" parent="@android:style/Widget.EditText">

@@ -17,7 +17,7 @@ import com.jeanloth.project.android.kotlin.domain.usescases.usecases.GetCommandB
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.ObserveArticleWrappersByCommandIdUseCase
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.ObserveCommandByIdUseCase
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.command.SaveCommandUseCase
-import com.jeanloth.project.android.kotlin.domain.usescases.usecases.appClient.DeleteClientUseCase
+import com.jeanloth.project.android.kotlin.domain.usescases.usecases.appClient.DeleteClientsUseCase
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.appClient.ObserveClientUseCase
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.appClient.SaveClientUseCase
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.article.*
@@ -64,7 +64,7 @@ val appModule = module {
 
     factory{ SaveClientUseCase(get()) }
     factory{ ObserveClientUseCase(get()) }
-    factory{ DeleteClientUseCase(get()) }
+    factory{ DeleteClientsUseCase(get()) }
 
     factory{ SaveCommandUseCase(get()) }
     factory{ GetAllCommandsUseCase(get()) }

@@ -18,13 +18,16 @@ import com.jeanloth.project.android.kotlin.axounaut.extensions.convertToLocalDat
 import com.jeanloth.project.android.kotlin.axounaut.mock.DataMock
 import com.jeanloth.project.android.kotlin.axounaut.ui.home.HomeFragmentDirections
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.CommandVM
+import com.jeanloth.project.android.kotlin.axounaut.viewModels.MainVM
 import com.jeanloth.project.android.kotlin.domain_models.entities.Command
 import com.jeanloth.project.android.kotlin.domain_models.entities.CommandStatusType
 import kotlinx.android.synthetic.main.fragment_command_list.*
 import kotlinx.android.synthetic.main.fragment_command_list.view.*
+import org.koin.android.viewmodel.ext.android.sharedViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import splitties.views.onClick
+import java.time.LocalDate
 
 /**
  * A fragment representing a list of Command.
@@ -33,6 +36,7 @@ class CommandListFragment(
     var displayMode: CommandDisplayMode
 ) : Fragment() {
 
+    private val mainVM : MainVM by sharedViewModel()
     private val commandVM : CommandVM by viewModel{
         parametersOf(
             0L
@@ -43,7 +47,7 @@ class CommandListFragment(
     enum class CommandDisplayMode(val statusCode : List<Int>){
         IN_PROGRESS(listOf(CommandStatusType.IN_PROGRESS.code, CommandStatusType.DONE.code)),
         TO_COME(listOf(CommandStatusType.TO_DO.code)),
-        PAST(listOf( CommandStatusType.PAYED.code, CommandStatusType.CANCELED.code, CommandStatusType.DELIVERED.code)),
+        PAST(listOf( CommandStatusType.DONE.code, CommandStatusType.PAYED.code, CommandStatusType.CANCELED.code, CommandStatusType.DELIVERED.code)),
     }
 
     override fun onCreateView(
@@ -56,6 +60,7 @@ class CommandListFragment(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        mainVM.setHeaderTitle("Commandes")
         commandAdapter = CommandAdapter(emptyList(), requireContext())
 
         // Set the adapter
@@ -72,9 +77,13 @@ class CommandListFragment(
         lifecycleScope.launchWhenStarted {
             commandVM.allCommandsLiveData().observe(viewLifecycleOwner){
                 Log.d("[Article Fragment", "Article observed : $it")
-                val commandToDisplay = it.filter {
+                var commandToDisplay = it.filter {
                     it.statusCode in displayMode.statusCode
                 }.sortedBy { it.deliveryDate?.convertToLocalDate()}
+
+                if(displayMode == CommandDisplayMode.IN_PROGRESS ){
+                    commandToDisplay = commandToDisplay.filter{ it.deliveryDate?.convertToLocalDate() == LocalDate.now()}
+                }
 
                 commandAdapter.setItems( commandToDisplay)
 

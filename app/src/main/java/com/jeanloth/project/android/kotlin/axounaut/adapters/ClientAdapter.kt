@@ -20,7 +20,7 @@ class ClientAdapter(
     var onPhoneClick : ((AppClient) -> Unit)? = null
     var onFavoriteClick : ((AppClient) -> Unit)? = null
     var onClick : ((AppClient) -> Unit)? = null
-    var onCheckboxClick : ((AppClient) -> Unit)? = null
+    var onCheckboxClick : ((AppClient, Boolean) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ClientHolder {
         val itemView = LayoutInflater.from(parent.context)
@@ -55,8 +55,9 @@ class ClientAdapter(
                 itemView.ib_favorite.backgroundTintList = ColorStateList.valueOf(context.resources.getColor(R.color.gray_1));
             }
 
-            itemView.cb_client.setOnClickListener {
-                onCheckboxClick?.invoke(client)
+            itemView.cb_client.isChecked = false
+            itemView.cb_client.setOnCheckedChangeListener { _, isChecked ->
+                onCheckboxClick?.invoke(client, isChecked )
             }
 
             itemView.ib_call.setOnClickListener {

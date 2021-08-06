@@ -37,8 +37,19 @@
     <string name="client_fidelity_label">%1$s points de fidélité</string>
     <string name="client_name_label">%1$s %2$s</string>
 
+    <!-- Errors -->
+    <string name="no_client_error">Il n\'y a aucun client d\'enregistré. Veuillez en ajouter un en cliquant sur ajouter.</string>
 
+    <!-- Success messages -->
+    <plurals name="adding_client_toast">
+        <item quantity="one" formatted="true">Le client a été supprimé avec succès.</item>
+        <item quantity="other" formatted="true">Les %1$d clients ont bien été supprimés.</item>
+    </plurals>
 
+    <plurals name="productCount">
+        <item quantity="one" formatted="true">%1$d of %2$d product</item>
+        <item quantity="other" formatted="true">%1$d of %2$d products</item>
+    </plurals>
 
     <!-- Preference Titles -->
     <string name="messages_header">Messages</string>
