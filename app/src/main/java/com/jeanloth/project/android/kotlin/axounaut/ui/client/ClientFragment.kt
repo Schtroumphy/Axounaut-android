@@ -82,11 +82,17 @@ class ClientFragment : Fragment() {
         }
 
         bt_btn_delete_client.onClick {
+            updateActionButtonDisplay(false)
             clientVM.deleteClients(clientListSelected)
             Snackbar.make(requireView(), resources.getQuantityString(R.plurals.adding_client_toast, clientListSelected.size, clientListSelected.size),
                 Snackbar.LENGTH_LONG).show()
             clientListSelected.clear()
         }
+    }
+
+    private fun updateActionButtonDisplay(isEditMode: Boolean) {
+        bt_btn_delete_client.visibility =  if(!isEditMode) VISIBLE else GONE
+        tv_btn_add_client.visibility =  if(!isEditMode) GONE else VISIBLE
     }
 
     private fun updateSelectedClientList(client: AppClient, selected: Boolean) {
@@ -101,8 +107,7 @@ class ClientFragment : Fragment() {
         }
         Log.d("[Client Fragment]", "Clients selected : $clientListSelected")
 
-        bt_btn_delete_client.visibility =  if(clientListSelected.isEmpty()) GONE else VISIBLE
-        tv_btn_add_client.visibility =  if(clientListSelected.isEmpty()) VISIBLE else GONE
+        updateActionButtonDisplay(clientListSelected.isEmpty())
 
     }
 

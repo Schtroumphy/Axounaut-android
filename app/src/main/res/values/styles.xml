@@ -12,6 +12,23 @@
 
     </style>
 
+    <style name="AccentButton" parent="ThemeOverlay.AppCompat.Dark">
+        <!-- customize colorButtonNormal for the disable color -->
+        <item name="colorButtonNormal">@color/gray_2</item>
+        <!-- customize colorAccent for the enabled color -->
+        <item name="android:colorAccent">@color/orange_003</item>
+    </style>
+
+    <style name="MaterialButtonStyle" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="backgroundTint">@color/selector_bt_orange</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">36dp</item>
+        <item name="android:background">@drawable/bg_rounded</item>
+        <item name="android:paddingHorizontal">100dp</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:layout_marginBottom">20dp</item>
+    </style>
+
     <style name="CustomButton" parent="Widget.AppCompat.Button">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">36dp</item>

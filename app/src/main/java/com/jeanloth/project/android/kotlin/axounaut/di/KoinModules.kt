@@ -1,10 +1,7 @@
 package com.jeanloth.project.android.kotlin.axounaut.di
 
 import android.content.Context
-import com.jeanloth.project.android.kotlin.axounaut.viewModels.ClientVM
-import com.jeanloth.project.android.kotlin.axounaut.viewModels.ArticleVM
-import com.jeanloth.project.android.kotlin.axounaut.viewModels.CommandVM
-import com.jeanloth.project.android.kotlin.axounaut.viewModels.MainVM
+import com.jeanloth.project.android.kotlin.axounaut.viewModels.*
 import com.jeanloth.project.android.kotlin.data.contracts.AppClientContract
 import com.jeanloth.project.android.kotlin.data.repositories.ArticleRepository
 import com.jeanloth.project.android.kotlin.data.contracts.ArticleContract
@@ -51,6 +48,7 @@ val appModule = module {
     viewModel { MainVM() }
     viewModel { ArticleVM( get(), get(), get(), get()) }
     viewModel { ClientVM( get(), get(), get()) }
+    viewModel { AddCommandVM() }
     viewModel { (currentCommandId : Long) -> CommandVM(
         currentCommandId = currentCommandId,
         get(), get(), get(), get(), get(), get(), get())

@@ -42,14 +42,8 @@ class ArticleDetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mainVM.setHeaderTitle("Détail article")
 
-        bt_previous_or_close.background = AppCompatResources.getDrawable(
-            requireContext(),
-            R.drawable.ic_left_arrow
-        )
-
-        setupHeader()
+        mainVM.setHeaderTitle("Ajouter un article")
 
         // Clear focus on typing done
         et_article_price.setOnEditorActionListener { v, actionId, event ->
@@ -101,15 +95,6 @@ class ArticleDetailsFragment : Fragment() {
 
         val selected: String = spinner_categories.selectedItem.toString()
         if (selected == "what ever the option was") {
-        }
-    }
-
-    private fun setupHeader() {
-        tv_title.text = "Ajouter un article"
-        tv_subtitle.visibility = View.GONE
-
-        bt_previous_or_close.setOnClickListener {
-            findNavController().popBackStack()
         }
     }
 

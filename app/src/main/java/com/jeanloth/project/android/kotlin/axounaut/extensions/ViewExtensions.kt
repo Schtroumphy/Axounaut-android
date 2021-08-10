@@ -7,6 +7,8 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.Fragment
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.jeanloth.project.android.kotlin.axounaut.R
 import com.jeanloth.project.android.kotlin.domain_models.entities.Article
 import java.text.DecimalFormat
@@ -50,3 +52,34 @@ fun Context.hideKeyboard(view: View) {
     val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
     inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
 }
+
+
+fun BottomSheetDialog.fullScreen() : BottomSheetDialog {
+    behavior.apply {
+        isFitToContents = false
+        skipCollapsed = true
+        state = BottomSheetBehavior.STATE_EXPANDED
+        isHideable = false
+        isDraggable = false
+
+        addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(view: View, i: Int) {
+                when (state) {
+                    BottomSheetBehavior.STATE_HIDDEN -> {
+                        dismiss()
+                    }
+                    else -> {
+                    }
+                }
+            }
+
+            override fun onSlide(view: View, slideOffest: Float) {
+
+            }
+        })
+    }
+    return this
+}
+
+

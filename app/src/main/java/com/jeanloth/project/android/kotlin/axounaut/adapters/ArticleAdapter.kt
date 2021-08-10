@@ -10,8 +10,10 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat.getColor
 import androidx.recyclerview.widget.RecyclerView
 import com.jeanloth.project.android.kotlin.axounaut.R
+import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleCategory
 import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleWrapper
 import kotlinx.android.synthetic.main.item_article.view.*
+import splitties.systemservices.notificationManager
 import splitties.views.verticalPadding
 
 class ArticleAdapter(
@@ -21,6 +23,7 @@ class ArticleAdapter(
 ) : RecyclerView.Adapter<ArticleAdapter.ArticleHolder>()  {
 
     var onAddMinusClick : ((List<ArticleWrapper>) -> Unit)? = null
+    var displayNoArticlesError : ((Boolean) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArticleHolder {
         val itemView = LayoutInflater.from(parent.context)
@@ -36,6 +39,12 @@ class ArticleAdapter(
 
     override fun getItemCount(): Int {
         return articleList.size
+    }
+
+    fun filterItemByCategory(articles : List<ArticleWrapper>, category : Int){ // Category code
+        this.articleList = articles.filter { it.article.category == category }
+        notifyDataSetChanged()
+        displayNoArticlesError?.invoke(this.articleList.isEmpty())
     }
 
     fun setItems(articles : List<ArticleWrapper>, isEditMode : Boolean){
@@ -60,8 +69,8 @@ class ArticleAdapter(
             if(isEditMode){
                 itemView.ib_minus.visibility = if(count > 0) VISIBLE else GONE
 
-                itemView.tv_name.setTextColor(getColor(context, if(count > 0) R.color.salamander else R.color.gray_1))
-                itemView.tv_count.setTextColor(getColor(context, if(count > 0) R.color.salamander else R.color.gray_1))
+                itemView.tv_name.setTextColor(getColor(context, if(count > 0) R.color.orange_003 else R.color.gray_1))
+                itemView.tv_count.setTextColor(getColor(context, if(count > 0) R.color.orange_002 else R.color.gray_1))
 
                 itemView.ib_add.setOnClickListener {
                     articleWrapper.count = count + 1

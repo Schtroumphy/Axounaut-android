@@ -11,7 +11,6 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="vertical"
-        android:layout_marginHorizontal="25dp"
         android:layout_marginVertical="5dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -19,46 +18,84 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:textSize="16sp"
+            android:fontFamily="@font/rosario_wght"
             android:gravity="center"
+            android:textColor="@color/brown_57"
+            android:textSize="26sp"
+            android:textStyle="bold"
             android:padding="5dp"
             android:layout_marginBottom="10dp"
             android:text="@string/add_client_label" />
 
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/et_client_firstname"
-            style="@style/App.custom.MediumEditText"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_client_firstname"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:drawableStart="@drawable/ic_add_user"
-            android:lines="1"
-            android:textSize="14sp"
-            android:imeOptions="actionNext"
+            android:layout_gravity="center"
             android:hint="Prénom du client"
-            android:textAlignment="center"
-            android:ems="10"
-            android:maxLines="1"
-            android:inputType="textCapSentences"
-            tools:text="" />
+            app:boxCornerRadiusBottomEnd="20dp"
+            app:boxCornerRadiusBottomStart="20dp"
+            app:boxCornerRadiusTopEnd="20dp"
+            app:boxCornerRadiusTopStart="20dp"
+            app:boxStrokeColor="@color/marron_light_1"
+            app:boxStrokeErrorColor="@color/salamander"
+            app:boxStrokeWidth="1dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginHorizontal="5dp"
+            app:boxStrokeWidthFocused="1.5dp"
+            app:hintAnimationEnabled="true"
+            app:hintTextColor="@color/green_light_1">
 
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/et_client_phone"
-            style="@style/App.custom.MediumEditText"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_client_firstname"
+                android:layout_width="300dp"
+                android:layout_height="45dp"
+                android:ems="10"
+                android:imeOptions="actionNext"
+                android:maxLines="1"
+                android:maxLength="20"
+                android:textAlignment="textStart"
+                android:inputType="textCapSentences"
+                android:textSize="14sp"
+                tools:text="Test du tex " />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_client_phone"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingStart="15dp"
-            android:textSize="14sp"
-            android:layout_marginTop="15dp"
-            android:clickable="true"
-            android:inputType="phone"
-            android:maxLines="1"
-            android:drawableStart="@drawable/ic_add_user"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:hint="Numéro un client"
-            android:layout_marginStart="15dp"/>
+            android:layout_gravity="center"
+            android:hint="Numéro de téléphone"
+            app:boxCornerRadiusBottomEnd="20dp"
+            app:boxCornerRadiusBottomStart="20dp"
+            app:boxCornerRadiusTopEnd="20dp"
+            app:boxCornerRadiusTopStart="20dp"
+            app:boxStrokeColor="@color/marron_light_1"
+            app:boxStrokeErrorColor="@color/salamander"
+            app:boxStrokeWidth="1dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginHorizontal="5dp"
+            app:boxStrokeWidthFocused="1.5dp"
+            app:hintAnimationEnabled="true"
+            app:hintTextColor="@color/green_light_1">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_client_phone"
+                android:layout_width="300dp"
+                android:layout_height="45dp"
+                android:ems="10"
+                android:imeOptions="actionNext"
+                android:maxLines="1"
+                android:maxLength="10"
+                android:textAlignment="textStart"
+                android:inputType="phone"
+                android:textSize="14sp"
+                tools:text="Test du text " />
+        </com.google.android.material.textfield.TextInputLayout>
+
 
     </LinearLayout>
 

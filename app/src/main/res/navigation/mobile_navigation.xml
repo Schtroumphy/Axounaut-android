@@ -14,6 +14,10 @@
         <action
             android:id="@+id/action_nav_home_to_nav_command_details"
             app:destination="@id/nav_command_details" />
+
+        <action
+            android:id="@+id/action_nav_home_to_nav_article"
+            app:destination="@id/nav_article" />
     </fragment>
 
     <fragment
@@ -87,5 +91,18 @@
         tools:layout="@layout/fragment_client_details" >
 
     </fragment>
+
+    <fragment
+        android:id="@+id/nav_add_command"
+        android:name="com.jeanloth.project.android.kotlin.axounaut.ui.commands.AddCommandDialogFragment"
+        android:label="Ajouter une commande"
+        tools:layout="@layout/fragment_add_command_dialog" >
+
+        <action
+            android:id="@+id/action_nav_add_command_to_nav_article"
+            app:destination="@id/nav_article" />
+    </fragment>
+
+
 
 </navigation>

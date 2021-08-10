@@ -118,5 +118,9 @@ class MainActivity : AppCompatActivity() {
         fab_menu.visibility = if(makeVisible) VISIBLE else GONE
     }
 
+    fun displayAddCommandFragment(){
+        AddCommandDialogFragment.newInstance().show(supportFragmentManager, "dialog")
+    }
+
 
 }

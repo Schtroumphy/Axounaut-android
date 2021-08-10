@@ -1,6 +1,7 @@
 package com.jeanloth.project.android.kotlin.axounaut.ui.commands
 
 import android.app.DatePickerDialog
+import android.app.Dialog
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -11,34 +12,30 @@ import android.view.View.*
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
-import androidx.lifecycle.lifecycleScope
+import androidx.core.content.ContextCompat.getColor
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.snackbar.Snackbar
 import com.jeanloth.project.android.kotlin.axounaut.R
 import com.jeanloth.project.android.kotlin.axounaut.adapters.ArticleAdapter
 import com.jeanloth.project.android.kotlin.axounaut.extensions.*
-import com.jeanloth.project.android.kotlin.axounaut.mock.DataMock
+import com.jeanloth.project.android.kotlin.axounaut.ui.home.HomeFragmentDirections
+import com.jeanloth.project.android.kotlin.axounaut.viewModels.AddCommandVM
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.ArticleVM
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.ClientVM
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.CommandVM
 import com.jeanloth.project.android.kotlin.domain_models.entities.*
 import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleWrapper.Companion.createWrapperList
-import kotlinx.android.synthetic.main.add_client_dialog.*
 import kotlinx.android.synthetic.main.add_client_dialog.view.*
 import kotlinx.android.synthetic.main.fragment_add_command_dialog.*
-import kotlinx.android.synthetic.main.fragment_client_details.*
-import kotlinx.android.synthetic.main.fragment_client_details.et_client_firstname
-import kotlinx.android.synthetic.main.fragment_client_details.et_client_lastname
 import org.koin.android.viewmodel.ext.android.sharedViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import splitties.alertdialog.appcompat.*
-import splitties.alertdialog.appcompat.messageResource
 import java.time.LocalDate
 import java.util.*
 import splitties.alertdialog.material.materialAlertDialog
-import splitties.views.inflate
 import splitties.views.onClick
 
 
@@ -55,9 +52,10 @@ class AddCommandDialogFragment : BottomSheetDialogFragment() {
 
     var articlesActualized = listOf<ArticleWrapper>()
     var isEditMode = true
-    private lateinit var adapter: ArticleAdapter
+    private lateinit var articleAdapter: ArticleAdapter
     private val clientVM : ClientVM by sharedViewModel()
     private val articleVM : ArticleVM by viewModel()
+    private val addCommandVM : AddCommandVM by viewModel()
     private val commandVM : CommandVM by viewModel{
         parametersOf(
             0L
@@ -65,6 +63,13 @@ class AddCommandDialogFragment : BottomSheetDialogFragment() {
     }
     private var selectedClient : AppClient? = null
     private lateinit var datePickerDialog : DatePickerDialog
+
+    lateinit var bottomSheetDialog: BottomSheetDialog
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        bottomSheetDialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
+        return bottomSheetDialog.fullScreen()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -81,14 +86,17 @@ class AddCommandDialogFragment : BottomSheetDialogFragment() {
 
         val articles = articleVM.getAllArticles()
         tv_error_no_articles.visibility = if(articles.isEmpty()) VISIBLE else GONE
-        adapter = ArticleAdapter(createWrapperList(articles), true, requireContext()).apply {
+        articleAdapter = ArticleAdapter(createWrapperList(articles).filter { it.article.category == ArticleCategory.SWEET.code }, true, requireContext()).apply {
             onAddMinusClick = {
                 Log.d("ADD COMMAND", "  articles list : $it")
-                bt_next.visibility  = if(it.count { it.count > 0 } > 0 && et_client.text.toString().isNotEmpty() && et_delivery_date.text.toString().isNotEmpty()) VISIBLE else INVISIBLE
                 articlesActualized = it
+                addCommandVM.setArticlesLiveData(articlesActualized)
+            }
+            displayNoArticlesError = {
+                //tv_error_no_articles.visibility = if(it) VISIBLE else GONE
             }
         }
-        rv_articles.adapter = adapter
+        rv_articles.adapter = articleAdapter
 
         bt_next.onClick {
             // Display previous button
@@ -101,24 +109,20 @@ class AddCommandDialogFragment : BottomSheetDialogFragment() {
             }
         }
 
-        /*et_client.setOnEditorActionListener { v, actionId, event ->
-            if(actionId == EditorInfo.IME_ACTION_DONE){
-                et_client.clearFocus()
-            }
-            false
-        }*/
+        clientVM.allClientsLiveData().observe(viewLifecycleOwner){
+            Log.d("[Client Fragment", "Client observed map : ${it.map { it.toNameString() }}")
+            val clientAdapter: ArrayAdapter<AppClient> = ArrayAdapter<AppClient>(
+                requireContext(),
+                android.R.layout.simple_list_item_1, it
+            )
+            clientAdapter.setNotifyOnChange(true)
+            et_client.threshold = 1
+            et_client.setAdapter(clientAdapter)
+        }
 
-        lifecycleScope.launchWhenStarted {
-            clientVM.allClientsLiveData().observe(viewLifecycleOwner){
-                Log.d("[Client Fragment", "Client observed map : ${it.map { it.toNameString() }}")
-                val clientAdapter: ArrayAdapter<AppClient> = ArrayAdapter<AppClient>(
-                    requireContext(),
-                    android.R.layout.simple_list_item_1, it
-                )
-                clientAdapter.setNotifyOnChange(true)
-                et_client.threshold = 1
-                et_client.setAdapter(clientAdapter)
-            }
+        addCommandVM.canResumeLiveData.observe(viewLifecycleOwner){
+            Log.d("[AddCommandDialog]", "Can resume ? $it")
+            bt_next.isEnabled = it
         }
 
         setupListenerForAutoCompleteTvClient()
@@ -127,6 +131,42 @@ class AddCommandDialogFragment : BottomSheetDialogFragment() {
 
         ib_add_client.onClick {
             showAddClientDialog()
+        }
+
+        bt_add_article.onClick {
+            dismiss()
+            // Redirect to add article fragment
+            findNavController().navigate(HomeFragmentDirections.actionNavHomeToNavArticle())
+        }
+
+        bt_sweet.onClick {
+            updateDisplayByCategory(ArticleCategory.SWEET.code)
+            articleAdapter.filterItemByCategory(createWrapperList(articles), ArticleCategory.SWEET.code)
+        }
+
+        bt_salt.onClick {
+            updateDisplayByCategory(ArticleCategory.SALTED.code)
+            articleAdapter.filterItemByCategory(createWrapperList(articles), ArticleCategory.SALTED.code)
+        }
+    }
+
+    private fun updateDisplayByCategory(code: Int) {
+        when(code){
+            ArticleCategory.SWEET.code -> {
+                bt_sweet.setTextColor(getColor(requireContext(), R.color.orange_001))
+                sweet_divider.visibility = VISIBLE
+
+                bt_salt.setTextColor(getColor(requireContext(), R.color.marron_light_1))
+                salt_divider.visibility = GONE
+            }
+            ArticleCategory.SALTED.code -> {
+                bt_sweet.setTextColor(getColor(requireContext(), R.color.marron_light_1))
+                sweet_divider.visibility = GONE
+
+                bt_sweet.setTextColor(getColor(requireContext(), R.color.orange_001))
+                salt_divider.visibility = VISIBLE
+            }
+            ArticleCategory.OTHER.code -> {}
         }
     }
 
@@ -137,17 +177,14 @@ class AddCommandDialogFragment : BottomSheetDialogFragment() {
         val day = calendar.get(Calendar.DAY_OF_MONTH)
 
         et_delivery_date.setOnClickListener {
-                this.hideKeyboard()
                 datePickerDialog = DatePickerDialog( requireContext(),{ view, year, monthOfYear, dayOfMonth ->
                     val dateSelected = LocalDate.of(year, monthOfYear+1, dayOfMonth)
                     Log.d("[DATE SELECTED]", "$dateSelected")
                     Log.d("[DATE SELECTED]", "${dateSelected.formatDateToOtherFormat("yyyy-MM-dd", "dd-MM-yyyy")}")
 
                     et_delivery_date.setText("${dateSelected.formatDateToOtherFormat("yyyy-MM-dd", "dd-MM-yyyy")}")
+                    addCommandVM.setDeliveryDate(dateSelected.formatDateToOtherFormat("yyyy-MM-dd", "dd-MM-yyyy"))
                     et_delivery_date.clearFocus()
-                    if(et_client.text.toString().isEmpty())
-                        et_client.requestFocus()
-
                 }, year, month, day)
             datePickerDialog.show()
             }
@@ -171,6 +208,7 @@ class AddCommandDialogFragment : BottomSheetDialogFragment() {
             if (item is AppClient) {
                 Log.d("[Client Fragment]", "Client selected : $item")
                 selectedClient = item
+                addCommandVM.setClientLiveData(item)
             }
             this.hideKeyboard()
             et_client.clearFocus()
@@ -179,9 +217,12 @@ class AddCommandDialogFragment : BottomSheetDialogFragment() {
 
     private fun changeEditModeDisplay() {
         isEditMode = !isEditMode
+        bt_add_article.visibility = if(isEditMode) VISIBLE else GONE
+        ll_bt_category.visibility = if(isEditMode) VISIBLE else GONE
+        ib_add_client.visibility = if(isEditMode) VISIBLE else GONE
+        tv_command_details.visibility = if(isEditMode) GONE else VISIBLE
         setupPreviousCloseButton()
-        setupNextButton()
-        adapter.setItems(articlesActualized, isEditMode)
+        articleAdapter.setItems(articlesActualized, isEditMode)
         setupElements()
     }
 
@@ -211,26 +252,6 @@ class AddCommandDialogFragment : BottomSheetDialogFragment() {
             requireContext(),
             if (isEditMode) R.drawable.ic_close else R.drawable.ic_left_arrow
         )
-    }
-
-    private fun setupNextButton() {
-        bt_next.background = getDrawable(
-            requireContext(),
-            if (isEditMode) R.drawable.ic_right_arrow else R.drawable.ic_check
-        )
-    }
-
-    private fun setupSelectedItems(article: Article) {
-        if (articlesActualized.map { it.article.name }.contains(article.name)) {
-            /*if (article > 0) {
-                //articlesActualized[articlesActualized.map { it.name }.indexOf(article.name)] = article
-            }
-        } else {
-            //articlesActualized.add(article)
-        }*/
-            //articlesActualized.removeIf { it.count == 0 }
-            Log.d("ADD COMMAND", "Selected items : $articlesActualized")
-        }
     }
 
     private fun setupHeaders() {
@@ -265,7 +286,9 @@ class AddCommandDialogFragment : BottomSheetDialogFragment() {
                 Log.d("[ADD COMMAND]", "Clic sur ok")
                 addClient(dialogView)
             }
-            cancelButton()
+            negativeButton(R.string.cancel){
+                dismiss()
+            }
         }.show()
     }
 

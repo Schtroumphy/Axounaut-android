@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
+import com.jeanloth.project.android.kotlin.axounaut.MainActivity
 import com.jeanloth.project.android.kotlin.axounaut.R
 import com.jeanloth.project.android.kotlin.axounaut.adapters.CommandAdapter
 import com.jeanloth.project.android.kotlin.axounaut.extensions.convertToLocalDate
@@ -61,6 +62,7 @@ class CommandListFragment(
         super.onViewCreated(view, savedInstanceState)
 
         mainVM.setHeaderTitle("Commandes")
+        (activity as MainActivity).hideOrShowMenuButton(true)
         commandAdapter = CommandAdapter(emptyList(), requireContext())
 
         // Set the adapter
@@ -102,6 +104,10 @@ class CommandListFragment(
         tv_error_no_commands.onClick {
             Snackbar.make(requireView(), "Test snackbar.",
                 Snackbar.LENGTH_SHORT).show()
+        }
+
+        fab_add_command.onClick {
+            (activity as MainActivity).displayAddCommandFragment()
         }
     }
 
