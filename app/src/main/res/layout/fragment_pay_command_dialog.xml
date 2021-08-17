@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cl_add_bottom_fragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    android:background="@drawable/bottom_sheet_bg"
+    tools:context=".ui.commands.AddCommandDialogFragment">
+
+    <ImageButton
+        android:id="@+id/bt_previous_or_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="25dp"
+        android:background="@drawable/ic_close"
+        android:backgroundTint="@color/brown_57"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <TextView
+        android:id="@+id/tv_add_command_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="35dp"
+        android:fontFamily="@font/rosario_wght"
+        android:gravity="center"
+        android:text="@string/add_command_label"
+        android:textColor="@color/brown_57"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/bt_previous_or_close"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til_delivery_date"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:hint="Date de livraison"
+        app:boxCornerRadiusBottomEnd="20dp"
+        app:boxCornerRadiusBottomStart="20dp"
+        app:boxCornerRadiusTopEnd="20dp"
+        app:boxCornerRadiusTopStart="20dp"
+        app:boxStrokeColor="@color/marron_light_1"
+        app:boxStrokeErrorColor="@color/salamander"
+        app:boxStrokeWidth="1dp"
+        android:focusableInTouchMode="false"
+        android:layout_marginTop="25dp"
+        android:layout_marginHorizontal="25dp"
+        app:boxStrokeWidthFocused="1.5dp"
+        app:hintAnimationEnabled="true"
+        app:hintTextColor="@color/green_light_1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_add_command_title">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_delivery_date"
+            android:layout_width="350dp"
+            android:layout_height="45dp"
+            android:ems="10"
+            android:imeOptions="actionNext"
+            android:inputType="date"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:textAlignment="textStart"
+            android:textSize="14sp"
+            tools:text="Test du text " />
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/ll_client"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="25dp"
+        android:layout_marginVertical="12dp"
+        android:gravity="center_vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/til_delivery_date">
+
+
+        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+            android:id="@+id/et_client"
+            style="@style/App.custom.MediumEditText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:textSize="14sp"
+            android:clickable="true"
+            android:textColorHint="@color/gray_2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:hint="Choisir un client"
+            android:completionThreshold="1"/>
+
+
+        <Button
+            android:id="@+id/ib_add_client"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_weight="1"
+            android:background="@drawable/ic_add"
+            android:backgroundTint="@color/selector_text_color"
+            android:foreground="?android:attr/selectableItemBackground"
+            app:layout_constraintBottom_toBottomOf="@+id/et_client"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/et_client"
+            app:layout_constraintTop_toTopOf="@+id/et_client" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/tv_error_no_articles"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:text="@string/no_articles_error"
+        android:visibility="gone"
+        android:layout_marginTop="35dp"
+        tools:visibility="visible"
+        android:gravity="center"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ll_bt_category"
+        app:layout_constraintBottom_toTopOf="@+id/tv_total_price"/>
+
+
+    <LinearLayout
+        android:id="@+id/ll_bt_category"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ll_client">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_marginEnd="55dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <Button
+                android:id="@+id/bt_sweet"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sucré"
+                android:background="?android:attr/selectableItemBackground"
+                android:textColor="@color/orange_001"
+                android:textAllCaps="false"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <View
+                android:id="@+id/sweet_divider"
+                android:layout_width="100dp"
+                android:layout_height="2dp"
+                android:background="@color/orange_001"
+                app:layout_constraintEnd_toEndOf="@id/bt_sweet"
+                app:layout_constraintTop_toBottomOf="@id/bt_sweet"
+                app:layout_constraintStart_toStartOf="@id/bt_sweet" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <Button
+                android:id="@+id/bt_salt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Salé"
+                android:background="?android:attr/selectableItemBackground"
+                android:textAllCaps="false"
+                android:layout_marginEnd="55dp"
+                android:textColor="@color/marron_light_1"
+                android:padding="0dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <View
+                android:id="@+id/salt_divider"
+                android:layout_width="100dp"
+                android:layout_height="2dp"
+                android:visibility="gone"
+                android:background="@color/orange_001"
+                app:layout_constraintEnd_toEndOf="@id/bt_salt"
+                app:layout_constraintTop_toBottomOf="@id/bt_salt"
+                app:layout_constraintStart_toStartOf="@id/bt_salt" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_articles"
+        android:layout_width="match_parent"
+        android:layout_height="350dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp"
+        android:padding="15dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ll_bt_category"
+        app:layout_constraintBottom_toTopOf="@+id/tv_total_price"
+        tools:listitem="@layout/item_article" />
+
+    <TextView
+        android:id="@+id/bt_add_article"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/adding"
+        android:textColor="@color/orange_002"
+        android:fontFamily="@font/roboto_medium"
+        android:textSize="14sp"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:layout_marginEnd="45dp"
+        app:layout_constraintBottom_toTopOf="@id/bt_next"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_total_price"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:letterSpacing="0.2"
+        android:fontFamily="@font/roboto_light"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bt_next"
+        tools:text="Prix total : 15€" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/bt_next"
+        style="@style/MaterialButtonStyle"
+        android:text="Suivant"
+        android:enabled="false"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+    
+
+</androidx.constraintlayout.widget.ConstraintLayout>

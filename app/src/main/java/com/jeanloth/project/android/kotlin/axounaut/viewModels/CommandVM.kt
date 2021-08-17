@@ -18,7 +18,6 @@ import kotlinx.coroutines.launch
 import java.lang.Exception
 
 class CommandVM (
-    private val currentCommandId : Long = 0L,
     private val observeCommandsUseCase: ObserveCommandsUseCase,
     private val observeCommandByIdUseCase: ObserveCommandByIdUseCase,
     private val getCommandByIdUseCase: GetCommandByIdUseCase,
@@ -30,6 +29,7 @@ class CommandVM (
 
     var commands : List<Command> = emptyList()
     var currentCommand : Command? = null
+    var currentCommandId : Long = 0L
 
     var allCommandMutableLiveData : MutableLiveData<List<Command>> = MutableLiveData(emptyList())
     fun allCommandsLiveData() : LiveData<List<Command>> = allCommandMutableLiveData

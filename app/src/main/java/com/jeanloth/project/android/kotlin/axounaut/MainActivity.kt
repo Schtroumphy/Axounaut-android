@@ -15,9 +15,11 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import com.jeanloth.project.android.kotlin.axounaut.ui.commands.AddCommandDialogFragment
+import com.jeanloth.project.android.kotlin.axounaut.ui.commands.PayCommandDialogFragment
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.MainVM
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.viewmodel.ext.android.viewModel
+import splitties.views.imageResource
 import splitties.views.onClick
 
 
@@ -41,7 +43,8 @@ class MainActivity : AppCompatActivity() {
 
         mainVM.headerTitleLiveData().observe(this, {
             Log.d("[Main Activity]", "Title observed : $it")
-            tv_header_title.text = it
+            tv_header_title.text = it.first
+            tv_header_subtitle.text = it.second
         })
 
         bt_tb_menu_more.setOnClickListener {
@@ -120,6 +123,16 @@ class MainActivity : AppCompatActivity() {
 
     fun displayAddCommandFragment(){
         AddCommandDialogFragment.newInstance().show(supportFragmentManager, "dialog")
+    }
+
+    fun displayPayCommandFragment(commandId : Long){
+        PayCommandDialogFragment.newInstance(commandId).show(supportFragmentManager, "payDialog")
+    }
+
+    fun replaceHeaderLogoByBackButton(){
+        iv_header_logo.setBackgroundResource(R.drawable.ic_back_button)
+        iv_header_logo.layoutParams.width = 46
+        iv_header_logo.layoutParams.height = 46
     }
 
 
