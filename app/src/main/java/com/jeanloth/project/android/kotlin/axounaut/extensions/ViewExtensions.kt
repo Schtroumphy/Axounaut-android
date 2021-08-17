@@ -56,7 +56,7 @@ fun Context.hideKeyboard(view: View) {
 
 fun BottomSheetDialog.fullScreen() : BottomSheetDialog {
     behavior.apply {
-        isFitToContents = false
+        isFitToContents = true
         skipCollapsed = true
         state = BottomSheetBehavior.STATE_EXPANDED
         isHideable = false

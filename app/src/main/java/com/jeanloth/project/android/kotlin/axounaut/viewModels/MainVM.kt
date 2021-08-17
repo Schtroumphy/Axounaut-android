@@ -15,16 +15,15 @@ import kotlinx.coroutines.launch
 
 class MainVM: ViewModel() {
 
-
-    private val headerTitleMutableLiveData = MutableLiveData<String>()
-    fun headerTitleLiveData(): LiveData<String> = headerTitleMutableLiveData
+    private val headerTitleMutableLiveData = MutableLiveData<Pair<String, String>>()
+    fun headerTitleLiveData(): LiveData<Pair<String, String>> = headerTitleMutableLiveData
 
     init {
-        headerTitleMutableLiveData.postValue("Kreyol Baker")
+        headerTitleMutableLiveData.postValue("Kreyol Baker" to "")
     }
 
-    fun setHeaderTitle(title : String) {
-        headerTitleMutableLiveData.value = title
+    fun setHeaderTitle(title : String, subtitle : String = "") {
+        headerTitleMutableLiveData.value = title to subtitle
     }
 
 }

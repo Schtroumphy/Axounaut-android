@@ -13,14 +13,18 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
+import com.jeanloth.project.android.kotlin.axounaut.MainActivity
 import com.jeanloth.project.android.kotlin.axounaut.R
 import com.jeanloth.project.android.kotlin.axounaut.adapters.CheckboxListAdapter
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.CommandVM
+import com.jeanloth.project.android.kotlin.axounaut.viewModels.MainVM
 import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleWrapperStatusType
 import com.jeanloth.project.android.kotlin.domain_models.entities.CommandStatusType
+import com.jeanloth.project.android.kotlin.domain_models.entities.CommandStatusType.Companion.getCommandStatusByCode
 import com.jeanloth.project.android.kotlin.domain_models.entities.toNameString
 import kotlinx.android.synthetic.main.fragment_command_detail.*
 import kotlinx.android.synthetic.main.layout_header.*
+import org.koin.android.viewmodel.ext.android.sharedViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import splitties.alertdialog.appcompat.*
@@ -35,13 +39,11 @@ import splitties.views.textColorResource
  */
 class CommandDetailFragment : Fragment() {
 
+    private val mainVM : MainVM by sharedViewModel()
+
     val args: CommandDetailFragmentArgs by navArgs()
     private lateinit var checkboxListAdapter: CheckboxListAdapter
-    private val commandVM : CommandVM by viewModel{
-        parametersOf(
-            args.commandToDetail.idCommand
-        )
-    }
+    private val commandVM : CommandVM by viewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -54,9 +56,15 @@ class CommandDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        commandVM.observeCurrentCommand()
+        mainVM.setHeaderTitle(getString(R.string.command_number_label, args.commandToDetail.idCommand), getString(R.string.command_delivery_date_label, args.commandToDetail.deliveryDate) )
+        val mainActivity = requireActivity() as MainActivity
+        mainActivity.hideOrShowMenuButton(false)
+        mainActivity.replaceHeaderLogoByBackButton()
+        tv_command_client.text = args.commandToDetail.client?.toNameString()
 
-        setupHeader()
+        commandVM.currentCommandId = args.commandToDetail.idCommand
+
+        commandVM.observeCurrentCommand()
 
         checkboxListAdapter = CheckboxListAdapter(args.commandToDetail.articleWrappers).apply {
             onCheckedItem = { item, isChecked ->
@@ -71,15 +79,6 @@ class CommandDetailFragment : Fragment() {
             adapter = checkboxListAdapter
         }
 
-        /*commandVM.currentAWLiveData().observe(viewLifecycleOwner){
-            Log.d("[Command details]", "current AWs observed for command id ${args.commandToDetail.idCommand} : $it")
-            checkboxListAdapter.setItems(it ?: emptyList())
-
-            if(it?.all { it.statusCode == ArticleWrapperStatusType.DONE.code} == true){
-                commandVM.updateStatusCommand(CommandStatusType.DONE)
-            }
-        }*/
-
         commandVM.updatedCommandMutableLiveData.observe(viewLifecycleOwner){
             Log.d("[Command details]", "Command MLD observed for id ${args.commandToDetail.idCommand} : $it")
         }
@@ -90,13 +89,25 @@ class CommandDetailFragment : Fragment() {
                 goBack()
             } else {
                 Log.d("[Command details]", "current command AWs observed for command id ${args.commandToDetail.idCommand} : ${it.articleWrappers}")
-                checkboxListAdapter.setItems(it.articleWrappers)
+                checkboxListAdapter.setItems(it.articleWrappers, it.statusCode == CommandStatusType.TO_DO.code || it.statusCode == CommandStatusType.IN_PROGRESS.code)
+
+                // Update status
+                tv_command_status.text = getCommandStatusByCode(it.statusCode).label.toUpperCase()
 
                 when(it.statusCode){
-                    CommandStatusType.TO_DO.code -> Log.d("[Command details]","TODO")
-                    CommandStatusType.IN_PROGRESS.code -> Log.d("[Command details]","In progress")
+                    CommandStatusType.TO_DO.code -> {
+                        Log.d("[Command details]","TODO")
+                        if(it.articleWrappers.any{ it.statusCode == ArticleWrapperStatusType.DONE.code}){
+                            commandVM.updateStatusCommand(CommandStatusType.IN_PROGRESS)
+                        }
+                    }
+                    CommandStatusType.IN_PROGRESS.code -> {
+                        Log.d("[Command details]","In progress")
+                        bt_delivered.isEnabled = true
+                    }
                     CommandStatusType.DONE.code -> {
                         Log.d("[Command details]","Terminé")
+                        bt_delivered.isEnabled = true
                     }
                     CommandStatusType.DELIVERED.code -> {
                         Log.d("[Command details]","Livré")
@@ -105,16 +116,53 @@ class CommandDetailFragment : Fragment() {
                     }
                     CommandStatusType.PAYED.code -> {
                         Log.d("[Command details]","Payé")
-
+                        bt_pay.visibility = GONE
                     }
-                    CommandStatusType.CANCELED.code -> Log.d("[Command details]","Cancel")
+                    CommandStatusType.CANCELED.code -> {
+                        Log.d("[Command details]","Cancel")
+                        bt_delivered.visibility = GONE
+                        bt_pay.visibility = GONE
+                    }
                 }
             }
         }
 
-        ic_delete.onClick {
+        bt_delete_command.onClick {
             displayDeleteDialog()
         }
+
+        bt_delivered.onClick {
+            if(commandVM.currentCommandLiveData().value!!.articleWrappers.any{ it.statusCode != ArticleWrapperStatusType.DONE.code}){
+                confirmUncompleteDeliveryDialog()
+            } else {
+                commandVM.updateStatusCommand(CommandStatusType.DELIVERED)
+            }
+        }
+
+        bt_pay.onClick {
+            displayPayCommandFragment()
+        }
+
+    }
+
+    private fun confirmUncompleteDeliveryDialog() {
+        requireContext().materialAlertDialog {
+            title = getString(R.string.delivery_dialog_title)
+            message = getString(R.string.delivery_dialog_content)
+            positiveButton(R.string.delivery) {
+                // Update command status
+                commandVM.updateStatusCommand(CommandStatusType.DELIVERED)
+                Snackbar.make(requireView(), "La commande est bien passée au statut 'Livrée'.",
+                    Snackbar.LENGTH_LONG).show()
+                goBack()
+            }
+            negativeButton(R.string.cancel) { dialog ->
+                dialog.dismiss()
+            }
+        }.onShow {
+            positiveButton.textColorResource = R.color.see_green
+            negativeButton.textColorResource = R.color.gray_2
+        }.show()
     }
 
     private fun displayDeleteDialog() {
@@ -127,8 +175,8 @@ class CommandDetailFragment : Fragment() {
                     Snackbar.LENGTH_LONG).show()
                 goBack()
             }
-            negativeButton(R.string.cancel) {
-                it.dismiss()
+            negativeButton(R.string.cancel) { dialog ->
+                dialog.dismiss()
             }
         }.onShow {
             positiveButton.textColorResource = R.color.see_green
@@ -140,16 +188,9 @@ class CommandDetailFragment : Fragment() {
         findNavController().popBackStack()
     }
 
-    private fun setupHeader() {
-        bt_previous_or_close.background = AppCompatResources.getDrawable(requireContext(), R.drawable.ic_left_arrow)
-
-        tv_title.text = getString(R.string.command_number_label, args.commandToDetail.idCommand)
-        tv_subtitle.text = args.commandToDetail.client?.toNameString()
-        ic_delete.visibility = VISIBLE
-
-        bt_previous_or_close.setOnClickListener {
-            findNavController().popBackStack()
-        }
+    fun displayPayCommandFragment(){
+        val mainActivity = activity as MainActivity
+        mainActivity.displayPayCommandFragment(commandVM.currentCommand!!.idCommand)
     }
 
 }

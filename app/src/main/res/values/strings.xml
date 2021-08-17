@@ -13,11 +13,15 @@
 
     <!-- General labels -->
     <string name="validate">Valider</string>
+    <string name="confirm">Confirmer</string>
     <string name="adding">Ajouter</string>
     <string name="cancel">Annuler</string>
     <string name="delete">Supprimer</string>
+    <string name="delivery">Livrer</string>
     <string name="x_count">x %1$s</string>
     <string name="total_price">Prix total : %1$s€</string>
+    <string name="pay">Payer</string>
+    <string name="deliver">Livrer</string>
 
     <!-- Article List Fragment -->
     <string name="no_articles_error">Aucun article n\'est enregistré.</string>
@@ -31,6 +35,20 @@
     <string name="delete_dialog_content">Etes-vous sûr de vouloir supprimer cette commande ?</string>
     <string name="number_label">N°%1$d</string>
     <string name="command_number_label">Commande n°%1$d</string>
+    <string name="command_delivery_date_label">Livraison le %1$s</string>
+    <string name="add_command_label">Ajouter une commande</string>
+    <string name="pay_command_label">Payer une commande</string>
+
+    <string name="delivery_dialog_title">Livraison de commande</string>
+    <string name="delivery_dialog_content">Etes-vous sûr de vouloir livrer cette commande incomplète ? Tous les articles
+        non réalisés seront annulés.
+    </string>
+
+    <!-- Pay command dialog Fragment -->
+    <string name="total_price_command_number_label">Prix total de la commande : %1$s€</string>
+    <string name="command_details_client_number">%1$s - n°%2$s</string>
+    <string name="dialog_incomplete_payment_title">Paiement incomplet</string>
+    <string name="dialog_incomplete_payment_content">Le prix total de cette commande est de %1$d€. Le paiement reçu est incomplet. Souhaitez-vous valider ce paiement et passer la commande au statut “Paiement incomplet” ? </string>
 
     <!-- Client Fragment -->
     <string name="add_client_label">Ajouter un client</string>
@@ -65,5 +83,4 @@
     <string name="attachment_summary_on">Automatically download attachments for incoming emails
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
-    <string name="add_command_label">Ajouter une commande</string>
 </resources>

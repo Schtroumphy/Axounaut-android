@@ -220,7 +220,6 @@ class AddCommandDialogFragment : BottomSheetDialogFragment() {
         bt_add_article.visibility = if(isEditMode) VISIBLE else GONE
         ll_bt_category.visibility = if(isEditMode) VISIBLE else GONE
         ib_add_client.visibility = if(isEditMode) VISIBLE else GONE
-        tv_command_details.visibility = if(isEditMode) GONE else VISIBLE
         setupPreviousCloseButton()
         articleAdapter.setItems(articlesActualized, isEditMode)
         setupElements()
@@ -312,7 +311,7 @@ class AddCommandDialogFragment : BottomSheetDialogFragment() {
         }
     }
 
-    companion object{
+    companion object {
         fun newInstance() = AddCommandDialogFragment()
     }
 }

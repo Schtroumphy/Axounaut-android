@@ -103,6 +103,14 @@
             app:destination="@id/nav_article" />
     </fragment>
 
+    <fragment
+        android:id="@+id/nav_pay_command"
+        android:name="com.jeanloth.project.android.kotlin.axounaut.ui.commands.PayCommandDialogFragment"
+        android:label="Pay command"
+        tools:layout="@layout/fragment_pay_command_dialog" >
+
+    </fragment>
+
 
 
 </navigation>

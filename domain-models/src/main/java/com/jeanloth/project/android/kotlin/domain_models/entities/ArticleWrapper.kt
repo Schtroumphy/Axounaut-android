@@ -1,5 +1,7 @@
 package com.jeanloth.project.android.kotlin.domain_models.entities
 
+import java.io.Serializable
+
 data class ArticleWrapper(
     val articleWrapperId : Long = 0,
     var commandId : Long = 0,
@@ -8,7 +10,7 @@ data class ArticleWrapper(
     var totalArticleWrapperPrice : Double? = count * article.price,
     var statusCode : Int = ArticleWrapperStatusType.TO_DO.code
 
-)  {
+) : Serializable  {
     companion object {
 
         fun createWrapperList(articles : List<Article>) : List<ArticleWrapper>{

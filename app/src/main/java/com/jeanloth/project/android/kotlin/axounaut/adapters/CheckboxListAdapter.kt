@@ -6,15 +6,19 @@ import android.text.style.StrikethroughSpan
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.*
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat.getColor
 import androidx.recyclerview.widget.RecyclerView
 import com.jeanloth.project.android.kotlin.axounaut.R
 import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleWrapper
 import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleWrapperStatusType
 import kotlinx.android.synthetic.main.item_checkbox_list.view.*
+import splitties.views.textColorResource
 
 class CheckboxListAdapter(
     private var items : List<ArticleWrapper>,
+    private var enableCheckBox : Boolean = true,
 ) : RecyclerView.Adapter<CheckboxListAdapter.ItemHolder>()  {
 
     var onCheckedItem : ((ArticleWrapper, Boolean) -> Unit)? = null
@@ -34,8 +38,9 @@ class CheckboxListAdapter(
         return items.size
     }
 
-    fun setItems(items : List<ArticleWrapper>){
+    fun setItems(items : List<ArticleWrapper>, enableCheckBox : Boolean){
         this.items = items
+        this.enableCheckBox = enableCheckBox
         notifyDataSetChanged()
     }
 
@@ -44,18 +49,26 @@ class CheckboxListAdapter(
         fun bind(item : ArticleWrapper, position : Int){
 
             val articleLabel = itemView.context.getString(R.string.article_name_count, item.article.name, item.count)
-            itemView.tv_label.text= if(item.statusCode != ArticleWrapperStatusType.DONE.code) articleLabel else stringBuilderLabel(articleLabel)
+            itemView.tv_label.text= if(item.statusCode != ArticleWrapperStatusType.DONE.code && item.statusCode != ArticleWrapperStatusType.CANCELED.code) articleLabel else stringBuilderLabel(articleLabel)
             itemView.cb_item.isChecked = item.statusCode == ArticleWrapperStatusType.DONE.code
-            //itemView.cb_item.isEnabled = item.statusCode != ArticleWrapperStatusType.DONE.code
+            itemView.cb_item.isEnabled = item.statusCode != ArticleWrapperStatusType.DONE.code && item.statusCode != ArticleWrapperStatusType.CANCELED.code && enableCheckBox
 
+            itemView.cb_item.visibility = if(item.statusCode == ArticleWrapperStatusType.CANCELED.code || !enableCheckBox) INVISIBLE else VISIBLE
+            if(item.statusCode == ArticleWrapperStatusType.CANCELED.code) {
+                itemView.tv_label.setTextColor(getColor(itemView.context, R.color.red_001))
+                itemView.tv_label_canceled.visibility = VISIBLE
+            } else {
+                itemView.tv_label.setTextColor(getColor(itemView.context, R.color.gray_2))
+                itemView.tv_label_canceled.visibility = GONE
+            }
             itemView.tv_label.setOnClickListener {
-                itemView.cb_item.isChecked = !itemView.cb_item.isChecked
+                if(itemView.cb_item.isEnabled)
+                    itemView.cb_item.isChecked = !itemView.cb_item.isChecked
             }
 
-            itemView.cb_item.setOnCheckedChangeListener{ buttonView, isChecked ->
+            itemView.cb_item.setOnCheckedChangeListener{ _, isChecked ->
                 item.statusCode = if(isChecked) ArticleWrapperStatusType.DONE.code else ArticleWrapperStatusType.IN_PROGRESS.code
                 onCheckedItem?.invoke(item, isChecked)
-                //notifyItemChanged(position)
             }
         }
         }

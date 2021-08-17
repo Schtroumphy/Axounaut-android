@@ -72,6 +72,8 @@ class CommandVM (
                         } else {
                             if(it?.statusCode == CommandStatusType.DONE.code){
                                 updateStatusCommand(CommandStatusType.TO_DO)
+                            } else if(it?.statusCode == CommandStatusType.TO_DO.code){
+                                updateStatusCommand(CommandStatusType.IN_PROGRESS)
                             }
                         }
                     }
@@ -136,6 +138,10 @@ class CommandVM (
     }
 
     fun updateStatusCommand(status: CommandStatusType) {
+        if(status == CommandStatusType.DELIVERED){
+            // update all article status not done
+            currentCommand!!.articleWrappers.filter { it.statusCode != ArticleWrapperStatusType.DONE.code }.forEach { it.statusCode = ArticleWrapperStatusType.CANCELED.code }
+        }
         currentCommand!!.statusCode= status.code
         Log.d("[CommandVM]", "Make command $status - $currentCommand")
         saveCommand(currentCommand!!)

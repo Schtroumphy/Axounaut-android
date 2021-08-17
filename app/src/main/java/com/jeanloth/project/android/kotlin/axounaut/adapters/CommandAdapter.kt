@@ -36,7 +36,7 @@ class CommandAdapter(
     }
 
     fun setItems(articles : List<Command>){
-        this.commandList =  articles
+        this.commandList =  articles.sortedBy { it.statusCode  }
         notifyDataSetChanged()
     }
 
@@ -61,13 +61,14 @@ class CommandAdapter(
                     CommandStatusType.IN_PROGRESS.code -> R.color.salamander
                     CommandStatusType.DONE.code -> R.color.green_dark_1
                     CommandStatusType.DELIVERED.code -> R.color.gray_2
-                    else -> android.R.color.transparent
+                    else -> android.R.color.black
                 }))
 
             itemView.cv_command.strokeColor = getColor(context, when(command.statusCode){
+                CommandStatusType.TO_DO.code -> R.color.gray_2
                 CommandStatusType.IN_PROGRESS.code -> R.color.salamander
                 CommandStatusType.DONE.code -> R.color.green_dark_1
-                CommandStatusType.DELIVERED.code -> R.color.gray_2
+                CommandStatusType.DELIVERED.code -> R.color.apple_green
                 else -> android.R.color.transparent
             })
         }
