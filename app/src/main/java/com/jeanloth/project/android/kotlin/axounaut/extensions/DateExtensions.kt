@@ -21,7 +21,7 @@ fun LocalDate.formatDateToOtherFormat(initDateFormat: String, endDateFormat: Str
     return formatter.format(initDate)
 }
 
-fun String.convertToLocalDate() = LocalDate.parse(this, DateTimeFormatter.ofPattern("dd-MM-yyyy", Locale.FRANCE))
+fun String.toLocalDate() = LocalDate.parse(this, DateTimeFormatter.ofPattern("dd-MM-yyyy", Locale.FRANCE))
 
 fun Date.formatToTruncatedDateTime(): String{
     val sdf= SimpleDateFormat("yyyyMMddHHmmss", Locale.getDefault())

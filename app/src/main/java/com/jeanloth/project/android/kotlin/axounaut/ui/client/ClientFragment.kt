@@ -72,7 +72,7 @@ class ClientFragment : Fragment() {
                 Log.d("[Client Fragment", "Client observed : $it")
                 clientAdapter.setItems(it)
 
-                tv_no_client_error.visibility = if(it.isNullOrEmpty()) VISIBLE else GONE
+                tv_no_client_error.visibility = if(it.isEmpty()) VISIBLE else GONE
             }
         }
 

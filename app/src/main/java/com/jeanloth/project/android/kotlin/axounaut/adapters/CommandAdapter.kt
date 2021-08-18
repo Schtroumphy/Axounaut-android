@@ -11,7 +11,6 @@ import com.jeanloth.project.android.kotlin.axounaut.R
 import com.jeanloth.project.android.kotlin.domain_models.entities.*
 import com.jeanloth.project.android.kotlin.domain_models.entities.CommandStatusType.Companion.getCommandStatusByCode
 import kotlinx.android.synthetic.main.item_command.view.*
-import splitties.views.textColorResource
 
 class CommandAdapter(
     private var commandList : List<Command>,
@@ -52,7 +51,7 @@ class CommandAdapter(
             itemView.tv_client_name.text= command.client?.toNameString()
 
             itemView.rv_articles_list.adapter = SimpleListAdapter(
-                convertArticleWrapperToItemList(command.articleWrappers)
+                convertArticleWrapperToItemList(command.articleWrappers), context
             )
 
             itemView.tv_status.text = getCommandStatusByCode(command.statusCode).label
@@ -91,7 +90,8 @@ class CommandAdapter(
             list.add(
                 ItemList(
                     articleLabel,
-                    isStriked = it.statusCode == ArticleWrapperStatusType.DONE.code
+                    isDone = it.statusCode == ArticleWrapperStatusType.DONE.code || it.statusCode == ArticleWrapperStatusType.CANCELED.code,
+                    isCanceled = it.statusCode == ArticleWrapperStatusType.CANCELED.code
                 )
             )
         }

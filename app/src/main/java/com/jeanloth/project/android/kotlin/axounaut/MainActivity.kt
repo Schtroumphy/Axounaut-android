@@ -129,10 +129,10 @@ class MainActivity : AppCompatActivity() {
         PayCommandDialogFragment.newInstance(commandId).show(supportFragmentManager, "payDialog")
     }
 
-    fun replaceHeaderLogoByBackButton(){
-        iv_header_logo.setBackgroundResource(R.drawable.ic_back_button)
-        iv_header_logo.layoutParams.width = 46
-        iv_header_logo.layoutParams.height = 46
+    fun replaceHeaderLogoByBackButton(replaceByBackButton : Boolean){
+        iv_header_logo.setBackgroundResource(if(replaceByBackButton) R.drawable.ic_back_button else R.drawable.logo_kb_001)
+        iv_header_logo.layoutParams.width = if(replaceByBackButton) 46 else 130
+        iv_header_logo.layoutParams.height = if(replaceByBackButton) 46 else 130
     }
 
 

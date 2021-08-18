@@ -56,11 +56,7 @@ class CommandDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        mainVM.setHeaderTitle(getString(R.string.command_number_label, args.commandToDetail.idCommand), getString(R.string.command_delivery_date_label, args.commandToDetail.deliveryDate) )
-        val mainActivity = requireActivity() as MainActivity
-        mainActivity.hideOrShowMenuButton(false)
-        mainActivity.replaceHeaderLogoByBackButton()
-        tv_command_client.text = args.commandToDetail.client?.toNameString()
+        setupHeader()
 
         commandVM.currentCommandId = args.commandToDetail.idCommand
 
@@ -116,6 +112,7 @@ class CommandDetailFragment : Fragment() {
                     }
                     CommandStatusType.PAYED.code -> {
                         Log.d("[Command details]","Payé")
+                        bt_delivered.visibility = GONE
                         bt_pay.visibility = GONE
                     }
                     CommandStatusType.CANCELED.code -> {
@@ -143,6 +140,19 @@ class CommandDetailFragment : Fragment() {
             displayPayCommandFragment()
         }
 
+    }
+
+    private fun setupHeader() {
+        mainVM.setHeaderTitle(
+            getString(
+                R.string.command_number_label,
+                args.commandToDetail.idCommand
+            ), getString(R.string.command_delivery_date_label, args.commandToDetail.deliveryDate)
+        )
+        val mainActivity = requireActivity() as MainActivity
+        mainActivity.hideOrShowMenuButton(false)
+        mainActivity.replaceHeaderLogoByBackButton(true)
+        tv_command_client.text = args.commandToDetail.client?.toNameString()
     }
 
     private fun confirmUncompleteDeliveryDialog() {

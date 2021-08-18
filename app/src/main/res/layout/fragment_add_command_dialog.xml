@@ -100,14 +100,13 @@
             android:hint="Choisir un client"
             android:completionThreshold="1"/>
 
-
         <Button
             android:id="@+id/ib_add_client"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_weight="1"
+            android:enabled="true"
             android:background="@drawable/ic_add"
-            android:backgroundTint="@color/selector_text_color"
             android:foreground="?android:attr/selectableItemBackground"
             app:layout_constraintBottom_toBottomOf="@+id/et_client"
             app:layout_constraintEnd_toEndOf="parent"

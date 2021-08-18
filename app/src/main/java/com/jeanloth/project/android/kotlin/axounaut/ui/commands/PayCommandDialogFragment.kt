@@ -125,7 +125,6 @@ class PayCommandDialogFragment(
                 displayIncompletePaymentDialog(commandVM.currentCommand!!.totalPrice!!)
             }
         }
-
     }
 
     private fun displayIncompletePaymentDialog(incompletePaymentAmount : Double) {

@@ -74,10 +74,7 @@ class CommandListFragment(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        mainVM.setHeaderTitle("Commandes")
-        (activity as MainActivity).hideOrShowMenuButton(true)
-        commandAdapter = CommandAdapter(emptyList(), requireContext())
-        cl_command_filters.visibility = if(displayMode == CommandDisplayMode.PAST) VISIBLE else GONE
+        setupHeader()
 
 
         // Set the adapter
@@ -138,6 +135,16 @@ class CommandListFragment(
         setupFilters()
     }
 
+    private fun setupHeader() {
+        mainVM.setHeaderTitle("Commandes")
+        val mainActivity = requireActivity() as MainActivity
+        mainActivity.hideOrShowMenuButton(true)
+        mainActivity.replaceHeaderLogoByBackButton(false)
+        commandAdapter = CommandAdapter(emptyList(), requireContext())
+        cl_command_filters.visibility =
+            if (displayMode == CommandDisplayMode.PAST) VISIBLE else GONE
+    }
+
     private fun setupFilters() {
         val periodAdapter: ArrayAdapter<String> = ArrayAdapter<String>(
             requireContext(),
@@ -187,7 +194,6 @@ class CommandListFragment(
                 } else {
                     commandsFilteredByStatus = allPastCommands
                 }
-
                 commandAdapter.setItems(commandsFilteredByStatus)
             }
 
