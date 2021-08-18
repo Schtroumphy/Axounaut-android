@@ -77,12 +77,11 @@
             app:boxStrokeColor="@color/marron_light_1"
             app:boxStrokeErrorColor="@color/salamander"
             app:boxStrokeWidth="1dp"
-            android:focusableInTouchMode="false"
             android:layout_marginTop="25dp"
             android:layout_marginHorizontal="25dp"
             app:boxStrokeWidthFocused="1.5dp"
             app:hintAnimationEnabled="true"
-            app:hintTextColor="@color/green_light_1"
+            app:hintTextColor="@color/orange_003"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" >
 
@@ -91,7 +90,8 @@
                 android:layout_width="150dp"
                 android:layout_height="45dp"
                 android:ems="10"
-                android:imeOptions="actionNext"
+                android:textCursorDrawable="@null"
+                android:imeOptions="actionDone"
                 android:inputType="numberDecimal"
                 android:textAlignment="textStart"
                 android:textSize="14sp"
@@ -103,11 +103,22 @@
             android:id="@+id/cb_complete_payment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Paiement complet"
+            android:buttonTint="@color/selector_cb"
+            android:scaleX="0.3"
+            android:scaleY="0.3"
+            android:button="@color/selector_cb"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
             app:layout_constraintStart_toEndOf="@id/til_payment_received"
             app:layout_constraintTop_toTopOf="@id/til_payment_received"
             app:layout_constraintBottom_toBottomOf="@id/til_payment_received"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/complete_payment"
+            app:layout_constraintTop_toTopOf="@id/cb_complete_payment"
+            app:layout_constraintBottom_toBottomOf="@id/cb_complete_payment"
+            app:layout_constraintStart_toEndOf="@id/cb_complete_payment" />
 
         <RelativeLayout
             android:id="@+id/rl_payment_type"
@@ -141,10 +152,10 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/til_reduction"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-            android:layout_width="350dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:hint="Réduction appliquée"
+            android:hint="@string/reduction"
             app:boxCornerRadiusBottomEnd="20dp"
             app:boxCornerRadiusBottomStart="20dp"
             app:boxCornerRadiusTopEnd="20dp"
@@ -157,38 +168,82 @@
             android:layout_marginHorizontal="25dp"
             app:boxStrokeWidthFocused="1.5dp"
             app:hintAnimationEnabled="true"
-            app:hintTextColor="@color/green_light_1"
+            app:hintTextColor="@color/orange_003"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/rl_payment_type" >
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_reduction"
-                android:layout_width="match_parent"
+                android:layout_width="150dp"
                 android:layout_height="45dp"
                 android:ems="10"
-                android:imeOptions="actionNext"
+                android:maxLength="3"
+                android:imeOptions="actionDone"
+                android:textCursorDrawable="@null"
                 android:inputType="numberDecimal"
                 android:textAlignment="textStart"
                 android:textSize="14sp"
                 tools:ignore="MissingConstraints" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <CheckBox
+            android:id="@+id/cb_round_amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:buttonTint="@color/selector_cb"
+            android:scaleX="0.3"
+            android:scaleY="0.3"
+            android:button="@color/selector_cb"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            app:layout_constraintStart_toEndOf="@id/til_reduction"
+            app:layout_constraintTop_toTopOf="@id/til_reduction"
+            app:layout_constraintBottom_toBottomOf="@id/til_reduction"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/round"
+            app:layout_constraintTop_toTopOf="@id/cb_round_amount"
+            app:layout_constraintBottom_toBottomOf="@id/cb_round_amount"
+            app:layout_constraintStart_toEndOf="@id/cb_round_amount" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
-        android:id="@+id/tv_total_price"
+        android:id="@+id/tv_incomplete_payment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textSize="16sp"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:textColor="@color/red_001"
+        android:letterSpacing="0.2"
+        android:fontFamily="@font/roboto_light"
+        android:layout_marginBottom="30dp"
+        android:visibility="invisible"
+        tools:visibility="visible"
+        android:padding="5dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/tv_total_price_with_reduction"
+        android:text="@string/incomplete_payment_error" />
+
+    <TextView
+        android:id="@+id/tv_total_price_with_reduction"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="12sp"
         android:textStyle="bold"
         android:letterSpacing="0.2"
+        android:visibility="invisible"
+        tools:visibility="visible"
+        android:textColor="@color/orange_003"
         android:fontFamily="@font/roboto_light"
         android:layout_marginBottom="@dimen/activity_vertical_margin"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toTopOf="@id/bt_proceed_payment"
-        tools:text="Prix total : 15€" />
+        tools:text="Prix total après réduction : 15€" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/bt_proceed_payment"

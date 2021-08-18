@@ -37,6 +37,9 @@ class CommandVM (
     var currentCommandMutableLiveData : MutableLiveData<Command?> = MutableLiveData()
     fun currentCommandLiveData() : LiveData<Command?> = currentCommandMutableLiveData
 
+    var currentTotalPriceMutableLiveData : MutableLiveData<Double> = MutableLiveData()
+    fun currentTotalPriceLiveData() : LiveData<Double> = currentTotalPriceMutableLiveData
+
     var currentCommandAwsMutableLiveData : MutableLiveData<List<ArticleWrapper>?> = MutableLiveData()
     fun currentAWLiveData() : LiveData<List<ArticleWrapper>?> = currentCommandAwsMutableLiveData
 
@@ -135,6 +138,10 @@ class CommandVM (
 
     fun saveArticleWrapper(articleWrapper : ArticleWrapper) {
         saveArticleWrapperUseCase.invoke(articleWrapper)
+    }
+
+    fun setCurrentTotalPrice(price : Double){
+        currentTotalPriceMutableLiveData.postValue(price)
     }
 
     fun updateStatusCommand(status: CommandStatusType) {

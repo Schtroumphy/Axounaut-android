@@ -5,7 +5,9 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.*
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
@@ -25,6 +27,9 @@ import splitties.alertdialog.appcompat.*
 import splitties.alertdialog.material.materialAlertDialog
 import splitties.views.onClick
 import splitties.views.textColorResource
+import java.util.*
+import kotlin.math.ceil
+import kotlin.math.roundToLong
 
 
 /**
@@ -66,6 +71,7 @@ class PayCommandDialogFragment(
 
         commandVM.currentCommandMutableLiveData.observe(viewLifecycleOwner){
             commandVM.currentCommand = it
+            commandVM.setCurrentTotalPrice(it!!.totalPrice!!)
 
             // Setup header
             tv_client_command_number.text = getString(
@@ -77,15 +83,54 @@ class PayCommandDialogFragment(
                 R.string.total_price_command_number_label,
                 it.totalPrice.toString()
             )
+        }
 
-            // Payment received
-            cb_complete_payment.setOnCheckedChangeListener { _, isChecked ->
-                et_payment_received.setText(if (isChecked) it.totalPrice.toString() else "")
+        commandVM.currentTotalPriceLiveData().observe(viewLifecycleOwner){
+            if(et_reduction.text!!.isNotEmpty())
+                tv_total_price_with_reduction.visibility = if (et_reduction.text.toString().toInt() > 0) VISIBLE else INVISIBLE
+            else tv_total_price_with_reduction.visibility = INVISIBLE
+
+            tv_total_price_with_reduction.text = getString(R.string.total_price_command_after_reduction_label, it.toString())
+
+            et_payment_received.setText(it.toString())
+            cb_round_amount.isEnabled = it > 0
+        }
+
+        et_payment_received.doOnTextChanged { text, _, _, count ->
+            bt_proceed_payment.isEnabled = text!!.isNotEmpty() && text.toString().toDouble() > 0
+
+            if(text!!.isNotEmpty()) {
+                tv_incomplete_payment.visibility = if (text.toString()
+                        .toDouble() != commandVM.currentTotalPriceMutableLiveData.value!!
+                ) VISIBLE else INVISIBLE
+                et_reduction.isEnabled = text.toString().toDouble() > 0
+                cb_complete_payment.isChecked = text.toString().toDouble() == commandVM.currentTotalPriceMutableLiveData.value!!
+            } else {
+                et_reduction.isEnabled = false
+                cb_round_amount.isEnabled = false
+                tv_incomplete_payment.visibility = VISIBLE
             }
         }
 
-        et_payment_received.doOnTextChanged { _, _, _, count ->
-            bt_proceed_payment.isEnabled = count > 0
+        et_reduction.doOnTextChanged{ text, _, _, _ ->
+            cb_round_amount.isEnabled = false
+        }
+
+        // Payment received
+        cb_complete_payment.setOnCheckedChangeListener { _, isChecked ->
+            et_payment_received.setText(if (isChecked) commandVM.currentTotalPriceMutableLiveData.value!!.toString() else "0.0")
+            if (!isChecked) {
+                tv_total_price_with_reduction.visibility = INVISIBLE
+                et_reduction.setText("0")
+                cb_round_amount.isChecked = false
+            }
+            et_payment_received.setSelection(commandVM.currentTotalPriceMutableLiveData.value!!.toString().length-1)
+        }
+
+        // Payment received
+        cb_round_amount.setOnCheckedChangeListener { _, isChecked ->
+            if(isChecked) commandVM.setCurrentTotalPrice(ceil(commandVM.currentTotalPriceMutableLiveData.value!!.toDouble()))
+            else commandVM.setCurrentTotalPrice(computeWithReduction(commandVM.currentCommand!!.totalPrice!!))
         }
 
         // Setup spinner
@@ -101,9 +146,24 @@ class PayCommandDialogFragment(
                 position: Int, id: Long
             ) {
                 commandVM.currentCommand?.paymentTypeCode = adapter.getItem(position)?.code
+                et_payment_received.clearFocus()
+                et_reduction.clearFocus()
             }
 
-            override fun onNothingSelected(adapter: AdapterView<*>?) {}
+            override fun onNothingSelected(adapter: AdapterView<*>?) {
+                et_payment_received.clearFocus()
+                et_reduction.clearFocus()
+            }
+        }
+
+        et_reduction.setOnEditorActionListener { _, actionId, _ ->
+            if(actionId == EditorInfo.IME_ACTION_DONE){
+                cb_round_amount.isEnabled = true
+                cb_round_amount.isChecked = false
+                updateTotalPriceWithReduction()
+                et_reduction.clearFocus()
+            }
+            true
         }
 
         // Close button
@@ -117,32 +177,21 @@ class PayCommandDialogFragment(
                 statusCode = if(et_payment_received.text.toString().toDouble() == commandVM.currentCommand!!.totalPrice) CommandStatusType.PAYED.code else CommandStatusType.INCOMPLETE_PAYMENT.code
             }
 
-            if(et_payment_received.text.toString().toDouble() == commandVM.currentCommand!!.totalPrice) {
-                commandVM.saveCommand(commandVM.currentCommand!!)
-                bottomSheetDialog.dismiss()
-                Snackbar.make(requireView(), "Paiement réussi", Snackbar.LENGTH_SHORT).show()
-            } else {
-                displayIncompletePaymentDialog(commandVM.currentCommand!!.totalPrice!!)
-            }
+            commandVM.saveCommand(commandVM.currentCommand!!)
+            bottomSheetDialog.dismiss()
+            Snackbar.make(requireView(), "Paiement pris en compte.", Snackbar.LENGTH_SHORT).show()
         }
     }
 
-    private fun displayIncompletePaymentDialog(incompletePaymentAmount : Double) {
-        requireContext().materialAlertDialog {
-            title = getString(R.string.dialog_incomplete_payment_title)
-            message = getString(R.string.dialog_incomplete_payment_content, incompletePaymentAmount)
-            positiveButton(R.string.confirm) {
-                commandVM.saveCommand(commandVM.currentCommand!!)
-                bottomSheetDialog.dismiss()
-            }
-            negativeButton(R.string.cancel) { dialog ->
-                dialog.dismiss()
-            }
-        }.onShow {
-            positiveButton.textColorResource = R.color.see_green
-            negativeButton.textColorResource = R.color.gray_2
-        }.show()
+    private fun updateTotalPriceWithReduction() {
+        if(et_reduction.text.toString().toInt() != 0){
+            commandVM.setCurrentTotalPrice(computeWithReduction(commandVM.currentTotalPriceMutableLiveData.value!!))
+        } else {
+            tv_total_price_with_reduction.visibility = INVISIBLE
+        }
     }
+
+    private fun computeWithReduction(price : Double): Double = price - price.times((et_reduction.text.toString().toInt()/ 100.0))
 
     companion object {
         fun newInstance(commandId: Long) = PayCommandDialogFragment(commandId)

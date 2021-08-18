@@ -46,7 +46,8 @@
 
     <!-- Pay command dialog Fragment -->
     <string name="total_price_command_number_label">Prix total de la commande : %1$s€</string>
-    <string name="command_details_client_number">%1$s - n°%2$s</string>
+    <string name="total_price_command_after_reduction_label">Prix total de la commande après réduction : %1$s€</string>
+    <string name="command_details_client_number">%1$s - Commande n°%2$s</string>
     <string name="dialog_incomplete_payment_title">Paiement incomplet</string>
     <string name="dialog_incomplete_payment_content">Le prix total de cette commande est de %1$d€. Le paiement reçu est incomplet. Souhaitez-vous valider ce paiement et passer la commande au statut “Paiement incomplet” ? </string>
 
@@ -83,4 +84,8 @@
     <string name="attachment_summary_on">Automatically download attachments for incoming emails
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="complete_payment">Paiement complet</string>
+    <string name="incomplete_payment_error">Le paiement est incomplet. En procédant au paiement, elle devra être complétée ultérieurement.</string>
+    <string name="reduction">Réduction</string>
+    <string name="round">Arrondir</string>
 </resources>
