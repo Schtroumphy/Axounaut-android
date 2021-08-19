@@ -6,6 +6,7 @@ import com.jeanloth.project.android.kotlin.domain.usescases.usecases.GetCommandB
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.ObserveArticleWrappersByCommandIdUseCase
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.ObserveCommandByIdUseCase
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.article.ObserveCommandsUseCase
+import com.jeanloth.project.android.kotlin.domain.usescases.usecases.article.SaveArticleUseCase
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.command.DeleteArticleWrapperUseCase
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.command.DeleteCommandUseCase
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.command.SaveArticleWrapperUseCase
@@ -26,6 +27,7 @@ class CommandVM (
     private val saveCommandUseCase: SaveCommandUseCase,
     private val deleteCommandUseCase: DeleteCommandUseCase,
     private val deleteArticleWrapperUseCase: DeleteArticleWrapperUseCase,
+    private val saveArticleUseCase: SaveArticleUseCase,
     private val saveArticleWrapperUseCase: SaveArticleWrapperUseCase,
 ): ViewModel() {
 
@@ -128,6 +130,12 @@ class CommandVM (
 
         command.articleWrappers.forEach {
             it.commandId = commandID
+            if(command.statusCode == CommandStatusType.PAYED.code || command.statusCode == CommandStatusType.INCOMPLETE_PAYMENT.code ){
+                if(it.statusCode == ArticleWrapperStatusType.DONE.code) {
+                    it.article.timeOrdered = it.article.timeOrdered + it.count
+                    saveArticleUseCase.invoke(it.article)
+                }
+            }
             saveArticleWrapper(it)
         }
     }

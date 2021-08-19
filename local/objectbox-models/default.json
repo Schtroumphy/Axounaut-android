@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "1:474612300085983869",
-      "lastPropertyId": "6:7258122112516802047",
+      "lastPropertyId": "7:1206798818198070539",
       "name": "ArticleEntity",
       "properties": [
         {
@@ -28,6 +28,12 @@
         {
           "id": "6:7258122112516802047",
           "name": "category",
+          "type": 5,
+          "flags": 4
+        },
+        {
+          "id": "7:1206798818198070539",
+          "name": "timeOrdered",
           "type": 5,
           "flags": 4
         }

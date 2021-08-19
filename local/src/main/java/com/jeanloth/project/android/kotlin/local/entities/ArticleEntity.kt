@@ -9,5 +9,6 @@ class ArticleEntity(
     var id: Long = 0,
     var name: String = "",
     var price : Double = 0.0,
+    val timeOrdered : Int = 0,
     val category : Int = ArticleCategory.SALTED.code
 ) : Entity

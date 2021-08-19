@@ -78,7 +78,7 @@
     },
     {
       "id": "3:1566633341899374880",
-      "lastPropertyId": "10:2277333302652746765",
+      "lastPropertyId": "11:4853069881162893639",
       "name": "ArticleWrapperEntity",
       "properties": [
         {
@@ -108,18 +108,18 @@
           "flags": 2
         },
         {
-          "id": "9:6621335919446060664",
-          "name": "status",
-          "type": 5,
-          "flags": 4
-        },
-        {
           "id": "10:2277333302652746765",
           "name": "articleId",
           "indexId": "2:5873975655316353978",
           "type": 11,
           "flags": 1548,
           "relationTarget": "ArticleEntity"
+        },
+        {
+          "id": "11:4853069881162893639",
+          "name": "statusCode",
+          "type": 5,
+          "flags": 4
         }
       ],
       "relations": []
@@ -193,7 +193,8 @@
     3331126271380054630,
     348032214652240965,
     904232837602124631,
-    1029198425942674685
+    1029198425942674685,
+    6621335919446060664
   ],
   "retiredRelationUids": [],
   "version": 1

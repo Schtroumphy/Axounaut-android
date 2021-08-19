@@ -12,6 +12,7 @@ class ArticleEntityMapper : Mapper<Article, ArticleEntity> {
             id = t.id,
             name = t.name,
             price = t.price,
+            timeOrdered = t.timeOrdered,
             category = t.category
         )
     }
@@ -21,6 +22,7 @@ class ArticleEntityMapper : Mapper<Article, ArticleEntity> {
             id = t.id,
             name = t.name,
             price = t.price,
+            timeOrdered = t.timeOrdered,
             category = t.category
         )
     }

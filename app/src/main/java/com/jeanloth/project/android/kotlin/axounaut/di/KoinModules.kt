@@ -46,7 +46,7 @@ val appModule = module {
     viewModel { ArticleVM( get(), get(), get(), get()) }
     viewModel { ClientVM( get(), get(), get()) }
     viewModel { AddCommandVM() }
-    viewModel { CommandVM(get(), get(), get(), get(), get(), get(), get(), get()) }
+    viewModel { CommandVM(get(), get(), get(), get(), get(), get(), get(), get(), get()) }
 
     // Uses cases
     factory{ GetAllArticlesUseCase(get()) }

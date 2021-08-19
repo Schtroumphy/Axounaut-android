@@ -27,6 +27,12 @@
         tools:layout="@layout/fragment_dashboard" />
 
     <fragment
+        android:id="@+id/navigation_analysis"
+        android:name="com.jeanloth.project.android.kotlin.axounaut.ui.commands.AnalysisFragment"
+        android:label="Analyses"
+        tools:layout="@layout/fragment_analysis" />
+
+    <fragment
         android:id="@+id/navigation_settings"
         android:name="com.jeanloth.project.android.kotlin.axounaut.ui.SettingsFragment"
         android:label="Paramètres" />

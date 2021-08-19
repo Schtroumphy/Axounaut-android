@@ -64,18 +64,21 @@
     <string name="client_fidelity_label">%1$s points de fidélité</string>
     <string name="client_name_label">%1$s %2$s</string>
 
+    <!-- Analysis Fragment -->
+    <string name="cross_quantity">x %1$s</string>
+
     <!-- Errors -->
     <string name="no_client_error">Il n\'y a aucun client d\'enregistré. Veuillez en ajouter un en cliquant sur ajouter.</string>
 
     <!-- Success messages -->
     <plurals name="adding_client_toast">
-        <item quantity="one" formatted="true">Le client a été supprimé avec succès.</item>
-        <item quantity="other" formatted="true">Les %1$d clients ont bien été supprimés.</item>
+        <item formatted="true" quantity="one">Le client a été supprimé avec succès.</item>
+        <item formatted="true" quantity="other">Les %1$d clients ont bien été supprimés.</item>
     </plurals>
 
     <plurals name="productCount">
-        <item quantity="one" formatted="true">%1$d of %2$d product</item>
-        <item quantity="other" formatted="true">%1$d of %2$d products</item>
+        <item formatted="true" quantity="one">%1$d of %2$d product</item>
+        <item formatted="true" quantity="other">%1$d of %2$d products</item>
     </plurals>
 
     <!-- Preference Titles -->
@@ -97,4 +100,14 @@
     <string name="reduction">Réduction</string>
     <string name="round">Arrondir</string>
     <string name="recipe">Recette</string>
+    <string name="no_analysis_available">Aucune analyse disponible pour le moment.</string>
+    <string name="title_activity_analysis">AnalysisActivity</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
 </resources>

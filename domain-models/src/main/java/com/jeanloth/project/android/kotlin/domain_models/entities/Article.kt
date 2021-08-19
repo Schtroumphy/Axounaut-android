@@ -4,5 +4,6 @@ data class Article(
         val id : Long = 0,
         val name : String,
         val price : Double = 0.0,
+        var timeOrdered : Int = 0,
         val category : Int = ArticleCategory.SALTED.code,
 )

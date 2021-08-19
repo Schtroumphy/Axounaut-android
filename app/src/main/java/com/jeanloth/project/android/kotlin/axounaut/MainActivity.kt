@@ -27,12 +27,6 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var navController : NavController
     private val mainVM : MainVM by viewModel()
-
-    private val rotateOpen : Animation by lazy { AnimationUtils.loadAnimation(this, R.anim.rotate_open_anim) }
-    private val rotateClose : Animation by lazy { AnimationUtils.loadAnimation(this, R.anim.rotate_close_anim) }
-    private val fromBottom : Animation by lazy { AnimationUtils.loadAnimation(this, R.anim.from_bottom_anim) }
-    private val toBottom : Animation by lazy { AnimationUtils.loadAnimation(this, R.anim.to_bottom_anim) }
-
     private var clicked = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,7 +70,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun navigateToAnalysis(view : View){
-        navController.navigate(R.id.navigation_dashboard)
+        navController.navigate(R.id.navigation_analysis)
     }
 
     fun hideKeyboard(activity: Activity) {
