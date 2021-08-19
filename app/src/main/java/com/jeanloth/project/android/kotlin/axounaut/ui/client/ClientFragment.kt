@@ -1,16 +1,17 @@
 package com.jeanloth.project.android.kotlin.axounaut.ui.client
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.internal.VisibilityAwareImageButton
 import com.google.android.material.snackbar.Snackbar
 import com.jeanloth.project.android.kotlin.axounaut.MainActivity
 import com.jeanloth.project.android.kotlin.axounaut.R
@@ -64,6 +65,10 @@ class ClientFragment : Fragment() {
                 clientVM.saveClient(it)
             }
 
+            onPhoneClick = {
+                callClient(it)
+            }
+
         }
         rv_clients.adapter = clientAdapter
 
@@ -84,10 +89,20 @@ class ClientFragment : Fragment() {
         bt_btn_delete_client.onClick {
             updateActionButtonDisplay(false)
             clientVM.deleteClients(clientListSelected)
-            Snackbar.make(requireView(), resources.getQuantityString(R.plurals.adding_client_toast, clientListSelected.size, clientListSelected.size),
-                Snackbar.LENGTH_LONG).show()
+            Snackbar.make(
+                requireView(), resources.getQuantityString(
+                    R.plurals.adding_client_toast,
+                    clientListSelected.size,
+                    clientListSelected.size
+                ),
+                Snackbar.LENGTH_LONG
+            ).show()
             clientListSelected.clear()
         }
+    }
+
+    private fun callClient(phoneNumber: Int?) {
+        startActivity(Intent(Intent.ACTION_DIAL, Uri.fromParts("tel",phoneNumber!!.toString(), null)))
     }
 
     private fun updateActionButtonDisplay(isEditMode: Boolean) {

@@ -17,7 +17,7 @@ class ClientAdapter(
     private val context : Context
 ) : RecyclerView.Adapter<ClientAdapter.ClientHolder>()  {
 
-    var onPhoneClick : ((AppClient) -> Unit)? = null
+    var onPhoneClick : ((Int?) -> Unit)? = null
     var onFavoriteClick : ((AppClient) -> Unit)? = null
     var onClick : ((AppClient) -> Unit)? = null
     var onCheckboxClick : ((AppClient, Boolean) -> Unit)? = null
@@ -61,7 +61,7 @@ class ClientAdapter(
             }
 
             itemView.ib_call.setOnClickListener {
-                onPhoneClick?.invoke(client)
+                onPhoneClick?.invoke(client.phoneNumber)
             }
 
             itemView.ib_favorite.setOnClickListener {

@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.jeanloth.project.android.kotlin.axounaut">
 
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+
     <application
         android:name=".application.AxounautApplication"
         android:allowBackup="true"
