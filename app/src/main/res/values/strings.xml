@@ -20,6 +20,8 @@
     <string name="delivery">Livrer</string>
     <string name="x_count">x %1$s</string>
     <string name="total_price">Prix total : %1$s€</string>
+    <string name="price_euro">%1$s €</string>
+    <string name="article_command_number">Commandé %1$ fois</string>
     <string name="pay">Payer</string>
     <string name="deliver">Livrer</string>
 
@@ -88,4 +90,5 @@
     <string name="incomplete_payment_error">Le paiement est incomplet. En procédant au paiement, elle devra être complétée ultérieurement.</string>
     <string name="reduction">Réduction</string>
     <string name="round">Arrondir</string>
+    <string name="recipe">Recette</string>
 </resources>

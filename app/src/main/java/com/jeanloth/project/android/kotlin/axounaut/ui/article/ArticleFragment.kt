@@ -17,6 +17,7 @@ import com.jeanloth.project.android.kotlin.axounaut.extensions.openPopUpMenu
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.ArticleVM
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.MainVM
 import kotlinx.android.synthetic.main.fragment_article.*
+import kotlinx.android.synthetic.main.item_article_list.*
 import kotlinx.android.synthetic.main.layout_header.*
 import org.koin.android.viewmodel.ext.android.sharedViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -51,13 +52,8 @@ class ArticleFragment : Fragment() {
         mainVM.setHeaderTitle("Mes articles")
 
         adapter = ArticleListAdapter(emptyList(), requireContext()).apply {
-            onMenuClick = { view, articleToDelete ->
-                view.openPopUpMenu(requireContext(), R.menu.popup_menu, map = mapOf(
-                    R.id.menu_delete to {
-                        Toast.makeText(requireContext(), "Suppression définitive de : ${articleToDelete.name}", Toast.LENGTH_SHORT).show()
-                        articleVM.deleteArticle(articleToDelete)
-                    }
-                ))
+            onEditClick = { article ->
+
             }
         }
         rv_articles_fragment.adapter = adapter
