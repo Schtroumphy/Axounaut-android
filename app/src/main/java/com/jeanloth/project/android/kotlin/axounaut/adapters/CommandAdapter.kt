@@ -57,18 +57,21 @@ class CommandAdapter(
             itemView.tv_status.text = getCommandStatusByCode(command.statusCode).label
             itemView.tv_status.setTextColor(getColor(context,
                 when(command.statusCode){
-                    CommandStatusType.IN_PROGRESS.code -> R.color.salamander
-                    CommandStatusType.DONE.code -> R.color.green_dark_1
-                    CommandStatusType.DELIVERED.code -> R.color.gray_2
+                    CommandStatusType.TO_DO.code -> R.color.gray_2
+                    CommandStatusType.IN_PROGRESS.code -> R.color.orange_003
+                    CommandStatusType.DONE.code -> R.color.marron_dark_1
+                    CommandStatusType.DELIVERED.code -> R.color.ginger
+                    CommandStatusType.PAYED.code -> R.color.green_light_2
                     else -> android.R.color.black
                 }))
 
             itemView.cv_command.strokeColor = getColor(context, when(command.statusCode){
                 CommandStatusType.TO_DO.code -> R.color.gray_2
-                CommandStatusType.IN_PROGRESS.code -> R.color.salamander
-                CommandStatusType.DONE.code -> R.color.green_dark_1
-                CommandStatusType.DELIVERED.code -> R.color.apple_green
-                else -> android.R.color.transparent
+                CommandStatusType.IN_PROGRESS.code -> R.color.orange_003
+                CommandStatusType.DONE.code -> R.color.marron_dark_1
+                CommandStatusType.DELIVERED.code -> R.color.ginger
+                CommandStatusType.PAYED.code -> R.color.green_light_2
+                else -> android.R.color.black
             })
         }
 
@@ -86,10 +89,12 @@ class CommandAdapter(
     fun convertArticleWrapperToItemList(articleWrappers : List<ArticleWrapper>) : List<ItemList>{
         val list = mutableListOf<ItemList>()
         articleWrappers.forEach {
-            val articleLabel = context.getString(R.string.article_name_count, it.article.name, it.count)
+            val articleLabel = context.getString(R.string.article_name, it.article.name)
+            val quantity = context.getString(R.string.article_quantity, it.count)
             list.add(
                 ItemList(
                     articleLabel,
+                    quantity,
                     isDone = it.statusCode == ArticleWrapperStatusType.DONE.code || it.statusCode == ArticleWrapperStatusType.CANCELED.code,
                     isCanceled = it.statusCode == ArticleWrapperStatusType.CANCELED.code
                 )

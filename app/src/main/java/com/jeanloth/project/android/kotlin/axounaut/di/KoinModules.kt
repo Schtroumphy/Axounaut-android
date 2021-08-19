@@ -13,14 +13,11 @@ import com.jeanloth.project.android.kotlin.data.repositories.CommandRepository
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.GetCommandByIdUseCase
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.ObserveArticleWrappersByCommandIdUseCase
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.ObserveCommandByIdUseCase
-import com.jeanloth.project.android.kotlin.domain.usescases.usecases.command.SaveCommandUseCase
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.appClient.DeleteClientsUseCase
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.appClient.ObserveClientUseCase
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.appClient.SaveClientUseCase
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.article.*
-import com.jeanloth.project.android.kotlin.domain.usescases.usecases.command.DeleteCommandUseCase
-import com.jeanloth.project.android.kotlin.domain.usescases.usecases.command.GetAllCommandsUseCase
-import com.jeanloth.project.android.kotlin.domain.usescases.usecases.command.SaveArticleWrapperUseCase
+import com.jeanloth.project.android.kotlin.domain.usescases.usecases.command.*
 import com.jeanloth.project.android.kotlin.local.contracts.LocalAppClientDatasourceContract
 import com.jeanloth.project.android.kotlin.local.contracts.LocalArticleDatasourceContract
 import com.jeanloth.project.android.kotlin.local.contracts.LocalArticleWrapperDatasourceContract
@@ -49,7 +46,7 @@ val appModule = module {
     viewModel { ArticleVM( get(), get(), get(), get()) }
     viewModel { ClientVM( get(), get(), get()) }
     viewModel { AddCommandVM() }
-    viewModel { CommandVM(get(), get(), get(), get(), get(), get(), get()) }
+    viewModel { CommandVM(get(), get(), get(), get(), get(), get(), get(), get()) }
 
     // Uses cases
     factory{ GetAllArticlesUseCase(get()) }
@@ -70,6 +67,7 @@ val appModule = module {
 
     factory{ SaveArticleWrapperUseCase(get()) }
     factory{ ObserveArticleWrappersByCommandIdUseCase(get()) }
+    factory{ DeleteArticleWrapperUseCase(get()) }
 
     // Data repository
     single { ArticleRepository(get()) } bind ArticleContract::class

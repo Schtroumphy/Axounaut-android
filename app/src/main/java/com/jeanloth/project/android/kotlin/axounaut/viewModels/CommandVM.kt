@@ -6,6 +6,7 @@ import com.jeanloth.project.android.kotlin.domain.usescases.usecases.GetCommandB
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.ObserveArticleWrappersByCommandIdUseCase
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.ObserveCommandByIdUseCase
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.article.ObserveCommandsUseCase
+import com.jeanloth.project.android.kotlin.domain.usescases.usecases.command.DeleteArticleWrapperUseCase
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.command.DeleteCommandUseCase
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.command.SaveArticleWrapperUseCase
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.command.SaveCommandUseCase
@@ -24,6 +25,7 @@ class CommandVM (
     private val observeArticleWrappersByCommandIdUseCase: ObserveArticleWrappersByCommandIdUseCase,
     private val saveCommandUseCase: SaveCommandUseCase,
     private val deleteCommandUseCase: DeleteCommandUseCase,
+    private val deleteArticleWrapperUseCase: DeleteArticleWrapperUseCase,
     private val saveArticleWrapperUseCase: SaveArticleWrapperUseCase,
 ): ViewModel() {
 
@@ -74,8 +76,6 @@ class CommandVM (
                             updateStatusCommand(CommandStatusType.DONE)
                         } else {
                             if(it?.statusCode == CommandStatusType.DONE.code){
-                                updateStatusCommand(CommandStatusType.TO_DO)
-                            } else if(it?.statusCode == CommandStatusType.TO_DO.code){
                                 updateStatusCommand(CommandStatusType.IN_PROGRESS)
                             }
                         }
@@ -152,6 +152,10 @@ class CommandVM (
         currentCommand!!.statusCode= status.code
         Log.d("[CommandVM]", "Make command $status - $currentCommand")
         saveCommand(currentCommand!!)
+    }
+
+    fun deleteArticleWrapperFromCurrentCommand(articleWrapper: ArticleWrapper) {
+        deleteArticleWrapperUseCase.invoke(currentCommand!!.articleWrappers.find { it == articleWrapper }!!)
     }
 
 }

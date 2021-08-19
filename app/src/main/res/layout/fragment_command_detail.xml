@@ -22,7 +22,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_weight="2.8">
+            android:layout_weight="2.5">
 
             <TextView
                 android:id="@+id/tv_command_client"
@@ -57,6 +57,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="@drawable/ic_dustbin"
+            android:foreground="?selectableItemBackgroundBorderless"
             android:backgroundTint="@color/ginger"
             android:layout_marginEnd="8dp"/>
 

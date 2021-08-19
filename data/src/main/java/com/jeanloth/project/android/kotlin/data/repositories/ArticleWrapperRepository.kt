@@ -29,7 +29,7 @@ class ArticleWrapperRepository(
         return localArticleWrapperDatasourceContract.saveArticleWrapper(articleWrapper)
     }
 
-    override fun deleteArticleWrapper(articleWrapper: ArticleWrapper): Boolean {
-        return localArticleWrapperDatasourceContract.deleteArticleWrapper(articleWrapper)
+    override fun deleteArticleWrapper(articleWrapper: ArticleWrapper) {
+        localArticleWrapperDatasourceContract.deleteArticleWrapper(articleWrapper)
     }
 }

@@ -27,7 +27,8 @@
 
     <!-- Article List Fragment -->
     <string name="no_articles_error">Aucun article n\'est enregistré.</string>
-    <string name="article_name_count">%1$s x %2$d</string>
+    <string name="article_name">%1$s</string>
+    <string name="article_quantity">Q : %1$d</string>
 
     <!-- Command Fragment -->
     <string name="no_loading_command_error">Aucune commande en cours.</string>
@@ -45,6 +46,11 @@
     <string name="delivery_dialog_content">Etes-vous sûr de vouloir livrer cette commande incomplète ? Tous les articles
         non réalisés seront annulés.
     </string>
+
+    <string name="cancel_dialog_title">Annuler un produit</string>
+    <string name="cancel_dialog_content">Voulez-vous annuler ce produit ?</string>
+    <string name="cancel_article">Annuler le produit</string>
+    <string name="delete_article">Supprimer</string>
 
     <!-- Pay command dialog Fragment -->
     <string name="total_price_command_number_label">Prix total de la commande : %1$s€</string>

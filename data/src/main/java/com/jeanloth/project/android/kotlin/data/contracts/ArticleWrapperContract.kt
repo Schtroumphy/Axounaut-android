@@ -13,5 +13,5 @@ interface ArticleWrapperContract {
 
     fun saveArticleWrapper(articleWrapper: ArticleWrapper) : Boolean
 
-    fun deleteArticleWrapper(articleWrapper: ArticleWrapper) : Boolean
+    fun deleteArticleWrapper(articleWrapper: ArticleWrapper)
 }
