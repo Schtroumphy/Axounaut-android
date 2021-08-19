@@ -46,7 +46,12 @@ class SimpleListAdapter(
 
         fun bind(item : ItemList){
 
-            //itemView.tv_label.text= if(!item.isDone) item.label else stringBuilderLabel(item.label, false)
+            itemView.tv_quantity.text = if(!item.isDone && !item.isCanceled){
+                item.quantity
+            } else {
+                stringBuilderLabel(item.quantity, item.isCanceled)
+            }
+
             itemView.tv_label.text = if(!item.isDone && !item.isCanceled){
                 item.label
             } else {

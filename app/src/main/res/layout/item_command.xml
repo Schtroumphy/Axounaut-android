@@ -49,16 +49,35 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_articles_list"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:paddingHorizontal="20dp"
                 android:paddingVertical="10dp"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_delivery_date"
-                tools:itemCount="1"
+                tools:itemCount="2"
                 tools:listitem="@layout/item_dot_list" />
+
+            <TextView
+                android:id="@+id/tv_comment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxWidth="250dp"
+                android:paddingHorizontal="5dp"
+                android:paddingVertical="5dp"
+                android:maxLines="1"
+                android:visibility="gone"
+                android:fontFamily="@font/roboto_light"
+                android:textStyle="italic"
+                android:text="Ce client souhaite être livré au plus tard à 12h"
+                android:textColor="@color/black"
+                android:ellipsize="end"
+                app:layout_constraintTop_toTopOf="@+id/tv_status"
+                app:layout_constraintBottom_toBottomOf="@id/tv_status"
+                app:layout_constraintEnd_toStartOf="@id/tv_status"
+                app:layout_constraintStart_toStartOf="parent"
+                />
 
             <TextView
                 android:id="@+id/tv_status"
@@ -68,7 +87,7 @@
                 android:paddingVertical="5dp"
                 android:text="En cours"
                 android:textColor="@color/black"
-                app:layout_constraintBottom_toBottomOf="@+id/rv_articles_list"
+                app:layout_constraintTop_toBottomOf="@+id/rv_articles_list"
                 app:layout_constraintEnd_toEndOf="@id/tv_delivery_date"
                 />
 

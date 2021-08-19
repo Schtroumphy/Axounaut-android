@@ -17,11 +17,26 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingHorizontal="20dp"
+        android:maxWidth="200dp"
+        android:maxLines="1"
+        android:ellipsize="end"
         android:paddingVertical="2dp"
         android:text="Pain au beurre"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toEndOf="@id/cb_item"
         app:layout_constraintBottom_toBottomOf="@id/cb_item"/>
+
+    <TextView
+        android:id="@+id/tv_cb_quantity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="2dp"
+        android:text="Q : 12"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"
+        app:layout_constraintBottom_toBottomOf="@id/tv_label"
+        app:layout_constraintTop_toTopOf="@id/tv_label"
+        app:layout_constraintStart_toEndOf="@id/tv_label"/>
 
     <TextView
         android:id="@+id/tv_label_canceled"

@@ -11,6 +11,7 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
+import com.jeanloth.project.android.kotlin.axounaut.MainActivity
 import com.jeanloth.project.android.kotlin.axounaut.R
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.ArticleVM
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.MainVM
@@ -43,7 +44,7 @@ class ArticleDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        mainVM.setHeaderTitle("Ajouter un article")
+        setupHeader()
 
         // Clear focus on typing done
         et_article_price.setOnEditorActionListener { v, actionId, event ->
@@ -58,6 +59,12 @@ class ArticleDetailsFragment : Fragment() {
         bt_add_article.setOnClickListener {
             addArticle()
         }
+    }
+
+    private fun setupHeader() {
+        mainVM.setHeaderTitle("Ajouter un article")
+        val mainActivity = requireActivity() as MainActivity
+        mainActivity.hideOrShowMenuButton(false)
     }
 
     private fun addArticle() {

@@ -9,6 +9,7 @@
     <color name="white">#FFFFFFFF</color>
 
     <color name="red_001">#DC0C3D</color>
+    <color name="red_002">#AEBC2222</color>
     <color name="salamander">#F05E23</color>
     <color name="salamander_attenue">#F17746</color>
     <color name="ginger">#BE5504</color>
@@ -26,6 +27,7 @@
     <color name="green_light_1">#6D906A</color>
     <color name="green_light_2">#5A7758</color>
     <color name="green_dark_1">#0E5E20</color>
+    <color name="green_dark_2">#1C5C2A</color>
 
     <color name="gray_1">#B3B5AE</color>
     <color name="gray_2">#747571</color>

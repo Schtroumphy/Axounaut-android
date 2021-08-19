@@ -130,7 +130,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun replaceHeaderLogoByBackButton(replaceByBackButton : Boolean){
-        iv_header_logo.setBackgroundResource(if(replaceByBackButton) R.drawable.ic_back_button else R.drawable.logo_kb_001)
+        iv_header_logo.foreground = getDrawable(if(replaceByBackButton) R.drawable.ic_back_button else R.drawable.logo_kb_001)
         iv_header_logo.layoutParams.width = if(replaceByBackButton) 46 else 130
         iv_header_logo.layoutParams.height = if(replaceByBackButton) 46 else 130
     }
