@@ -132,7 +132,7 @@
     },
     {
       "id": "4:591053467257610499",
-      "lastPropertyId": "11:1705992252766511246",
+      "lastPropertyId": "12:4865363898770884160",
       "name": "CommandEntity",
       "properties": [
         {
@@ -176,6 +176,12 @@
           "type": 11,
           "flags": 1548,
           "relationTarget": "AppClientEntity"
+        },
+        {
+          "id": "12:4865363898770884160",
+          "name": "reduction",
+          "type": 8,
+          "flags": 2
         }
       ],
       "relations": []

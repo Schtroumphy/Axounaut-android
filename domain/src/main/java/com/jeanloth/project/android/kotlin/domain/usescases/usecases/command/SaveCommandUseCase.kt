@@ -11,15 +11,6 @@ class SaveCommandUseCase(
 
     fun invoke(command: Command) : Long{
         val commandId = commandContract.saveCommand(command)
-        if(command.statusCode != CommandStatusType.DELIVERED.code && command.articleWrappers.all { it.statusCode == ArticleWrapperStatusType.DONE.code}){
-            command.statusCode = CommandStatusType.DONE.code
-            commandContract.saveCommand(command)
-        } else {
-            if(command.statusCode == CommandStatusType.DONE.code){
-                command.statusCode = CommandStatusType.IN_PROGRESS.code
-                commandContract.saveCommand(command)
-            }
-        }
         return commandId
     }
 

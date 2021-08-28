@@ -22,6 +22,7 @@ class CommandEntityMapper(
             articleWrappers = mutableListOf<ArticleWrapper>(),
             client = clientMapper.from(t.client.target),
             totalPrice = t.totalPrice,
+            reduction = t.reduction,
             paymentAmount = t.paymentAmount,
             paymentTypeCode = t.paymentTypeCode
         )
@@ -41,6 +42,7 @@ class CommandEntityMapper(
             deliveryDate = t.deliveryDate,
             statusCode = t.statusCode,
             totalPrice = t.totalPrice,
+            reduction = t.reduction,
             paymentAmount = t.paymentAmount,
             paymentTypeCode = t.paymentTypeCode
         )

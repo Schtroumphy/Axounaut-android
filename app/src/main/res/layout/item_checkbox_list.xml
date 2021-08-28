@@ -16,12 +16,10 @@
         android:id="@+id/tv_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingHorizontal="20dp"
         android:maxWidth="200dp"
         android:maxLines="1"
         android:ellipsize="end"
-        android:paddingVertical="2dp"
-        android:text="Pain au beurre"
+        android:text="Pain au chocolat x10 et vas-y que j'e"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toEndOf="@id/cb_item"
         app:layout_constraintBottom_toBottomOf="@id/cb_item"/>
@@ -36,7 +34,7 @@
         android:layout_marginStart="@dimen/activity_horizontal_margin"
         app:layout_constraintBottom_toBottomOf="@id/tv_label"
         app:layout_constraintTop_toTopOf="@id/tv_label"
-        app:layout_constraintStart_toEndOf="@id/tv_label"/>
+        app:layout_constraintEnd_toStartOf="@+id/tv_label_canceled"/>
 
     <TextView
         android:id="@+id/tv_label_canceled"
@@ -45,8 +43,9 @@
         android:paddingHorizontal="10dp"
         android:paddingVertical="2dp"
         android:text="Annulé"
-        android:visibility="gone"
-        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:visibility="invisible"
+        tools:visibility="visible"
+        android:layout_marginEnd="10dp"
         android:textColor="@color/red_002"
         android:fontFamily="@font/noto_sans_bold_italic"
         app:layout_constraintTop_toTopOf="parent"

@@ -12,6 +12,7 @@ data class Command(
     var client : AppClient? = null,
     var totalPrice : Double? = null,
     var articleWrappers : List<ArticleWrapper>,
+    var reduction : Double? = 0.0,
     var paymentAmount : Double? = null,
     var paymentTypeCode : String? = null
 ) : Serializable

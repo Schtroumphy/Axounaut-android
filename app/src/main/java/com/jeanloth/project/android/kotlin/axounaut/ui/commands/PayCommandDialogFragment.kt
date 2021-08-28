@@ -75,22 +75,21 @@ class PayCommandDialogFragment(
                 it!!.client!!.toNameString(),
                 it.idCommand.toString()
             )
+            tv_total_command_price.text = getString(
+                R.string.total_price_command_number_label,
+                it.totalPrice.toString()
+            )
         }
 
         commandVM.currentTotalPriceLiveData().observe(viewLifecycleOwner){
-            tv_total_command_price.text = getString(
-                R.string.total_price_command_number_label,
-                it.toString()
-            )
 
-            /*if(et_reduction.text!!.isNotEmpty())
+            if(et_reduction.text!!.isNotEmpty())
                 tv_total_price_with_reduction.visibility = if (et_reduction.text.toString().toInt() > 0) VISIBLE else INVISIBLE
             else tv_total_price_with_reduction.visibility = INVISIBLE
 
             tv_total_price_with_reduction.text = getString(R.string.total_price_command_after_reduction_label, it.toString())
 
             et_payment_received.setText(it.toString())
-            cb_round_amount.isEnabled = it > 0*/
         }
 
         et_payment_received.doOnTextChanged { text, _, _, count ->
@@ -127,15 +126,8 @@ class PayCommandDialogFragment(
             if (!isChecked) {
                 tv_total_price_with_reduction.visibility = INVISIBLE
                 et_reduction.setText("")
-                cb_round_amount.isChecked = false
             }
             et_payment_received.setSelection(et_payment_received.text.toString().length)
-        }
-
-        // Payment received
-        cb_round_amount.setOnCheckedChangeListener { _, isChecked ->
-            if(isChecked) commandVM.setCurrentTotalPrice(ceil(commandVM.currentTotalPriceMutableLiveData.value!!.toDouble()))
-            else commandVM.setCurrentTotalPrice(computeWithReduction(commandVM.currentCommand!!.totalPrice!!))
         }
 
         // Setup spinner
@@ -143,10 +135,7 @@ class PayCommandDialogFragment(
 
         et_reduction.setOnEditorActionListener { _, actionId, _ ->
             if(actionId == EditorInfo.IME_ACTION_DONE){
-                cb_round_amount.isEnabled = true
-                cb_round_amount.isChecked = false
-                //updateTotalPriceWithReduction()
-                //et_reduction.clearFocus()
+                updateTotalPriceWithReduction()
             }
             true
         }
@@ -159,7 +148,11 @@ class PayCommandDialogFragment(
         bt_proceed_payment.onClick {
             commandVM.currentCommand?.apply {
                 paymentAmount = commandVM.currentTotalPriceLiveData().value
-                statusCode = if(commandVM.currentTotalPriceLiveData().value == commandVM.currentCommand!!.totalPrice) CommandStatusType.PAYED.code else CommandStatusType.INCOMPLETE_PAYMENT.code
+                reduction = if(et_reduction.text.toString().isNotEmpty()) et_reduction.text.toString().toDouble() else 0.0
+                statusCode = if(
+                    commandVM.currentTotalPriceLiveData().value == commandVM.currentCommand!!.totalPrice ||
+                    commandVM.currentTotalPriceLiveData().value == commandVM.currentCommand!!.totalPrice?.minus(et_reduction.text.toString().toDouble()))
+                            CommandStatusType.PAYED.code else CommandStatusType.INCOMPLETE_PAYMENT.code
             }
 
             commandVM.saveCommand(commandVM.currentCommand!!)
@@ -199,7 +192,7 @@ class PayCommandDialogFragment(
         }
     }
 
-    private fun computeWithReduction(price : Double): Double = price - price.times((et_reduction.text.toString().toInt()/ 100.0))
+    private fun computeWithReduction(price : Double): Double = price - et_reduction.text.toString().toInt()
 
     companion object {
         fun newInstance(commandId: Long) = PayCommandDialogFragment(commandId)

@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat.getColor
 import androidx.recyclerview.widget.RecyclerView
 import com.jeanloth.project.android.kotlin.axounaut.R
+import com.jeanloth.project.android.kotlin.domain_models.entities.Article
 import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleCategory
 import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleWrapper
 import kotlinx.android.synthetic.main.item_article.view.*
@@ -25,6 +26,8 @@ class ArticleAdapter(
     var onAddMinusClick : ((List<ArticleWrapper>) -> Unit)? = null
     var displayNoArticlesError : ((Boolean) -> Unit)? = null
 
+    var categoryToDisplay : Int = ArticleCategory.SWEET.code
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArticleHolder {
         val itemView = LayoutInflater.from(parent.context)
                 .inflate(R.layout.item_article, parent, false)
@@ -34,21 +37,20 @@ class ArticleAdapter(
     override fun onBindViewHolder(holder: ArticleHolder, position: Int) {
         val article: ArticleWrapper = articleList[position]
         holder.bind(article, position)
-
     }
 
     override fun getItemCount(): Int {
         return articleList.size
     }
 
-    fun filterItemByCategory(articles : List<ArticleWrapper>, category : Int){ // Category code
-        this.articleList = articles.filter { it.article.category == category }
+    fun filterItemByCategory(category : Int){ // Category code
+        this.categoryToDisplay = category
         notifyDataSetChanged()
-        displayNoArticlesError?.invoke(this.articleList.isEmpty())
+        //displayNoArticlesError?.invoke(this.articleList.filter { it.article.category == category }.isEmpty())
     }
 
     fun setItems(articles : List<ArticleWrapper>, isEditMode : Boolean){
-        this.articleList = if(isEditMode) articles else articles.filter { it.count > 0 }
+        //this.articleList = if(isEditMode) articles else articles.filter { it.count > 0 }
         this.isEditMode = isEditMode
         notifyDataSetChanged()
     }
@@ -57,36 +59,44 @@ class ArticleAdapter(
 
         fun bind(articleWrapper : ArticleWrapper, position : Int){
 
-            itemView.tv_name.text= articleWrapper.article.name
+            if(articleWrapper.article.category == categoryToDisplay){
+                itemView.cl_article.visibility = VISIBLE
 
-            val count = articleWrapper.count
+                itemView.tv_name.text= articleWrapper.article.name
 
-            setupElementVisibility(count.toString(), isEditMode)
+                val count = articleWrapper.count
 
-            itemView.tv_name.setTextColor(getColor(context, R.color.gray_1))
-            itemView.tv_count.setTextColor(getColor(context, R.color.gray_1))
+                setupElementVisibility(count.toString(), isEditMode)
 
-            if(isEditMode){
-                itemView.ib_minus.visibility = if(count > 0) VISIBLE else GONE
+                itemView.tv_name.setTextColor(getColor(context, R.color.gray_1))
+                itemView.tv_count.setTextColor(getColor(context, R.color.gray_1))
 
-                itemView.tv_name.setTextColor(getColor(context, if(count > 0) R.color.orange_003 else R.color.gray_1))
-                itemView.tv_count.setTextColor(getColor(context, if(count > 0) R.color.orange_002 else R.color.gray_1))
+                if(isEditMode){
+                    itemView.ib_minus.visibility = if(count > 0) VISIBLE else GONE
 
-                itemView.ib_add.setOnClickListener {
-                    articleWrapper.count = count + 1
-                    articleWrapper.totalArticleWrapperPrice = articleWrapper.count * articleWrapper.article.price
-                    onAddMinusClick?.invoke(articleList)
-                    notifyDataSetChanged()
-                }
+                    itemView.tv_name.setTextColor(getColor(context, if(count > 0) R.color.orange_003 else R.color.gray_1))
+                    itemView.tv_count.setTextColor(getColor(context, if(count > 0) R.color.orange_002 else R.color.gray_1))
 
-                itemView.ib_minus.setOnClickListener {
-                    if(count > 0) {
-                        articleWrapper.count = count - 1
+                    itemView.ib_add.setOnClickListener {
+                        articleWrapper.count = count + 1
+                        articleWrapper.totalArticleWrapperPrice = articleWrapper.count * articleWrapper.article.price
+                        onAddMinusClick?.invoke(articleList)
+                        notifyDataSetChanged()
                     }
-                    onAddMinusClick?.invoke(articleList)
-                    notifyItemChanged(position)
+
+                    itemView.ib_minus.setOnClickListener {
+                        if(count > 0) {
+                            articleWrapper.count = count - 1
+                        }
+                        onAddMinusClick?.invoke(articleList)
+                        notifyItemChanged(position)
+                    }
                 }
+            } else {
+                itemView.cl_article.visibility = GONE
             }
+
+
         }
 
         private fun setupElementVisibility(count : String, editMode: Boolean) {

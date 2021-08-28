@@ -141,12 +141,12 @@ class AddCommandDialogFragment : BottomSheetDialogFragment() {
 
         bt_sweet.onClick {
             updateDisplayByCategory(ArticleCategory.SWEET.code)
-            articleAdapter.filterItemByCategory(createWrapperList(articles), ArticleCategory.SWEET.code)
+            articleAdapter.filterItemByCategory(ArticleCategory.SWEET.code)
         }
 
         bt_salt.onClick {
             updateDisplayByCategory(ArticleCategory.SALTED.code)
-            articleAdapter.filterItemByCategory(createWrapperList(articles), ArticleCategory.SALTED.code)
+            articleAdapter.filterItemByCategory(ArticleCategory.SALTED.code)
         }
     }
 
@@ -163,7 +163,7 @@ class AddCommandDialogFragment : BottomSheetDialogFragment() {
                 bt_sweet.setTextColor(getColor(requireContext(), R.color.marron_light_1))
                 sweet_divider.visibility = GONE
 
-                bt_sweet.setTextColor(getColor(requireContext(), R.color.orange_001))
+                bt_salt.setTextColor(getColor(requireContext(), R.color.orange_001))
                 salt_divider.visibility = VISIBLE
             }
             ArticleCategory.OTHER.code -> {}

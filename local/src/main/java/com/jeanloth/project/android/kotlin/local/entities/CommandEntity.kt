@@ -22,6 +22,7 @@ class CommandEntity(
 
     var statusCode : Int = CommandStatusType.TO_DO.code,
     var totalPrice : Double? = null,
+    var reduction : Double? = 0.0,
     var paymentAmount : Double? = null,
     var paymentTypeCode : String? = null
 

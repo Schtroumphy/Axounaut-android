@@ -19,6 +19,7 @@ import com.jeanloth.project.android.kotlin.axounaut.R
 import com.jeanloth.project.android.kotlin.axounaut.adapters.CheckboxListAdapter
 import com.jeanloth.project.android.kotlin.axounaut.extensions.SwipeToCancelCallback
 import com.jeanloth.project.android.kotlin.axounaut.extensions.displayDialog
+import com.jeanloth.project.android.kotlin.axounaut.extensions.notCanceled
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.CommandVM
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.MainVM
 import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleWrapper
@@ -118,6 +119,9 @@ class CommandDetailFragment : Fragment() {
                 // Update status
                 tv_command_status.text = getCommandStatusByCode(it.statusCode).label.toUpperCase()
 
+                // Update total price
+                tv_total_price.text = getString(R.string.total_price, it.totalPrice.toString())
+
                 commandVM.updateStatusByStatus(it.statusCode)
 
                 when (it.statusCode) {
@@ -159,7 +163,7 @@ class CommandDetailFragment : Fragment() {
         }
 
         bt_delivered.onClick {
-            if (commandVM.currentCommand!!.articleWrappers.any { it.statusCode != ArticleWrapperStatusType.DONE.code }) {
+            if (commandVM.currentCommand!!.articleWrappers.notCanceled().any { it.statusCode != ArticleWrapperStatusType.DONE.code }) {
                 confirmUncompleteDeliveryDialog()
             } else {
                 commandVM.updateStatusCommand(CommandStatusType.DELIVERED)
@@ -197,7 +201,6 @@ class CommandDetailFragment : Fragment() {
                     requireView(), "La commande est bien passée au statut 'Livrée'.",
                     Snackbar.LENGTH_LONG
                 ).show()
-                goBack()
             },
             negativeButtonLabelRef = R.string.cancel,
             negativeAction = {}
@@ -240,8 +243,7 @@ class CommandDetailFragment : Fragment() {
             positiveButtonLabelRef = R.string.cancel_article,
             positiveAction =  {
                 articleWrapper.statusCode = ArticleWrapperStatusType.CANCELED.code
-                commandVM.saveArticleWrapper(articleWrapper)
-            },
+                commandVM.saveArticleWrapper(articleWrapper) },
             negativeButtonLabelRef = R.string.delete_article,
             negativeAction = {
                 commandVM.deleteArticleWrapperFromCurrentCommand(articleWrapper)

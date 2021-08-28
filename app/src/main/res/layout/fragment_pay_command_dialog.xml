@@ -186,28 +186,6 @@
                 tools:ignore="MissingConstraints" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <CheckBox
-            android:id="@+id/cb_round_amount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:buttonTint="@color/selector_cb"
-            android:scaleX="0.3"
-            android:scaleY="0.3"
-            android:button="@color/selector_cb"
-            android:layout_marginStart="@dimen/activity_horizontal_margin"
-            app:layout_constraintStart_toEndOf="@id/til_reduction"
-            app:layout_constraintTop_toTopOf="@id/til_reduction"
-            app:layout_constraintBottom_toBottomOf="@id/til_reduction"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/round"
-            app:layout_constraintTop_toTopOf="@id/cb_round_amount"
-            app:layout_constraintBottom_toBottomOf="@id/cb_round_amount"
-            app:layout_constraintStart_toEndOf="@id/cb_round_amount" />
-
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView

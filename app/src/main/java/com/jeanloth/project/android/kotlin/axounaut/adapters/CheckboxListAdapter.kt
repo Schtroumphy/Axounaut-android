@@ -72,7 +72,7 @@ class CheckboxListAdapter(
                 itemView.tv_label_canceled.visibility = VISIBLE
             } else {
                 itemView.tv_label.setTextColor(getColor(itemView.context, R.color.gray_2))
-                itemView.tv_label_canceled.visibility = GONE
+                itemView.tv_label_canceled.visibility = INVISIBLE
             }
             itemView.tv_label.setOnClickListener {
                 if(itemView.cb_item.isEnabled)

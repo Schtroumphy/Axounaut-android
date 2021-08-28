@@ -3,6 +3,7 @@ package com.jeanloth.project.android.kotlin.axounaut.viewModels
 import android.util.Log
 import android.view.View
 import androidx.lifecycle.*
+import com.jeanloth.project.android.kotlin.axounaut.extensions.notCanceled
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.GetCommandByIdUseCase
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.ObserveArticleWrappersByCommandIdUseCase
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.ObserveCommandByIdUseCase
@@ -66,6 +67,12 @@ class CommandVM (
                         currentCommandMutableLiveData.postValue(it)
                         currentCommand = it
                         setCurrentTotalPrice(it!!.totalPrice!!)
+
+                        val realTotalPrice = it.articleWrappers.filter { it.statusCode != ArticleWrapperStatusType.CANCELED.code }.map { it.count * it.article.price }.sum()
+                        if(it.articleWrappers.any { it.statusCode == ArticleWrapperStatusType.CANCELED.code } && it.totalPrice != realTotalPrice){
+                            it.totalPrice= realTotalPrice
+                            saveCommand(it)
+                        }
                     }
                 } catch (e:Exception){
                     Log.d("[CommandVM]", " Exception AWs from command Id $currentCommandId observed : $e")
@@ -110,7 +117,7 @@ class CommandVM (
             }
             CommandStatusType.IN_PROGRESS.code -> {
                 Log.d("[Command details]", "In progress")
-                if (command.articleWrappers.all { it.statusCode == ArticleWrapperStatusType.DONE.code || it.statusCode == ArticleWrapperStatusType.CANCELED.code }) {
+                if (command.articleWrappers.notCanceled().all { it.statusCode == ArticleWrapperStatusType.DONE.code}) {
                     updateStatusCommand(CommandStatusType.DONE)
                 } else if (command.articleWrappers.all { it.statusCode == ArticleWrapperStatusType.CANCELED.code }) {
                     // TODO display dialog to canceled or delete command
@@ -118,7 +125,7 @@ class CommandVM (
             }
             CommandStatusType.DONE.code -> {
                 Log.d("[Command details]", "Terminé")
-                if (!command.articleWrappers.all { it.statusCode == ArticleWrapperStatusType.DONE.code || it.statusCode == ArticleWrapperStatusType.CANCELED.code}) {
+                if (!command.articleWrappers.notCanceled().all { it.statusCode == ArticleWrapperStatusType.DONE.code}) {
                     updateStatusCommand(CommandStatusType.IN_PROGRESS)
                 }
             }
