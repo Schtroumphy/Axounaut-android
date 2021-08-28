@@ -4,13 +4,14 @@ import android.app.Activity
 import android.content.Context
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.jeanloth.project.android.kotlin.axounaut.R
-import com.jeanloth.project.android.kotlin.domain_models.entities.Article
+import splitties.alertdialog.appcompat.*
+import splitties.alertdialog.material.materialAlertDialog
+import splitties.views.textColorResource
 import java.text.DecimalFormat
 
 
@@ -80,6 +81,27 @@ fun BottomSheetDialog.fullScreen() : BottomSheetDialog {
         })
     }
     return this
+}
+
+fun displayDialog(
+    context : Context, titleRef : Int, contentRef : Int, positiveButtonLabelRef : Int, positiveAction : (() -> Unit),
+    negativeButtonLabelRef : Int, negativeAction : (() -> Unit), positiveButtonColor : Int = R.color.see_green, negativeButtonColor : Int = R.color.gray_2
+){
+    context.materialAlertDialog {
+            title = context.getString(titleRef)
+            message = context.getString(contentRef)
+            positiveButton(positiveButtonLabelRef) {
+                positiveAction.invoke()
+                it.dismiss()
+            }
+            negativeButton(negativeButtonLabelRef) {
+                negativeAction.invoke()
+                it.dismiss()
+            }
+        }.onShow {
+            positiveButton.textColorResource = positiveButtonColor
+            negativeButton.textColorResource = negativeButtonColor
+        }.show()
 }
 
 

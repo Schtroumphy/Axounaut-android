@@ -18,6 +18,7 @@ import com.jeanloth.project.android.kotlin.axounaut.MainActivity
 import com.jeanloth.project.android.kotlin.axounaut.R
 import com.jeanloth.project.android.kotlin.axounaut.adapters.CheckboxListAdapter
 import com.jeanloth.project.android.kotlin.axounaut.extensions.SwipeToCancelCallback
+import com.jeanloth.project.android.kotlin.axounaut.extensions.displayDialog
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.CommandVM
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.MainVM
 import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleWrapper
@@ -117,20 +118,14 @@ class CommandDetailFragment : Fragment() {
                 // Update status
                 tv_command_status.text = getCommandStatusByCode(it.statusCode).label.toUpperCase()
 
+                commandVM.updateStatusByStatus(it.statusCode)
+
                 when (it.statusCode) {
                     CommandStatusType.TO_DO.code -> {
                         Log.d("[Command details]", "TODO")
-                        if (it.articleWrappers.any { it.statusCode == ArticleWrapperStatusType.DONE.code || it.statusCode == ArticleWrapperStatusType.CANCELED.code }) {
-                            commandVM.updateStatusCommand(CommandStatusType.IN_PROGRESS)
-                        }
                     }
                     CommandStatusType.IN_PROGRESS.code -> {
-                        Log.d("[Command details]", "In progress")
-                        if (it.articleWrappers.all { it.statusCode == ArticleWrapperStatusType.DONE.code || it.statusCode == ArticleWrapperStatusType.CANCELED.code }) {
-                            commandVM.updateStatusCommand(CommandStatusType.DONE)
-                        } else if (it.articleWrappers.all { it.statusCode == ArticleWrapperStatusType.CANCELED.code }) {
-                            // TODO display dialog to canceled or delete command
-                        }
+                        Log.d("[Command details]", "En cours")
                         bt_delivered.isEnabled = true
                         bt_delivered.visibility = VISIBLE
                     }
@@ -138,9 +133,7 @@ class CommandDetailFragment : Fragment() {
                         Log.d("[Command details]", "Terminé")
                         bt_delivered.visibility = VISIBLE
                         bt_delivered.isEnabled = true
-                        if (!it.articleWrappers.all { it.statusCode == ArticleWrapperStatusType.DONE.code || it.statusCode == ArticleWrapperStatusType.CANCELED.code}) {
-                            commandVM.updateStatusCommand(CommandStatusType.IN_PROGRESS)
-                        }
+
                     }
                     CommandStatusType.DELIVERED.code -> {
                         Log.d("[Command details]", "Livré")
@@ -166,7 +159,7 @@ class CommandDetailFragment : Fragment() {
         }
 
         bt_delivered.onClick {
-            if (commandVM.currentCommandLiveData().value!!.articleWrappers.any { it.statusCode != ArticleWrapperStatusType.DONE.code }) {
+            if (commandVM.currentCommand!!.articleWrappers.any { it.statusCode != ArticleWrapperStatusType.DONE.code }) {
                 confirmUncompleteDeliveryDialog()
             } else {
                 commandVM.updateStatusCommand(CommandStatusType.DELIVERED)
@@ -193,75 +186,67 @@ class CommandDetailFragment : Fragment() {
     }
 
     private fun confirmUncompleteDeliveryDialog() {
-        requireContext().materialAlertDialog {
-            title = getString(R.string.delivery_dialog_title)
-            message = getString(R.string.delivery_dialog_content)
-            positiveButton(R.string.delivery) {
-                // Update command status
+        displayDialog(
+            context = requireContext(),
+            titleRef = R.string.delivery_dialog_title,
+            contentRef = R.string.delivery_dialog_content,
+            positiveButtonLabelRef = R.string.delivery,
+            positiveAction = {
                 commandVM.updateStatusCommand(CommandStatusType.DELIVERED)
                 Snackbar.make(
                     requireView(), "La commande est bien passée au statut 'Livrée'.",
                     Snackbar.LENGTH_LONG
                 ).show()
                 goBack()
-            }
-            negativeButton(R.string.cancel) { dialog ->
-                dialog.dismiss()
-            }
-        }.onShow {
-            positiveButton.textColorResource = R.color.see_green
-            negativeButton.textColorResource = R.color.gray_2
-        }.show()
+            },
+            negativeButtonLabelRef = R.string.cancel,
+            negativeAction = {}
+        )
     }
 
     private fun displayDeleteDialog() {
-        requireContext().materialAlertDialog {
-            title = getString(R.string.delete_dialog_title)
-            message = getString(R.string.delete_dialog_content)
-            positiveButton(R.string.delete) {
+        displayDialog(
+            context = requireContext(),
+            titleRef = R.string.delete_dialog_title,
+            contentRef = R.string.delete_dialog_content,
+            positiveButtonLabelRef = R.string.delete,
+            positiveAction = {
                 commandVM.removeCommand()
                 Snackbar.make(
                     requireView(), "La commande a bien été supprimée.",
                     Snackbar.LENGTH_LONG
                 ).show()
                 goBack()
-            }
-            negativeButton(R.string.cancel) { dialog ->
-                dialog.dismiss()
-            }
-        }.onShow {
-            positiveButton.textColorResource = R.color.see_green
-            negativeButton.textColorResource = R.color.gray_2
-        }.show()
+            },
+            negativeButtonLabelRef = R.string.cancel,
+            negativeAction = {}
+        )
     }
 
     private fun goBack() {
         findNavController().popBackStack()
     }
 
-    fun displayPayCommandFragment() {
+    private fun displayPayCommandFragment() {
         val mainActivity = activity as MainActivity
         mainActivity.displayPayCommandFragment(commandVM.currentCommand!!.idCommand)
     }
 
-    fun displayCancelOrDeleteArticle(articleWrapper: ArticleWrapper, position: Int){
-        requireContext().materialAlertDialog {
-            title = getString(R.string.cancel_dialog_title)
-            message = getString(R.string.cancel_dialog_content)
-            positiveButton(R.string.cancel_article) { dialog ->
+    private fun displayCancelOrDeleteArticle(articleWrapper: ArticleWrapper, position: Int){
+        displayDialog(
+            context = requireContext(),
+            titleRef = R.string.cancel_dialog_title,
+            contentRef = R.string.cancel_dialog_content,
+            positiveButtonLabelRef = R.string.cancel_article,
+            positiveAction =  {
                 articleWrapper.statusCode = ArticleWrapperStatusType.CANCELED.code
                 commandVM.saveArticleWrapper(articleWrapper)
-                dialog.dismiss()
-            }
-            negativeButton(R.string.delete_article) { dialog ->
+            },
+            negativeButtonLabelRef = R.string.delete_article,
+            negativeAction = {
                 commandVM.deleteArticleWrapperFromCurrentCommand(articleWrapper)
                 checkboxListAdapter.onItemDelete(position)
-                dialog.dismiss()
-            }
-        }.onShow {
-            positiveButton.textColorResource = R.color.see_green
-            negativeButton.textColorResource = R.color.gray_2
-        }.show()
+            })
     }
 
 

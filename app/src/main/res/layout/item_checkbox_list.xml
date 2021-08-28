@@ -47,7 +47,7 @@
         android:text="Annulé"
         android:visibility="gone"
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
-        android:textColor="@color/red_001"
+        android:textColor="@color/red_002"
         android:fontFamily="@font/noto_sans_bold_italic"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

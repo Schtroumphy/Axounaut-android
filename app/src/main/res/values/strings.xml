@@ -65,7 +65,7 @@
     <string name="client_name_label">%1$s %2$s</string>
 
     <!-- Analysis Fragment -->
-    <string name="cross_quantity">x %1$s</string>
+    <string name="cross_quantity">X %1$s</string>
 
     <!-- Errors -->
     <string name="no_client_error">Il n\'y a aucun client d\'enregistré. Veuillez en ajouter un en cliquant sur ajouter.</string>

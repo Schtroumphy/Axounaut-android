@@ -1,6 +1,7 @@
 package com.jeanloth.project.android.kotlin.axounaut.viewModels
 
 import android.util.Log
+import android.view.View
 import androidx.lifecycle.*
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.GetCommandByIdUseCase
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.ObserveArticleWrappersByCommandIdUseCase
@@ -15,6 +16,7 @@ import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleWrapper
 import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleWrapperStatusType
 import com.jeanloth.project.android.kotlin.domain_models.entities.Command
 import com.jeanloth.project.android.kotlin.domain_models.entities.CommandStatusType
+import kotlinx.android.synthetic.main.fragment_command_detail.*
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.lang.Exception
@@ -22,12 +24,9 @@ import java.lang.Exception
 class CommandVM (
     private val observeCommandsUseCase: ObserveCommandsUseCase,
     private val observeCommandByIdUseCase: ObserveCommandByIdUseCase,
-    private val getCommandByIdUseCase: GetCommandByIdUseCase,
-    private val observeArticleWrappersByCommandIdUseCase: ObserveArticleWrappersByCommandIdUseCase,
     private val saveCommandUseCase: SaveCommandUseCase,
     private val deleteCommandUseCase: DeleteCommandUseCase,
     private val deleteArticleWrapperUseCase: DeleteArticleWrapperUseCase,
-    private val saveArticleUseCase: SaveArticleUseCase,
     private val saveArticleWrapperUseCase: SaveArticleWrapperUseCase,
 ): ViewModel() {
 
@@ -44,22 +43,9 @@ class CommandVM (
     var currentTotalPriceMutableLiveData : MutableLiveData<Double> = MutableLiveData()
     fun currentTotalPriceLiveData() : LiveData<Double> = currentTotalPriceMutableLiveData
 
-    var currentCommandAwsMutableLiveData : MutableLiveData<List<ArticleWrapper>?> = MutableLiveData()
-    fun currentAWLiveData() : LiveData<List<ArticleWrapper>?> = currentCommandAwsMutableLiveData
-
-    var commandAwsMediatorLiveData = MediatorLiveData<Any>()
-    var updatedCommandMutableLiveData = MutableLiveData<Command>()
-    fun updatedCommand() : LiveData<Command>  = updatedCommandMutableLiveData
+    var reductionMutableLiveData : MutableLiveData<Double> = MutableLiveData()
 
     init {
-
-        commandAwsMediatorLiveData.addSource(currentCommandAwsMutableLiveData){
-            emitUpdatedCommand(null, it)
-        }
-
-        commandAwsMediatorLiveData.addSource(currentCommandMutableLiveData){
-            emitUpdatedCommand(it, null)
-        }
 
         viewModelScope.launch {
             observeCommandsUseCase.invoke().collect {
@@ -67,77 +53,29 @@ class CommandVM (
             }
         }
 
+        observeCurrentCommand()
+    }
+
+
+    fun observeCurrentCommand(){
         viewModelScope.launch {
             if(currentCommandId != 0L) {
                 try {
                     observeCommandByIdUseCase.invoke(currentCommandId).collect {
                         Log.d("[CommandVM]", " Current AWs from command Id $currentCommandId observed : $it")
                         currentCommandMutableLiveData.postValue(it)
-
-                        if(it?.articleWrappers?.all { it.statusCode == ArticleWrapperStatusType.DONE.code} == true ){
-                            updateStatusCommand(CommandStatusType.DONE)
-                        } else {
-                            if(it?.statusCode == CommandStatusType.DONE.code){
-                                updateStatusCommand(CommandStatusType.IN_PROGRESS)
-                            }
-                        }
+                        currentCommand = it
+                        setCurrentTotalPrice(it!!.totalPrice!!)
                     }
                 } catch (e:Exception){
                     Log.d("[CommandVM]", " Exception AWs from command Id $currentCommandId observed : $e")
                 }
-                try {
-                    observeArticleWrappersByCommandIdUseCase.invoke(currentCommandId).collect {
-                        Log.d("[CommandVM]", " Current AWs from command Id $currentCommandId observed : $it")
-                        currentCommandAwsMutableLiveData.postValue(it)
-                    }
-                } catch (e:Exception){
-                    Log.d("[CommandVM]", " Exception AWs from command Id $currentCommandId observed : $e")
-                }
-            }
-        }
-    }
-
-    private fun emitUpdatedCommand(command: Command?, aws: List<ArticleWrapper>?) {
-        command?.let {
-            Log.d("[CommandVM]", " Current command UPDATED $command")
-            updatedCommandMutableLiveData.postValue(command!!)
-        }
-        aws?.let {
-
-            // Get command by id and emit it
-            val commandGetted = getCommandByIdUseCase.invoke(aws.first().commandId)
-            Log.d("[CommandVM]", " Current command UPDATED $commandGetted")
-            updatedCommandMutableLiveData.postValue(commandGetted!!)
-        }
-    }
-
-    fun observeCurrentCommand(){
-        viewModelScope.launch {
-            try {
-                observeCommandByIdUseCase.invoke(currentCommandId).collect {
-                    Log.d("[CommandVM]", " Current command from Id $currentCommandId observed : $it")
-                    currentCommandMutableLiveData.postValue(it)
-                    currentCommand = it
-                }
-            } catch (e:Exception){
-                Log.d("[CommandVM]", " Exception command from Id $currentCommandId observed : $e")
             }
         }
     }
 
     fun saveCommand(command: Command){
-        val commandID = saveCommandUseCase.invoke(command)
-
-        command.articleWrappers.forEach {
-            it.commandId = commandID
-            if(command.statusCode == CommandStatusType.PAYED.code || command.statusCode == CommandStatusType.INCOMPLETE_PAYMENT.code ){
-                if(it.statusCode == ArticleWrapperStatusType.DONE.code) {
-                    it.article.timeOrdered = it.article.timeOrdered + it.count
-                    saveArticleUseCase.invoke(it.article)
-                }
-            }
-            saveArticleWrapper(it)
-        }
+        saveCommandUseCase.invoke(command)
     }
 
     fun removeCommand(){
@@ -153,17 +91,48 @@ class CommandVM (
     }
 
     fun updateStatusCommand(status: CommandStatusType) {
-        if(status == CommandStatusType.DELIVERED){
-            // update all article status not done
-            currentCommand!!.articleWrappers.filter { it.statusCode != ArticleWrapperStatusType.DONE.code }.forEach { it.statusCode = ArticleWrapperStatusType.CANCELED.code }
-        }
-        currentCommand!!.statusCode= status.code
-        Log.d("[CommandVM]", "Make command $status - $currentCommand")
-        saveCommand(currentCommand!!)
+        Log.d("[CommandVM]", "Make command $status")
+        saveCommandUseCase.updateCommandStatus(currentCommand!!, status)
     }
 
     fun deleteArticleWrapperFromCurrentCommand(articleWrapper: ArticleWrapper) {
         deleteArticleWrapperUseCase.invoke(currentCommand!!.articleWrappers.find { it == articleWrapper }!!)
+    }
+
+    fun updateStatusByStatus(statusCode: Int) {
+        val command = currentCommand!!
+        when (statusCode) {
+            CommandStatusType.TO_DO.code -> {
+                Log.d("[Command details]", "TODO")
+                if (command.articleWrappers.any { it.statusCode == ArticleWrapperStatusType.DONE.code || it.statusCode == ArticleWrapperStatusType.CANCELED.code }) {
+                    updateStatusCommand(CommandStatusType.IN_PROGRESS)
+                }
+            }
+            CommandStatusType.IN_PROGRESS.code -> {
+                Log.d("[Command details]", "In progress")
+                if (command.articleWrappers.all { it.statusCode == ArticleWrapperStatusType.DONE.code || it.statusCode == ArticleWrapperStatusType.CANCELED.code }) {
+                    updateStatusCommand(CommandStatusType.DONE)
+                } else if (command.articleWrappers.all { it.statusCode == ArticleWrapperStatusType.CANCELED.code }) {
+                    // TODO display dialog to canceled or delete command
+                }
+            }
+            CommandStatusType.DONE.code -> {
+                Log.d("[Command details]", "Terminé")
+                if (!command.articleWrappers.all { it.statusCode == ArticleWrapperStatusType.DONE.code || it.statusCode == ArticleWrapperStatusType.CANCELED.code}) {
+                    updateStatusCommand(CommandStatusType.IN_PROGRESS)
+                }
+            }
+            CommandStatusType.DELIVERED.code -> {
+                Log.d("[Command details]", "Livré")
+            }
+            CommandStatusType.PAYED.code -> {
+                Log.d("[Command details]", "Payé")
+            }
+            CommandStatusType.CANCELED.code -> {
+                Log.d("[Command details]", "Cancel")
+            }
+        }
+
     }
 
 }

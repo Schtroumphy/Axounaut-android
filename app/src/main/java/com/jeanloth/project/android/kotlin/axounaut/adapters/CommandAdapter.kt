@@ -90,7 +90,7 @@ class CommandAdapter(
         val list = mutableListOf<ItemList>()
         articleWrappers.forEach {
             val articleLabel = context.getString(R.string.article_name, it.article.name)
-            val quantity = context.getString(R.string.article_quantity, it.count)
+            val quantity = context.getString(R.string.cross_quantity, it.count.toString())
             list.add(
                 ItemList(
                     articleLabel,

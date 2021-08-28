@@ -66,65 +66,70 @@ class PayCommandDialogFragment(
         commandVM.currentCommandId = commandId
         Log.d("[Pay command fragment]", "Current command id : ${commandVM.currentCommandId}")
 
-
         commandVM.observeCurrentCommand()
 
         commandVM.currentCommandMutableLiveData.observe(viewLifecycleOwner){
-            commandVM.currentCommand = it
-            commandVM.setCurrentTotalPrice(it!!.totalPrice!!)
-
             // Setup header
             tv_client_command_number.text = getString(
                 R.string.command_details_client_number,
                 it!!.client!!.toNameString(),
                 it.idCommand.toString()
             )
-            tv_total_command_price.text = getString(
-                R.string.total_price_command_number_label,
-                it.totalPrice.toString()
-            )
         }
 
         commandVM.currentTotalPriceLiveData().observe(viewLifecycleOwner){
-            if(et_reduction.text!!.isNotEmpty())
+            tv_total_command_price.text = getString(
+                R.string.total_price_command_number_label,
+                it.toString()
+            )
+
+            /*if(et_reduction.text!!.isNotEmpty())
                 tv_total_price_with_reduction.visibility = if (et_reduction.text.toString().toInt() > 0) VISIBLE else INVISIBLE
             else tv_total_price_with_reduction.visibility = INVISIBLE
 
             tv_total_price_with_reduction.text = getString(R.string.total_price_command_after_reduction_label, it.toString())
 
             et_payment_received.setText(it.toString())
-            cb_round_amount.isEnabled = it > 0
+            cb_round_amount.isEnabled = it > 0*/
         }
 
         et_payment_received.doOnTextChanged { text, _, _, count ->
             bt_proceed_payment.isEnabled = text!!.isNotEmpty() && text.toString().toDouble() > 0
 
-            if(text!!.isNotEmpty()) {
-                tv_incomplete_payment.visibility = if (text.toString()
-                        .toDouble() != commandVM.currentTotalPriceMutableLiveData.value!!
-                ) VISIBLE else INVISIBLE
-                et_reduction.isEnabled = text.toString().toDouble() > 0
-                cb_complete_payment.isChecked = text.toString().toDouble() == commandVM.currentTotalPriceMutableLiveData.value!!
-            } else {
+            if(text.isNotEmpty()) {
+                when(text.toString().toDouble()){
+                    in 0.1 ..commandVM.currentTotalPriceMutableLiveData.value!! - 0.1 -> {
+                        cb_complete_payment.isChecked = false
+                        et_reduction.isEnabled = true
+                        tv_incomplete_payment.visibility = VISIBLE
+                    }
+                    commandVM.currentTotalPriceMutableLiveData.value!! -> {
+                        cb_complete_payment.isChecked = true
+                        et_reduction.isEnabled = true
+                        tv_incomplete_payment.visibility = INVISIBLE
+                    }
+                    else -> {
+                        //cb_complete_payment.isChecked = false
+                        tv_incomplete_payment.visibility = VISIBLE
+                        // TODO Display other error
+                    }
+                }
+               } else {
                 et_reduction.isEnabled = false
-                cb_round_amount.isEnabled = false
                 tv_incomplete_payment.visibility = VISIBLE
             }
         }
 
-        et_reduction.doOnTextChanged{ text, _, _, _ ->
-            cb_round_amount.isEnabled = false
-        }
 
         // Payment received
         cb_complete_payment.setOnCheckedChangeListener { _, isChecked ->
             et_payment_received.setText(if (isChecked) commandVM.currentTotalPriceMutableLiveData.value!!.toString() else "0.0")
             if (!isChecked) {
                 tv_total_price_with_reduction.visibility = INVISIBLE
-                et_reduction.setText("0")
+                et_reduction.setText("")
                 cb_round_amount.isChecked = false
             }
-            et_payment_received.setSelection(commandVM.currentTotalPriceMutableLiveData.value!!.toString().length-1)
+            et_payment_received.setSelection(et_payment_received.text.toString().length)
         }
 
         // Payment received
@@ -134,10 +139,39 @@ class PayCommandDialogFragment(
         }
 
         // Setup spinner
+        setupSpinner()
+
+        et_reduction.setOnEditorActionListener { _, actionId, _ ->
+            if(actionId == EditorInfo.IME_ACTION_DONE){
+                cb_round_amount.isEnabled = true
+                cb_round_amount.isChecked = false
+                //updateTotalPriceWithReduction()
+                //et_reduction.clearFocus()
+            }
+            true
+        }
+
+        // Close button
+        bt_pay_close.onClick{
+            bottomSheetDialog.dismiss()
+        }
+
+        bt_proceed_payment.onClick {
+            commandVM.currentCommand?.apply {
+                paymentAmount = commandVM.currentTotalPriceLiveData().value
+                statusCode = if(commandVM.currentTotalPriceLiveData().value == commandVM.currentCommand!!.totalPrice) CommandStatusType.PAYED.code else CommandStatusType.INCOMPLETE_PAYMENT.code
+            }
+
+            commandVM.saveCommand(commandVM.currentCommand!!)
+            bottomSheetDialog.dismiss()
+            Snackbar.make(requireView(), "Paiement pris en compte.", Snackbar.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun setupSpinner() {
         val adapter: ArrayAdapter<PaymentType> = ArrayAdapter<PaymentType>(
             requireContext(), android.R.layout.simple_spinner_item, PaymentType.values()
         )
-
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinner_payment_type.adapter = adapter
         spinner_payment_type.onItemSelectedListener = object : OnItemSelectedListener {
@@ -154,32 +188,6 @@ class PayCommandDialogFragment(
                 et_payment_received.clearFocus()
                 et_reduction.clearFocus()
             }
-        }
-
-        et_reduction.setOnEditorActionListener { _, actionId, _ ->
-            if(actionId == EditorInfo.IME_ACTION_DONE){
-                cb_round_amount.isEnabled = true
-                cb_round_amount.isChecked = false
-                updateTotalPriceWithReduction()
-                et_reduction.clearFocus()
-            }
-            true
-        }
-
-        // Close button
-        bt_pay_close.onClick{
-            bottomSheetDialog.dismiss()
-        }
-
-        bt_proceed_payment.onClick {
-            commandVM.currentCommand?.apply {
-                paymentAmount = et_payment_received.text.toString().toDouble()
-                statusCode = if(et_payment_received.text.toString().toDouble() == commandVM.currentCommand!!.totalPrice) CommandStatusType.PAYED.code else CommandStatusType.INCOMPLETE_PAYMENT.code
-            }
-
-            commandVM.saveCommand(commandVM.currentCommand!!)
-            bottomSheetDialog.dismiss()
-            Snackbar.make(requireView(), "Paiement pris en compte.", Snackbar.LENGTH_SHORT).show()
         }
     }
 

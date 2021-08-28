@@ -70,7 +70,7 @@ class SimpleListAdapter(
                 this.length,
                 Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
             )
-            if(isCanceled) setSpan(ForegroundColorSpan(getColor(context, R.color.red_001)), this.length - label.length,
+            if(isCanceled) setSpan(ForegroundColorSpan(getColor(context, R.color.red_002)), this.length - label.length,
                 this.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 
         }
