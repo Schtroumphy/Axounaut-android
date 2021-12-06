@@ -6,12 +6,10 @@ import android.util.Log
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
-import android.view.animation.Animation
-import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import com.jeanloth.project.android.kotlin.axounaut.ui.commands.AddCommandDialogFragment
@@ -19,7 +17,7 @@ import com.jeanloth.project.android.kotlin.axounaut.ui.commands.PayCommandDialog
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.MainVM
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.viewmodel.ext.android.viewModel
-import splitties.views.imageResource
+import splitties.views.imageDrawable
 import splitties.views.onClick
 
 
@@ -27,13 +25,26 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var navController : NavController
     private val mainVM : MainVM by viewModel()
-    private var clicked = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         navController = findNavController(R.id.nav_host_fragment)
+
+        mainVM.setHeaderTitle(when(intent.getStringExtra("FRAGMENT_TO_SHOW")){
+            "COMMANDS" -> "Commandes"
+            "ANALYSIS" -> "Analyses"
+            "STOCK" -> "Stocks"
+            else -> "Kreyol Baker"
+        })
+
+        when(intent.getStringExtra("FRAGMENT_TO_SHOW")){
+            "COMMANDS" -> navigateToCommands()
+            "ANALYSIS" -> navigateToAnalysis()
+            "STOCK" -> navigateToStock()
+            else -> "Kreyol Baker"
+        }
 
         mainVM.headerTitleLiveData().observe(this, {
             Log.d("[Main Activity]", "Title observed : $it")
@@ -45,46 +56,35 @@ class MainActivity : AppCompatActivity() {
             openPopUpMenu(it)
         }
 
-        navController.addOnDestinationChangedListener { _, destination, _ ->
+        navController.addOnDestinationChangedListener { _, destination, classe ->
             if(destination.id == R.id.nav_article_details) {
                 //fab_menu.visibility = GONE
             } else {
                 //fab_menu.visibility = VISIBLE
             }
+            hideOrShowAddCommandButton(destination.id == R.id.nav_command_list)
         }
 
-        iv_header_logo.setOnClickListener {
-            navController.navigateUp()
-            navController.navigate(R.id.navigation_home)
-            mainVM.setHeaderTitle("Kreyol Baker")
+        iv_header_logo.onClick {
+            onBackPressed()
         }
 
-    }
-
-    fun navigateToCommands(view : View){
-        navController.navigate(R.id.navigation_home)
-    }
-
-    fun navigateToStock(view : View){
-        navController.navigate(R.id.navigation_dashboard)
-    }
-
-    fun navigateToAnalysis(view : View){
-        navController.navigate(R.id.navigation_analysis)
-    }
-
-    fun hideKeyboard(activity: Activity) {
-        val imm: InputMethodManager =
-            activity.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-        //Find the currently focused view, so we can grab the correct window token from it.
-        var view = activity.currentFocus
-        //If no view currently has focus, create a new one, just so we can grab a window token from it
-        if (view == null) {
-            view = View(activity)
+        fab_add_command.onClick {
+            displayAddCommandFragment()
         }
-        imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
+    fun navigateToCommands(){
+        navController.navigate(R.id.nav_command_list)
+    }
+
+    fun navigateToStock(){
+        navController.navigate(R.id.nav_dashboard)
+    }
+
+    fun navigateToAnalysis(){
+        navController.navigate(R.id.nav_analysis)
+    }
 
     fun openPopUpMenu(view : View) {
         view.setOnClickListener {
@@ -115,6 +115,10 @@ class MainActivity : AppCompatActivity() {
         fab_menu.visibility = if(makeVisible) VISIBLE else GONE
     }
 
+    fun hideOrShowAddCommandButton(makeVisible : Boolean){
+        fab_add_command.visibility = if(makeVisible) VISIBLE else GONE
+    }
+
     fun displayAddCommandFragment(){
         AddCommandDialogFragment.newInstance().show(supportFragmentManager, "dialog")
     }
@@ -124,7 +128,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun replaceHeaderLogoByBackButton(replaceByBackButton : Boolean){
-        iv_header_logo.foreground = getDrawable(if(replaceByBackButton) R.drawable.ic_back_button else R.drawable.logo_kb_001)
+        iv_header_logo.imageDrawable = ContextCompat.getDrawable(this, if(replaceByBackButton) R.drawable.ic_back_button else R.drawable.logo_kb_002)
         iv_header_logo.layoutParams.width = if(replaceByBackButton) 46 else 130
         iv_header_logo.layoutParams.height = if(replaceByBackButton) 46 else 130
     }

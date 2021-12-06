@@ -26,8 +26,6 @@ class ArticleAdapter(
     var onAddMinusClick : ((List<ArticleWrapper>) -> Unit)? = null
     var displayNoArticlesError : ((Boolean) -> Unit)? = null
 
-    var categoryToDisplay : Int = ArticleCategory.SWEET.code
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArticleHolder {
         val itemView = LayoutInflater.from(parent.context)
                 .inflate(R.layout.item_article, parent, false)
@@ -43,14 +41,9 @@ class ArticleAdapter(
         return articleList.size
     }
 
-    fun filterItemByCategory(category : Int){ // Category code
-        this.categoryToDisplay = category
-        notifyDataSetChanged()
-        //displayNoArticlesError?.invoke(this.articleList.filter { it.article.category == category }.isEmpty())
-    }
-
-    fun setItems(articles : List<ArticleWrapper>, isEditMode : Boolean){
+    fun setItems(articles : List<ArticleWrapper>, isEditMode : Boolean = false){
         //this.articleList = if(isEditMode) articles else articles.filter { it.count > 0 }
+        this.articleList = articles
         this.isEditMode = isEditMode
         notifyDataSetChanged()
     }
@@ -59,43 +52,38 @@ class ArticleAdapter(
 
         fun bind(articleWrapper : ArticleWrapper, position : Int){
 
-            if(articleWrapper.article.category == categoryToDisplay){
-                itemView.cl_article.visibility = VISIBLE
+            itemView.cl_article.visibility = VISIBLE
 
-                itemView.tv_name.text= articleWrapper.article.name
+            itemView.tv_name.text= articleWrapper.article.name
 
-                val count = articleWrapper.count
+            val count = articleWrapper.count
 
-                setupElementVisibility(count.toString(), isEditMode)
+            setupElementVisibility(count.toString(), isEditMode)
 
-                itemView.tv_name.setTextColor(getColor(context, R.color.gray_1))
-                itemView.tv_count.setTextColor(getColor(context, R.color.gray_1))
+            itemView.tv_name.setTextColor(getColor(context, R.color.gray_1))
+            itemView.tv_count.setTextColor(getColor(context, R.color.gray_1))
 
-                if(isEditMode){
-                    itemView.ib_minus.visibility = if(count > 0) VISIBLE else GONE
+            if(isEditMode){
+                itemView.ib_minus.visibility = if(count > 0) VISIBLE else GONE
 
-                    itemView.tv_name.setTextColor(getColor(context, if(count > 0) R.color.orange_003 else R.color.gray_1))
-                    itemView.tv_count.setTextColor(getColor(context, if(count > 0) R.color.orange_002 else R.color.gray_1))
+                itemView.tv_name.setTextColor(getColor(context, if(count > 0) R.color.orange_003 else R.color.gray_1))
+                itemView.tv_count.setTextColor(getColor(context, if(count > 0) R.color.orange_002 else R.color.gray_1))
 
-                    itemView.ib_add.setOnClickListener {
-                        articleWrapper.count = count + 1
-                        articleWrapper.totalArticleWrapperPrice = articleWrapper.count * articleWrapper.article.price
-                        onAddMinusClick?.invoke(articleList)
-                        notifyDataSetChanged()
-                    }
-
-                    itemView.ib_minus.setOnClickListener {
-                        if(count > 0) {
-                            articleWrapper.count = count - 1
-                        }
-                        onAddMinusClick?.invoke(articleList)
-                        notifyItemChanged(position)
-                    }
+                itemView.ib_add.setOnClickListener {
+                    articleWrapper.count = count + 1
+                    //articleWrapper.totalArticleWrapperPrice = articleWrapper.count * articleWrapper.article.price
+                    onAddMinusClick?.invoke(articleList)
+                    notifyItemChanged(position)
                 }
-            } else {
-                itemView.cl_article.visibility = GONE
-            }
 
+                itemView.ib_minus.setOnClickListener {
+                    if(count > 0) {
+                        articleWrapper.count = count - 1
+                    }
+                    onAddMinusClick?.invoke(articleList)
+                    notifyItemChanged(position)
+                }
+            }
 
         }
 

@@ -32,8 +32,5 @@ class HomeFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        val commandViewPager = CommandViewPager(childFragmentManager)
-        vp_command.adapter = commandViewPager
-        tl_command.setupWithViewPager(vp_command)
     }
 }

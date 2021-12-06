@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
+    android:orientation="vertical"
     android:background="@drawable/bottom_sheet_bg"
     tools:context=".ui.commands.AddCommandDialogFragment">
 
@@ -14,9 +15,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="25dp"
-        android:layout_marginTop="25dp"
-        android:background="@drawable/ic_close"
-        android:backgroundTint="@color/brown_57"
+        android:layout_marginTop="15dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/ic_close"
+        android:tint="@color/brown_57"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -25,95 +27,92 @@
         android:id="@+id/tv_add_command_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="35dp"
+        android:layout_marginTop="10dp"
         android:fontFamily="@font/rosario_wght"
         android:gravity="center"
         android:text="@string/add_command_label"
         android:textColor="@color/brown_57"
+        app:layout_constraintTop_toBottomOf="@+id/bt_previous_or_close"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         android:textSize="26sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@id/bt_previous_or_close"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:textStyle="bold" />
 
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_delivery_date"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:hint="Date de livraison"
-        app:boxCornerRadiusBottomEnd="20dp"
-        app:boxCornerRadiusBottomStart="20dp"
-        app:boxCornerRadiusTopEnd="20dp"
-        app:boxCornerRadiusTopStart="20dp"
-        app:boxStrokeColor="@color/marron_light_1"
-        app:boxStrokeErrorColor="@color/salamander"
-        app:boxStrokeWidth="1dp"
-        android:focusableInTouchMode="false"
-        android:layout_marginTop="25dp"
-        android:layout_marginHorizontal="25dp"
-        app:boxStrokeWidthFocused="1.5dp"
-        app:hintAnimationEnabled="true"
-        app:hintTextColor="@color/green_light_1"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_add_command_title">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_delivery_date"
-            android:layout_width="350dp"
-            android:layout_height="45dp"
-            android:ems="10"
-            android:imeOptions="actionNext"
-            android:inputType="date"
-            android:focusable="false"
-            android:focusableInTouchMode="false"
-            android:textAlignment="textStart"
-            android:textSize="14sp"
-            tools:text="Test du text " />
-    </com.google.android.material.textfield.TextInputLayout>
-
-
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:id="@+id/ll_client"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="25dp"
-        android:layout_marginVertical="12dp"
+        android:layout_marginVertical="18dp"
         android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:weightSum="10"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/til_delivery_date">
+        app:layout_constraintTop_toBottomOf="@+id/tv_add_command_title">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_delivery_date"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="4"
+            android:focusableInTouchMode="false"
+            android:hint="Date"
+            app:boxCornerRadiusBottomEnd="20dp"
+            app:boxCornerRadiusBottomStart="20dp"
+            app:boxCornerRadiusTopEnd="20dp"
+            app:boxCornerRadiusTopStart="20dp"
+            app:boxStrokeColor="@color/marron_light_1"
+            app:boxStrokeErrorColor="@color/salamander"
+            app:boxStrokeWidth="1dp"
+            app:boxStrokeWidthFocused="1.5dp"
+            app:hintAnimationEnabled="true"
+            app:hintTextColor="@color/green_light_1">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_delivery_date"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:ems="10"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:imeOptions="actionNext"
+                android:inputType="date"
+                android:textAlignment="textStart"
+                android:textSize="14sp"
+                tools:text="Test du text " />
+        </com.google.android.material.textfield.TextInputLayout>
 
 
         <androidx.appcompat.widget.AppCompatAutoCompleteTextView
             android:id="@+id/et_client"
             style="@style/App.custom.MediumEditText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:textSize="14sp"
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="5"
             android:clickable="true"
+            android:completionThreshold="1"
+            android:hint="Client"
             android:textColorHint="@color/gray_2"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:hint="Choisir un client"
-            android:completionThreshold="1"/>
+            android:textSize="14sp" />
 
-        <Button
+        <ImageButton
             android:id="@+id/ib_add_client"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:enabled="true"
-            android:background="@drawable/ic_add"
-            android:foreground="?android:attr/selectableItemBackground"
-            app:layout_constraintBottom_toBottomOf="@+id/et_client"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/et_client"
-            app:layout_constraintTop_toTopOf="@+id/et_client" />
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_add"
+            android:tint="@color/orange_003" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 
     <TextView
         android:id="@+id/tv_error_no_articles"
@@ -122,10 +121,10 @@
         android:text="@string/no_articles_error"
         android:visibility="gone"
         android:layout_marginTop="35dp"
-        tools:visibility="visible"
+        tools:visibility="gone"
         android:gravity="center"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ll_bt_category"
+        app:layout_constraintTop_toBottomOf="@+id/ll_client"
         app:layout_constraintBottom_toTopOf="@+id/tv_total_price"/>
 
 
@@ -135,7 +134,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="0dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/ll_client">
 
@@ -199,14 +198,18 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_articles"
         android:layout_width="match_parent"
-        android:layout_height="350dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:layout_marginBottom="15dp"
         android:padding="15dp"
+        tools:visibility="visible"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ll_bt_category"
-        app:layout_constraintBottom_toTopOf="@+id/tv_total_price"
+        app:layout_constraintBottom_toTopOf="@+id/bt_add_article"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        tools:itemCount="2"
         tools:listitem="@layout/item_article" />
 
     <TextView
@@ -217,33 +220,45 @@
         android:textColor="@color/orange_002"
         android:fontFamily="@font/roboto_medium"
         android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/rv_articles"
         android:layout_marginBottom="@dimen/activity_vertical_margin"
-        android:layout_marginEnd="45dp"
-        app:layout_constraintBottom_toTopOf="@id/bt_next"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:layout_marginEnd="45dp"/>
+
+    <View
+        android:id="@+id/view_extra_space"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/tv_total_price"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_weight="0"
         android:gravity="center"
         android:textSize="16sp"
         android:textStyle="bold"
         android:letterSpacing="0.2"
+        android:layout_marginBottom="20dp"
         android:fontFamily="@font/roboto_light"
-        android:layout_marginBottom="@dimen/activity_vertical_margin"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toTopOf="@id/bt_next"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         tools:text="Prix total : 15€" />
+
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/bt_next"
+        android:layout_weight="0"
         style="@style/MaterialButtonStyle"
         android:text="Suivant"
-        android:enabled="false"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        android:enabled="false"/>
+
     
 
 </androidx.constraintlayout.widget.ConstraintLayout>

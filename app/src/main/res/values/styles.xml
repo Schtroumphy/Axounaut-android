@@ -5,8 +5,7 @@
         <item name="bottomSheetStyle">@style/AppModalStyle</item>
     </style>
 
-    <style name="AppModalStyle"
-        parent="Widget.Design.BottomSheet.Modal">
+    <style name="AppModalStyle" parent="Widget.Design.BottomSheet.Modal">
         <item name="android:background">@drawable/bottom_sheet_bg</item>
         <item name="behavior_peekHeight">750dp</item>
 
@@ -24,7 +23,6 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">36dp</item>
         <item name="android:background">@drawable/bg_rounded</item>
-        <item name="android:paddingHorizontal">100dp</item>
         <item name="android:textSize">14sp</item>
         <item name="android:layout_marginBottom">20dp</item>
     </style>
@@ -71,5 +69,14 @@
     <style name="TextInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
         <item name="boxStrokeColor">@color/salamander</item>
         <item name="boxStrokeWidth">2dp</item>
+    </style>
+
+    <style name="Widget.Theme.Axounaut.ActionBar.Fullscreen" parent="Widget.AppCompat.ActionBar">
+        <item name="android:background">@color/black_overlay</item>
+    </style>
+
+    <style name="Widget.Theme.Axounaut.ButtonBar.Fullscreen" parent="">
+        <item name="android:background">@color/black_overlay</item>
+        <item name="android:buttonBarStyle">?android:attr/buttonBarStyle</item>
     </style>
 </resources>

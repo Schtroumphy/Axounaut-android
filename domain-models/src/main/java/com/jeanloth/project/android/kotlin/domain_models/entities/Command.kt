@@ -10,9 +10,12 @@ data class Command(
     val deliveryDate : String? = null,
     var statusCode : Int = CommandStatusType.TO_DO.code,
     var client : AppClient? = null,
-    var totalPrice : Double? = null,
     var articleWrappers : List<ArticleWrapper>,
     var reduction : Double? = 0.0,
     var paymentAmount : Double? = null,
     var paymentTypeCode : String? = null
-) : Serializable
+) : Serializable {
+
+    val totalPrice : Double
+        get() = this.articleWrappers.filter { it.statusCode != ArticleWrapperStatusType.CANCELED.code }.filter { it.count > 0 }.sumOf { it.totalArticleWrapperPrice ?: 0.0 }
+}

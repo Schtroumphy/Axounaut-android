@@ -23,13 +23,7 @@ import com.jeanloth.project.android.kotlin.domain_models.entities.PaymentType
 import com.jeanloth.project.android.kotlin.domain_models.entities.toNameString
 import kotlinx.android.synthetic.main.fragment_pay_command_dialog.*
 import org.koin.android.viewmodel.ext.android.sharedViewModel
-import splitties.alertdialog.appcompat.*
-import splitties.alertdialog.material.materialAlertDialog
 import splitties.views.onClick
-import splitties.views.textColorResource
-import java.util.*
-import kotlin.math.ceil
-import kotlin.math.roundToLong
 
 
 /**
@@ -53,6 +47,7 @@ class PayCommandDialogFragment(
         bottomSheetDialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
         return bottomSheetDialog.fullScreen()
     }
+    var totalPrice : Double = 0.0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -79,9 +74,10 @@ class PayCommandDialogFragment(
                 R.string.total_price_command_number_label,
                 it.totalPrice.toString()
             )
+            //totalPrice = it.totalPrice ?: 0.0
         }
 
-        commandVM.currentTotalPriceLiveData().observe(viewLifecycleOwner){
+        commandVM.paymentReceivedLiveData().observe(viewLifecycleOwner){
 
             if(et_reduction.text!!.isNotEmpty())
                 tv_total_price_with_reduction.visibility = if (et_reduction.text.toString().toInt() > 0) VISIBLE else INVISIBLE
@@ -97,12 +93,12 @@ class PayCommandDialogFragment(
 
             if(text.isNotEmpty()) {
                 when(text.toString().toDouble()){
-                    in 0.1 ..commandVM.currentTotalPriceMutableLiveData.value!! - 0.1 -> {
+                    in 0.1 ..commandVM.paymentReceivedMutableLiveData.value!! - 0.1 -> {
                         cb_complete_payment.isChecked = false
                         et_reduction.isEnabled = true
                         tv_incomplete_payment.visibility = VISIBLE
                     }
-                    commandVM.currentTotalPriceMutableLiveData.value!! -> {
+                    commandVM.paymentReceivedMutableLiveData.value!! -> {
                         cb_complete_payment.isChecked = true
                         et_reduction.isEnabled = true
                         tv_incomplete_payment.visibility = INVISIBLE
@@ -122,7 +118,7 @@ class PayCommandDialogFragment(
 
         // Payment received
         cb_complete_payment.setOnCheckedChangeListener { _, isChecked ->
-            et_payment_received.setText(if (isChecked) commandVM.currentTotalPriceMutableLiveData.value!!.toString() else "0.0")
+            et_payment_received.setText(if (isChecked) commandVM.paymentReceivedMutableLiveData.value!!.toString() else "0.0")
             if (!isChecked) {
                 tv_total_price_with_reduction.visibility = INVISIBLE
                 et_reduction.setText("")
@@ -145,18 +141,21 @@ class PayCommandDialogFragment(
             bottomSheetDialog.dismiss()
         }
 
+        //Confirm payment
         bt_proceed_payment.onClick {
             commandVM.currentCommand?.apply {
-                paymentAmount = commandVM.currentTotalPriceLiveData().value
+                paymentAmount = commandVM.paymentReceivedLiveData().value
                 reduction = if(et_reduction.text.toString().isNotEmpty()) et_reduction.text.toString().toDouble() else 0.0
                 statusCode = if(
-                    commandVM.currentTotalPriceLiveData().value == commandVM.currentCommand!!.totalPrice ||
-                    commandVM.currentTotalPriceLiveData().value == commandVM.currentCommand!!.totalPrice?.minus(et_reduction.text.toString().toDouble()))
+                    commandVM.paymentReceivedLiveData().value == commandVM.currentCommand!!.totalPrice ||
+                    commandVM.paymentReceivedLiveData().value == commandVM.currentCommand!!.totalPrice?.minus(et_reduction.text.toString().toDouble()))
                             CommandStatusType.PAYED.code else CommandStatusType.INCOMPLETE_PAYMENT.code
             }
 
             commandVM.saveCommand(commandVM.currentCommand!!)
             bottomSheetDialog.dismiss()
+
+            // TODO Send parameter to previous fragment to display this snackbar
             Snackbar.make(requireView(), "Paiement pris en compte.", Snackbar.LENGTH_SHORT).show()
         }
     }
@@ -186,9 +185,7 @@ class PayCommandDialogFragment(
 
     private fun updateTotalPriceWithReduction() {
         if(et_reduction.text.toString().toInt() != 0){
-            commandVM.setCurrentTotalPrice(computeWithReduction(commandVM.currentTotalPriceMutableLiveData.value!!))
-        } else {
-            tv_total_price_with_reduction.visibility = INVISIBLE
+            commandVM.setPaymentReceived(computeWithReduction(totalPrice))
         }
     }
 

@@ -14,6 +14,10 @@ import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleWrapper
 import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleWrapperStatusType
 import kotlinx.android.synthetic.main.item_checkbox_list.view.*
 import kotlinx.android.synthetic.main.item_checkbox_list.view.tv_label
+import android.text.method.ScrollingMovementMethod
+
+
+
 
 class CheckboxListAdapter(
     private var items : MutableList<ArticleWrapper>,
@@ -64,6 +68,7 @@ class CheckboxListAdapter(
             itemView.tv_cb_quantity.text= if(item.statusCode != ArticleWrapperStatusType.DONE.code && item.statusCode != ArticleWrapperStatusType.CANCELED.code) quantity else stringBuilderLabel(quantity)
             itemView.cb_item.isChecked = item.statusCode == ArticleWrapperStatusType.DONE.code
             itemView.cb_item.isEnabled = enableCheckBox
+            itemView.tv_label.movementMethod = ScrollingMovementMethod()
 
             itemView.cb_item.visibility = if(item.statusCode == ArticleWrapperStatusType.CANCELED.code) INVISIBLE else VISIBLE
             if(item.statusCode == ArticleWrapperStatusType.CANCELED.code) {

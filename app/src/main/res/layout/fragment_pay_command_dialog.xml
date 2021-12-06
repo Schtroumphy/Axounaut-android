@@ -20,7 +20,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-
     <TextView
         android:id="@+id/tv_add_command_title"
         android:layout_width="match_parent"
@@ -40,197 +39,198 @@
         android:id="@+id/tv_client_command_number"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:text="Adrien DELONNE - n° 1234"
         android:gravity="center"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_add_command_title"
-        app:layout_constraintStart_toStartOf="parent" />
+        tools:text="Adrien DELONNE - n° 1234" />
 
     <TextView
         android:id="@+id/tv_total_command_price"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:text="Prix total de la commande : 40€"
+        android:layout_marginTop="25dp"
         android:gravity="center"
-        android:layout_marginTop="25dp"
         android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_client_command_number"
-        app:layout_constraintStart_toStartOf="parent" />
+        tools:text="Prix total de la commande : 40€" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="450dp"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til_payment_received"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginHorizontal="20dp"
         android:layout_marginTop="25dp"
+        android:hint="Paiement reçu"
+        app:boxCornerRadiusBottomEnd="20dp"
+        app:boxCornerRadiusBottomStart="20dp"
+        app:boxCornerRadiusTopEnd="20dp"
+        app:boxCornerRadiusTopStart="20dp"
+        app:boxStrokeColor="@color/marron_light_1"
+        app:boxStrokeErrorColor="@color/salamander"
+        app:boxStrokeWidth="1dp"
+        app:boxStrokeWidthFocused="1.5dp"
+        app:hintAnimationEnabled="true"
+        app:hintTextColor="@color/orange_003"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_total_command_price">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/til_payment_received"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_payment_received"
+            android:layout_width="150dp"
+            android:layout_height="45dp"
+            android:ems="10"
+            android:imeOptions="actionDone"
+            android:inputType="numberDecimal"
+            android:textAlignment="textStart"
+            android:textCursorDrawable="@null"
+            android:textSize="14sp"
+            tools:ignore="MissingConstraints"
+            tools:text="30€" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <CheckBox
+        android:id="@+id/cb_complete_payment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"
+        android:button="@color/selector_cb"
+        android:buttonTint="@color/selector_cb"
+        android:scaleX="0.3"
+        android:scaleY="0.3"
+        app:layout_constraintBottom_toBottomOf="@id/til_payment_received"
+        app:layout_constraintStart_toEndOf="@id/til_payment_received"
+        app:layout_constraintTop_toTopOf="@id/til_payment_received" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/complete_payment"
+        app:layout_constraintBottom_toBottomOf="@id/cb_complete_payment"
+        app:layout_constraintStart_toEndOf="@id/cb_complete_payment"
+        app:layout_constraintTop_toTopOf="@id/cb_complete_payment" />
+
+    <RelativeLayout
+        android:id="@+id/rl_payment_type"
+        android:layout_width="0dp"
+        android:layout_height="55dp"
+        android:layout_marginHorizontal="@dimen/activity_vertical_margin"
+        android:layout_marginVertical="@dimen/activity_vertical_margin"
+        android:background="@drawable/bg_edit_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/til_payment_received">
+
+        <Spinner
+            android:id="@+id/spinner_payment_type"
+            style="@style/Widget.AppCompat.DropDownItem.Spinner"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:hint="Paiement reçu"
-            app:boxCornerRadiusBottomEnd="20dp"
-            app:boxCornerRadiusBottomStart="20dp"
-            app:boxCornerRadiusTopEnd="20dp"
-            app:boxCornerRadiusTopStart="20dp"
-            app:boxStrokeColor="@color/marron_light_1"
-            app:boxStrokeErrorColor="@color/salamander"
-            app:boxStrokeWidth="1dp"
-            android:layout_marginTop="25dp"
-            android:layout_marginHorizontal="25dp"
-            app:boxStrokeWidthFocused="1.5dp"
-            app:hintAnimationEnabled="true"
-            app:hintTextColor="@color/orange_003"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" >
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_payment_received"
-                android:layout_width="150dp"
-                android:layout_height="45dp"
-                android:ems="10"
-                android:textCursorDrawable="@null"
-                android:imeOptions="actionDone"
-                android:inputType="numberDecimal"
-                android:textAlignment="textStart"
-                android:textSize="14sp"
-                tools:text="30€"
-                tools:ignore="MissingConstraints" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <CheckBox
-            android:id="@+id/cb_complete_payment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:buttonTint="@color/selector_cb"
-            android:scaleX="0.3"
-            android:scaleY="0.3"
-            android:button="@color/selector_cb"
-            android:layout_marginStart="@dimen/activity_horizontal_margin"
-            app:layout_constraintStart_toEndOf="@id/til_payment_received"
-            app:layout_constraintTop_toTopOf="@id/til_payment_received"
-            app:layout_constraintBottom_toBottomOf="@id/til_payment_received"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/complete_payment"
-            app:layout_constraintTop_toTopOf="@id/cb_complete_payment"
-            app:layout_constraintBottom_toBottomOf="@id/cb_complete_payment"
-            app:layout_constraintStart_toEndOf="@id/cb_complete_payment" />
-
-        <RelativeLayout
-            android:id="@+id/rl_payment_type"
-            android:layout_width="350dp"
-            android:layout_height="55dp"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="26dp"
             android:layout_marginVertical="@dimen/activity_vertical_margin"
-            android:layout_marginStart="24dp"
-            android:background="@drawable/bg_edit_text"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/til_payment_received">
+            android:background="@null" />
 
-            <Spinner
-                android:id="@+id/spinner_payment_type"
-                style="@style/Widget.AppCompat.DropDownItem.Spinner"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@null"
-                android:layout_marginHorizontal="26dp"
-                android:layout_marginVertical="@dimen/activity_vertical_margin" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/activity_horizontal_margin"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentBottom="true"
-                android:src="@android:drawable/arrow_down_float" />
-        </RelativeLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/til_reduction"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:hint="@string/reduction"
-            app:boxCornerRadiusBottomEnd="20dp"
-            app:boxCornerRadiusBottomStart="20dp"
-            app:boxCornerRadiusTopEnd="20dp"
-            app:boxCornerRadiusTopStart="20dp"
-            app:boxStrokeColor="@color/marron_light_1"
-            app:boxStrokeErrorColor="@color/salamander"
-            app:boxStrokeWidth="1dp"
-            android:focusableInTouchMode="false"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:layout_marginHorizontal="25dp"
-            app:boxStrokeWidthFocused="1.5dp"
-            app:hintAnimationEnabled="true"
-            app:hintTextColor="@color/orange_003"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/rl_payment_type" >
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            android:src="@android:drawable/arrow_down_float" />
+    </RelativeLayout>
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_reduction"
-                android:layout_width="150dp"
-                android:layout_height="45dp"
-                android:ems="10"
-                android:maxLength="3"
-                android:imeOptions="actionDone"
-                android:textCursorDrawable="@null"
-                android:inputType="numberDecimal"
-                android:textAlignment="textStart"
-                android:textSize="14sp"
-                tools:ignore="MissingConstraints" />
-        </com.google.android.material.textfield.TextInputLayout>
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til_reduction"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:focusableInTouchMode="false"
+        android:hint="@string/reduction"
+        app:boxCornerRadiusBottomEnd="20dp"
+        app:boxCornerRadiusBottomStart="20dp"
+        app:boxCornerRadiusTopEnd="20dp"
+        app:boxCornerRadiusTopStart="20dp"
+        app:boxStrokeColor="@color/marron_light_1"
+        app:boxStrokeErrorColor="@color/salamander"
+        app:boxStrokeWidth="1dp"
+        app:boxStrokeWidthFocused="1.5dp"
+        app:hintAnimationEnabled="true"
+        app:hintTextColor="@color/orange_003"
+        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rl_payment_type">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_reduction"
+            android:layout_width="150dp"
+            android:layout_height="45dp"
+            android:ems="10"
+            android:imeOptions="actionDone"
+            android:inputType="numberDecimal"
+            android:maxLength="3"
+            android:textAlignment="textStart"
+            android:textCursorDrawable="@null"
+            android:textSize="14sp"
+            tools:ignore="MissingConstraints" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
         android:id="@+id/tv_incomplete_payment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp"
+        android:fontFamily="@font/roboto_light"
         android:gravity="center"
+        android:letterSpacing="0.2"
+        android:padding="5dp"
+        android:text="@string/incomplete_payment_error"
+        android:textColor="@color/red_001"
         android:textSize="12sp"
         android:textStyle="bold"
-        android:textColor="@color/red_001"
-        android:letterSpacing="0.2"
-        android:fontFamily="@font/roboto_light"
-        android:layout_marginBottom="30dp"
         android:visibility="invisible"
-        tools:visibility="visible"
-        android:padding="5dp"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toTopOf="@id/tv_total_price_with_reduction"
-        android:text="@string/incomplete_payment_error" />
+        app:layout_constraintStart_toStartOf="parent"
+        tools:visibility="visible" />
 
     <TextView
         android:id="@+id/tv_total_price_with_reduction"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:fontFamily="@font/roboto_light"
         android:gravity="center"
+        android:letterSpacing="0.2"
+        android:textColor="@color/orange_003"
         android:textSize="12sp"
         android:textStyle="bold"
-        android:letterSpacing="0.2"
         android:visibility="invisible"
-        tools:visibility="visible"
-        android:textColor="@color/orange_003"
-        android:fontFamily="@font/roboto_light"
-        android:layout_marginBottom="@dimen/activity_vertical_margin"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toTopOf="@id/bt_proceed_payment"
-        tools:text="Prix total après réduction : 15€" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="Prix total après réduction : 15€"
+        tools:visibility="visible" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/bt_proceed_payment"
         style="@style/MaterialButtonStyle"
-        android:text="Procéder au paiement"
         android:enabled="false"
-        app:layout_constraintStart_toStartOf="parent"
+        android:paddingHorizontal="50dp"
+        android:text="Procéder au paiement"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
-    
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toBottomOf="@id/til_reduction"
+        app:layout_constraintBottom_toTopOf="@id/bt_proceed_payment"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

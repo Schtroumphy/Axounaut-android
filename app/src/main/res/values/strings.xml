@@ -20,6 +20,8 @@
     <string name="delivery">Livrer</string>
     <string name="x_count">x %1$s</string>
     <string name="total_price">Prix total : %1$s€</string>
+    <string name="received_payment_amount">Paiement reçu : %1$d€</string>
+    <string name="applied_reduction">Réduction appliquée : %1$d€</string>
     <string name="price_euro">%1$s €</string>
     <string name="article_command_number">Commandé %1$ fois</string>
     <string name="pay">Payer</string>

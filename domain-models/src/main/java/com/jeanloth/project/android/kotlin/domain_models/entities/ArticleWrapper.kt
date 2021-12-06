@@ -7,10 +7,13 @@ data class ArticleWrapper(
     var commandId : Long = 0,
     var article : Article,
     var count : Int = 0,
-    var totalArticleWrapperPrice : Double? = count * article.price,
     var statusCode : Int = ArticleWrapperStatusType.TO_DO.code
 
 ) : Serializable  {
+
+    val totalArticleWrapperPrice : Double?
+    get() = count * article.price
+
     companion object {
 
         fun createWrapperList(articles : List<Article>) : List<ArticleWrapper>{

@@ -14,7 +14,6 @@ import com.jeanloth.project.android.kotlin.axounaut.MainActivity
 import com.jeanloth.project.android.kotlin.axounaut.R
 import com.jeanloth.project.android.kotlin.axounaut.adapters.AnalysisListAdapter
 import com.jeanloth.project.android.kotlin.axounaut.adapters.ArticleAdapter
-import com.jeanloth.project.android.kotlin.axounaut.ui.home.HomeFragmentDirections
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.ArticleVM
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.CommandVM
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.MainVM
@@ -98,7 +97,7 @@ class AnalysisFragment: Fragment() {
     private fun goToCommandDetails(command: Command) {
         Log.d("TAG", "Command to details : $command")
         findNavController().navigate(
-            HomeFragmentDirections.actionNavHomeToNavCommandDetails(
+            CommandListFragmentDirections.actionNavCommandListToNavCommandDetails(
                 commandToDetail = command
             )
         )

@@ -4,6 +4,8 @@ plugins {
     id 'kotlin-android-extensions'
     id 'androidx.navigation.safeargs.kotlin'
     id 'io.objectbox'
+    id 'kotlin-kapt'
+
 }
 
 android {
@@ -33,6 +35,9 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
+    }
+    buildFeatures {
+        viewBinding true
     }
 }
 

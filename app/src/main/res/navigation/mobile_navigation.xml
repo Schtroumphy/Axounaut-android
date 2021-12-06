@@ -3,31 +3,31 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@+id/nav_command_list">
 
     <fragment
-        android:id="@+id/navigation_home"
-        android:name="com.jeanloth.project.android.kotlin.axounaut.ui.home.HomeFragment"
-        android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" >
+        android:id="@+id/nav_command_list"
+        android:name="com.jeanloth.project.android.kotlin.axounaut.ui.commands.CommandListFragment"
+        android:label="Liste des commandes"
+        tools:layout="@layout/fragment_command_list" >
 
         <action
-            android:id="@+id/action_nav_home_to_nav_command_details"
+            android:id="@+id/action_nav_command_list_to_nav_command_details"
             app:destination="@id/nav_command_details" />
 
         <action
-            android:id="@+id/action_nav_home_to_nav_article"
+            android:id="@+id/action_nav_command_list_to_nav_article"
             app:destination="@id/nav_article" />
     </fragment>
 
     <fragment
-        android:id="@+id/navigation_dashboard"
+        android:id="@+id/nav_dashboard"
         android:name="com.jeanloth.project.android.kotlin.axounaut.ui.dashboard.DashboardFragment"
         android:label="@string/title_stock"
         tools:layout="@layout/fragment_dashboard" />
 
     <fragment
-        android:id="@+id/navigation_analysis"
+        android:id="@+id/nav_analysis"
         android:name="com.jeanloth.project.android.kotlin.axounaut.ui.commands.AnalysisFragment"
         android:label="Analyses"
         tools:layout="@layout/fragment_analysis" />
@@ -36,14 +36,6 @@
         android:id="@+id/navigation_settings"
         android:name="com.jeanloth.project.android.kotlin.axounaut.ui.SettingsFragment"
         android:label="Paramètres" />
-
-    <fragment
-        android:id="@+id/nav_command_list"
-        android:name="com.jeanloth.project.android.kotlin.axounaut.ui.commands.CommandListFragment"
-        android:label="Liste commandes"
-        tools:layout="@layout/fragment_command_list" >
-
-    </fragment>
 
     <fragment
         android:id="@+id/nav_command_details"

@@ -11,10 +11,10 @@ class CommandViewPager(fm: FragmentManager) : FragmentPagerAdapter(fm, BEHAVIOR_
 
     override fun getItem(position: Int): Fragment {
         return when(position){
-            0 -> CommandListFragment( displayMode = CommandListFragment.CommandDisplayMode.IN_PROGRESS)
-            1 -> CommandListFragment(displayMode = CommandListFragment.CommandDisplayMode.TO_COME)
-            2 -> CommandListFragment(displayMode = CommandListFragment.CommandDisplayMode.PAST)
-            else -> CommandListFragment( displayMode = CommandListFragment.CommandDisplayMode.IN_PROGRESS)
+            0 -> CommandListFragment()
+            1 -> CommandListFragment()
+            2 -> CommandListFragment()
+            else -> CommandListFragment()
         }
     }
 

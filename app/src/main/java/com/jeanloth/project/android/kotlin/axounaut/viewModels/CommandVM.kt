@@ -1,14 +1,11 @@
 package com.jeanloth.project.android.kotlin.axounaut.viewModels
 
 import android.util.Log
-import android.view.View
 import androidx.lifecycle.*
 import com.jeanloth.project.android.kotlin.axounaut.extensions.notCanceled
-import com.jeanloth.project.android.kotlin.domain.usescases.usecases.GetCommandByIdUseCase
-import com.jeanloth.project.android.kotlin.domain.usescases.usecases.ObserveArticleWrappersByCommandIdUseCase
+import com.jeanloth.project.android.kotlin.axounaut.ui.commands.CommandListFragment
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.ObserveCommandByIdUseCase
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.article.ObserveCommandsUseCase
-import com.jeanloth.project.android.kotlin.domain.usescases.usecases.article.SaveArticleUseCase
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.command.DeleteArticleWrapperUseCase
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.command.DeleteCommandUseCase
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.command.SaveArticleWrapperUseCase
@@ -17,10 +14,12 @@ import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleWrapper
 import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleWrapperStatusType
 import com.jeanloth.project.android.kotlin.domain_models.entities.Command
 import com.jeanloth.project.android.kotlin.domain_models.entities.CommandStatusType
-import kotlinx.android.synthetic.main.fragment_command_detail.*
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.lang.Exception
+import androidx.lifecycle.MediatorLiveData
+import com.jeanloth.project.android.kotlin.axounaut.extensions.toLocalDate
+import java.time.LocalDate
 
 class CommandVM (
     private val observeCommandsUseCase: ObserveCommandsUseCase,
@@ -41,10 +40,12 @@ class CommandVM (
     var currentCommandMutableLiveData : MutableLiveData<Command?> = MutableLiveData()
     fun currentCommandLiveData() : LiveData<Command?> = currentCommandMutableLiveData
 
-    var currentTotalPriceMutableLiveData : MutableLiveData<Double> = MutableLiveData()
-    fun currentTotalPriceLiveData() : LiveData<Double> = currentTotalPriceMutableLiveData
+    var paymentReceivedMutableLiveData : MutableLiveData<Double> = MutableLiveData()
+    fun paymentReceivedLiveData() : LiveData<Double> = paymentReceivedMutableLiveData
 
-    var reductionMutableLiveData : MutableLiveData<Double> = MutableLiveData()
+    var displayModeMutableLiveData : MutableLiveData<CommandListFragment.CommandDisplayMode> = MutableLiveData(CommandListFragment.CommandDisplayMode.IN_PROGRESS)
+
+    val commandToDisplayMediatorLiveData = MediatorLiveData<List<Command>>()
 
     init {
 
@@ -54,9 +55,29 @@ class CommandVM (
             }
         }
 
+        commandToDisplayMediatorLiveData.addSource(allCommandMutableLiveData) { value: List<Command> ->
+            commandToDisplayMediatorLiveData.setValue(value)
+        }
+        commandToDisplayMediatorLiveData.addSource(displayModeMutableLiveData) { value: CommandListFragment.CommandDisplayMode ->
+            var commandToDisplay: List<Command> = emptyList()
+            val commands = allCommandMutableLiveData.value ?: emptyList()
+
+            commandToDisplay = commands.filter { it.statusCode in value.statusCode }.apply {
+                when (value) {
+                    CommandListFragment.CommandDisplayMode.TO_COME -> filter {
+                        it.deliveryDate?.toLocalDate()!!.isAfter(LocalDate.now())
+                    }
+                    else -> this.sortedBy { it.deliveryDate?.toLocalDate() }
+                }
+            }
+            commandToDisplayMediatorLiveData.setValue(commandToDisplay)
+        }
         observeCurrentCommand()
     }
 
+    fun setDisplayMode(displayMode: CommandListFragment.CommandDisplayMode) {
+        displayModeMutableLiveData.value = displayMode
+    }
 
     fun observeCurrentCommand(){
         viewModelScope.launch {
@@ -66,11 +87,10 @@ class CommandVM (
                         Log.d("[CommandVM]", " Current AWs from command Id $currentCommandId observed : $it")
                         currentCommandMutableLiveData.postValue(it)
                         currentCommand = it
-                        setCurrentTotalPrice(it!!.totalPrice!!)
+                        setPaymentReceived(it!!.totalPrice!!)
 
-                        val realTotalPrice = it.articleWrappers.filter { it.statusCode != ArticleWrapperStatusType.CANCELED.code }.map { it.count * it.article.price }.sum()
-                        if(it.articleWrappers.any { it.statusCode == ArticleWrapperStatusType.CANCELED.code } && it.totalPrice != realTotalPrice){
-                            it.totalPrice= realTotalPrice
+                        if(it.articleWrappers.any { it.statusCode == ArticleWrapperStatusType.CANCELED.code }){
+                            //it.totalPrice= realTotalPrice
                             saveCommand(it)
                         }
                     }
@@ -93,8 +113,8 @@ class CommandVM (
         saveArticleWrapperUseCase.invoke(articleWrapper)
     }
 
-    fun setCurrentTotalPrice(price : Double){
-        currentTotalPriceMutableLiveData.postValue(price)
+    fun setPaymentReceived(price : Double){
+        paymentReceivedMutableLiveData.postValue(price)
     }
 
     fun updateStatusCommand(status: CommandStatusType) {

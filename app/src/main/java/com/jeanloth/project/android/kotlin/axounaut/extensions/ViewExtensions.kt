@@ -15,24 +15,25 @@ import splitties.views.textColorResource
 import java.text.DecimalFormat
 
 
-fun Double.formatDouble() : String{
+fun Double.formatDouble(): String {
     return DecimalFormat("#.##").format(this.toFloat())
 }
 
-fun View.openPopUpMenu(context: Context, menu : Int, map : Map<Int, (() -> Unit)>) {
+fun View.openPopUpMenu(context: Context, menu: Int, map: Map<Int, (() -> Unit)>) {
     this.setOnClickListener {
         //Creating the instance of PopupMenu
-        val popup = PopupMenu( context, this)
+        val popup = PopupMenu(context, this)
 
         //Inflating the Popup using xml file
         popup.menuInflater.inflate(menu, popup.menu)
 
         //registering popup with OnMenuItemClickListener
         popup.setOnMenuItemClickListener { item ->
-            for((key, value) in map){
+            for ((key, value) in map) {
                 when (item.itemId) {
                     key -> value
-                    else -> {}
+                    else -> {
+                    }
                 }
             }
             true
@@ -55,7 +56,7 @@ fun Context.hideKeyboard(view: View) {
 }
 
 
-fun BottomSheetDialog.fullScreen() : BottomSheetDialog {
+fun BottomSheetDialog.fullScreen(): BottomSheetDialog {
     behavior.apply {
         isFitToContents = true
         skipCollapsed = true
@@ -84,24 +85,34 @@ fun BottomSheetDialog.fullScreen() : BottomSheetDialog {
 }
 
 fun displayDialog(
-    context : Context, titleRef : Int, contentRef : Int, positiveButtonLabelRef : Int, positiveAction : (() -> Unit),
-    negativeButtonLabelRef : Int, negativeAction : (() -> Unit), positiveButtonColor : Int = R.color.see_green, negativeButtonColor : Int = R.color.gray_2
-){
+    context: Context,
+    titleRef: Int,
+    contentRef: Int? = null,
+    contentMessage: String?= null,
+    positiveButtonLabelRef: Int? = null,
+    positiveAction: (() -> Unit)? = null,
+    negativeButtonLabelRef: Int,
+    negativeAction: (() -> Unit),
+    positiveButtonColor: Int = R.color.see_green,
+    negativeButtonColor: Int = R.color.gray_2
+) {
     context.materialAlertDialog {
-            title = context.getString(titleRef)
-            message = context.getString(contentRef)
+        title = context.getString(titleRef)
+        message = if(contentRef != null) context.getString(contentRef) else contentMessage ?: ""
+        if (positiveButtonLabelRef != null && positiveAction != null) {
             positiveButton(positiveButtonLabelRef) {
                 positiveAction.invoke()
                 it.dismiss()
             }
-            negativeButton(negativeButtonLabelRef) {
-                negativeAction.invoke()
-                it.dismiss()
-            }
-        }.onShow {
-            positiveButton.textColorResource = positiveButtonColor
-            negativeButton.textColorResource = negativeButtonColor
-        }.show()
+        }
+        negativeButton(negativeButtonLabelRef) {
+            negativeAction.invoke()
+            it.dismiss()
+        }
+    }.onShow {
+        positiveButton.textColorResource = positiveButtonColor
+        negativeButton.textColorResource = negativeButtonColor
+    }.show()
 }
 
 

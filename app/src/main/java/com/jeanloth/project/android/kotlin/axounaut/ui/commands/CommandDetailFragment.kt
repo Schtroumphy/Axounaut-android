@@ -22,24 +22,15 @@ import com.jeanloth.project.android.kotlin.axounaut.extensions.displayDialog
 import com.jeanloth.project.android.kotlin.axounaut.extensions.notCanceled
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.CommandVM
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.MainVM
-import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleWrapper
-import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleWrapperStatusType
-import com.jeanloth.project.android.kotlin.domain_models.entities.CommandStatusType
+import com.jeanloth.project.android.kotlin.domain_models.entities.*
 import com.jeanloth.project.android.kotlin.domain_models.entities.CommandStatusType.Companion.getCommandStatusByCode
-import com.jeanloth.project.android.kotlin.domain_models.entities.toNameString
 import kotlinx.android.synthetic.main.fragment_command_detail.*
-import kotlinx.android.synthetic.main.layout_header.*
 import org.koin.android.viewmodel.ext.android.sharedViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
-import splitties.alertdialog.appcompat.*
-import splitties.alertdialog.material.materialAlertDialog
 import splitties.views.onClick
-import splitties.views.textColorResource
 
 /**
- * A simple [Fragment] subclass.
- * Use the [CommandDetailFragment.newInstance] factory method to
- * create an instance of this fragment.
+ * Fragment to show details of a command (deliver it, save payment, delete it...)
  */
 class CommandDetailFragment : Fragment() {
 
@@ -63,7 +54,6 @@ class CommandDetailFragment : Fragment() {
         setupHeader()
 
         commandVM.currentCommandId = args.commandToDetail.idCommand
-
         commandVM.observeCurrentCommand()
 
         checkboxListAdapter = CheckboxListAdapter(args.commandToDetail.articleWrappers.toMutableList()).apply {
@@ -83,14 +73,14 @@ class CommandDetailFragment : Fragment() {
             layoutManager = LinearLayoutManager(context)
             adapter = checkboxListAdapter
         }
+
+        // Swipe to cancel an article
         val swipeHandler = object : SwipeToCancelCallback(requireContext()) {
             override fun onMove(
                 recyclerView: RecyclerView,
                 viewHolder: RecyclerView.ViewHolder,
                 target: RecyclerView.ViewHolder
-            ): Boolean {
-                TODO("Not yet implemented")
-            }
+            ): Boolean { return true }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 checkboxListAdapter.updateArticleStatus(viewHolder.absoluteAdapterPosition)
@@ -99,22 +89,15 @@ class CommandDetailFragment : Fragment() {
         val itemTouchHelper = ItemTouchHelper(swipeHandler)
         itemTouchHelper.attachToRecyclerView(rv_command_articles)
 
+        // Observe current command to detail
         commandVM.currentCommandLiveData().observe(viewLifecycleOwner) {
-            Log.d(
-                "[Command details]",
-                "current commend observed for id ${args.commandToDetail.idCommand} : $it"
+            Log.d("[Command details]","current commend observed for id ${args.commandToDetail.idCommand} : $it"
             )
-            if (it == null) {// Has been deleted
+            if (it == null) { // Has been deleted
                 goBack()
             } else {
-                Log.d(
-                    "[Command details]",
-                    "current command AWs observed for command id ${args.commandToDetail.idCommand} : ${it.articleWrappers}"
-                )
-                checkboxListAdapter.setItems(
-                    it.articleWrappers,
-                    it.statusCode == CommandStatusType.TO_DO.code || it.statusCode == CommandStatusType.IN_PROGRESS.code || it.statusCode == CommandStatusType.DONE.code
-                )
+                Log.d("[Command details]", "current command AWs observed for command id ${args.commandToDetail.idCommand} : ${it.articleWrappers}")
+                checkboxListAdapter.setItems(it.articleWrappers, it.statusCode == CommandStatusType.TO_DO.code || it.statusCode == CommandStatusType.IN_PROGRESS.code || it.statusCode == CommandStatusType.DONE.code)
 
                 // Update status
                 tv_command_status.text = getCommandStatusByCode(it.statusCode).label.toUpperCase()
@@ -124,37 +107,27 @@ class CommandDetailFragment : Fragment() {
 
                 commandVM.updateStatusByStatus(it.statusCode)
 
+                Log.d("[Command details]", "${it.statusCode}")
                 when (it.statusCode) {
-                    CommandStatusType.TO_DO.code -> {
-                        Log.d("[Command details]", "TODO")
-                    }
-                    CommandStatusType.IN_PROGRESS.code -> {
-                        Log.d("[Command details]", "En cours")
-                        bt_delivered.isEnabled = true
-                        bt_delivered.visibility = VISIBLE
-                    }
-                    CommandStatusType.DONE.code -> {
-                        Log.d("[Command details]", "Terminé")
+                    CommandStatusType.TO_DO.code -> { }
+                    CommandStatusType.IN_PROGRESS.code, CommandStatusType.DONE.code -> {
                         bt_delivered.visibility = VISIBLE
                         bt_delivered.isEnabled = true
-
                     }
                     CommandStatusType.DELIVERED.code -> {
-                        Log.d("[Command details]", "Livré")
                         bt_delivered.visibility = GONE
                         bt_pay.visibility = VISIBLE
+                        bt_edit_command.visibility = GONE
                     }
-                    CommandStatusType.PAYED.code -> {
-                        Log.d("[Command details]", "Payé")
+                    CommandStatusType.PAYED.code, CommandStatusType.INCOMPLETE_PAYMENT.code, CommandStatusType.CANCELED.code -> {
                         bt_delivered.visibility = GONE
                         bt_pay.visibility = GONE
-                    }
-                    CommandStatusType.CANCELED.code -> {
-                        Log.d("[Command details]", "Cancel")
-                        bt_delivered.visibility = GONE
-                        bt_pay.visibility = GONE
+                        bt_edit_command.visibility = GONE
                     }
                 }
+
+                // Fill payment received tv if payed or incomplete
+                if(it.statusCode == CommandStatusType.PAYED.code ||it.statusCode == CommandStatusType.INCOMPLETE_PAYMENT.code) fillPaymentInfo(it)
             }
         }
 
@@ -162,18 +135,32 @@ class CommandDetailFragment : Fragment() {
             displayDeleteDialog()
         }
 
+        bt_edit_command.onClick {
+            displayAddCommandFragment(commandVM.currentCommand)
+        }
+
         bt_delivered.onClick {
-            if (commandVM.currentCommand!!.articleWrappers.notCanceled().any { it.statusCode != ArticleWrapperStatusType.DONE.code }) {
+            val articlesNotCanceled = commandVM.currentCommand!!.articleWrappers.notCanceled()
+            if(!articlesNotCanceled.map { it.statusCode }.any { it == ArticleWrapperStatusType.DONE.code}) {
+                displayErrorDialog("")
+            } else if (articlesNotCanceled.any { it.statusCode != ArticleWrapperStatusType.DONE.code }) {
                 confirmUncompleteDeliveryDialog()
             } else {
                 commandVM.updateStatusCommand(CommandStatusType.DELIVERED)
             }
         }
 
-        bt_pay.onClick {
-            displayPayCommandFragment()
-        }
+        bt_pay.onClick { displayPayCommandFragment() }
+    }
 
+    private fun fillPaymentInfo(it: Command) {
+        tv_payment_received.visibility = VISIBLE
+        tv_payment_received.text = getString(R.string.received_payment_amount, it.paymentAmount?.toInt())
+
+        if(it.reduction != 0.0) {
+            tv_reduction.visibility = VISIBLE
+            tv_reduction.text = getString(R.string.applied_reduction, it.reduction?.toInt())
+        }
     }
 
     private fun setupHeader() {
@@ -187,6 +174,16 @@ class CommandDetailFragment : Fragment() {
         mainActivity.hideOrShowMenuButton(false)
         mainActivity.replaceHeaderLogoByBackButton(true)
         tv_command_client.text = args.commandToDetail.client?.toNameString()
+    }
+
+    private fun displayErrorDialog(message : String){
+        displayDialog(
+            context = requireContext(),
+            titleRef = R.string.delivery_dialog_title,
+            contentMessage = "Si aucun item n'a été réalisé, merci de supprimer la commande ou de la modifier pour la mettre à jour.",
+            negativeButtonLabelRef = R.string.cancel,
+            negativeAction = {}
+        )
     }
 
     private fun confirmUncompleteDeliveryDialog() {
@@ -249,6 +246,10 @@ class CommandDetailFragment : Fragment() {
                 commandVM.deleteArticleWrapperFromCurrentCommand(articleWrapper)
                 checkboxListAdapter.onItemDelete(position)
             })
+    }
+
+    fun displayAddCommandFragment(currentCommand: Command?) {
+        AddCommandDialogFragment.newInstance(currentCommand).show(requireActivity().supportFragmentManager, "dialog")
     }
 
 

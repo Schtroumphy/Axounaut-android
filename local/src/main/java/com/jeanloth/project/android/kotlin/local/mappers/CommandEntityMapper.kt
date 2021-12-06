@@ -10,7 +10,6 @@ import java.time.LocalDate
 class CommandEntityMapper(
     private val articleWrapperMapper: ArticleWrapperEntityMapper,
     val clientMapper : AppClientEntityMapper,
-    val commandDao : CommandDAO
     ) :
     Mapper<Command, CommandEntity> {
 
@@ -21,7 +20,6 @@ class CommandEntityMapper(
             statusCode = t.statusCode,
             articleWrappers = mutableListOf<ArticleWrapper>(),
             client = clientMapper.from(t.client.target),
-            totalPrice = t.totalPrice,
             reduction = t.reduction,
             paymentAmount = t.paymentAmount,
             paymentTypeCode = t.paymentTypeCode

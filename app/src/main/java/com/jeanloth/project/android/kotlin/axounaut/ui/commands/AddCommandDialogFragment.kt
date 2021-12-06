@@ -20,7 +20,6 @@ import com.google.android.material.snackbar.Snackbar
 import com.jeanloth.project.android.kotlin.axounaut.R
 import com.jeanloth.project.android.kotlin.axounaut.adapters.ArticleAdapter
 import com.jeanloth.project.android.kotlin.axounaut.extensions.*
-import com.jeanloth.project.android.kotlin.axounaut.ui.home.HomeFragmentDirections
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.AddCommandVM
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.ArticleVM
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.ClientVM
@@ -29,6 +28,7 @@ import com.jeanloth.project.android.kotlin.domain_models.entities.*
 import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleWrapper.Companion.createWrapperList
 import kotlinx.android.synthetic.main.add_client_dialog.view.*
 import kotlinx.android.synthetic.main.fragment_add_command_dialog.*
+import org.koin.android.scope.currentScope
 import org.koin.android.viewmodel.ext.android.sharedViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
@@ -36,6 +36,8 @@ import splitties.alertdialog.appcompat.*
 import java.time.LocalDate
 import java.util.*
 import splitties.alertdialog.material.materialAlertDialog
+import splitties.views.imageDrawable
+import splitties.views.imageResource
 import splitties.views.onClick
 
 
@@ -48,9 +50,10 @@ import splitties.views.onClick
  *    AddCommandDialogFragment.newInstance(30).show(supportFragmentManager, "dialog")
  * </pre>
  */
-class AddCommandDialogFragment : BottomSheetDialogFragment() {
+class AddCommandDialogFragment (
+    val currentCommand: Command?= null
+): BottomSheetDialogFragment() {
 
-    var articlesActualized = listOf<ArticleWrapper>()
     var isEditMode = true
     private lateinit var articleAdapter: ArticleAdapter
     private val clientVM : ClientVM by sharedViewModel()
@@ -83,14 +86,18 @@ class AddCommandDialogFragment : BottomSheetDialogFragment() {
         setupHeaders()
 
         Log.d("[Add command fragment]", "Clients : ${clientVM.allClientsMutableLiveData.value}")
+        Log.d("[Current command to edit]", "$currentCommand")
 
-        val articles = articleVM.getAllArticles()
-        tv_error_no_articles.visibility = if(articles.isEmpty()) VISIBLE else GONE
-        articleAdapter = ArticleAdapter(createWrapperList(articles).filter { it.article.category == ArticleCategory.SWEET.code }, true, requireContext()).apply {
+        val articles : List<Article> = articleVM.getAllArticles()
+        addCommandVM.setAllArticlesLiveData(createWrapperList(articles))
+
+        if(currentCommand != null) addCommandVM.setArticlesLiveData(currentCommand.articleWrappers)
+
+        tv_error_no_articles.visibility = if(addCommandVM.allArticlesLiveData.value?.isEmpty() == true) VISIBLE else GONE
+        articleAdapter = ArticleAdapter(addCommandVM.allArticlesLiveData.value?.filter { it.article.category == ArticleCategory.SWEET.code } ?: emptyList(), true, requireContext()).apply {
             onAddMinusClick = {
                 Log.d("ADD COMMAND", "  articles list : $it")
-                articlesActualized = it
-                addCommandVM.setArticlesLiveData(articlesActualized)
+                addCommandVM.setArticlesLiveData(it)
             }
             displayNoArticlesError = {
                 //tv_error_no_articles.visibility = if(it) VISIBLE else GONE
@@ -98,17 +105,7 @@ class AddCommandDialogFragment : BottomSheetDialogFragment() {
         }
         rv_articles.adapter = articleAdapter
 
-        bt_next.onClick {
-            // Display previous button
-            if(isEditMode)
-                changeEditModeDisplay()
-            else {
-                // Save command
-                saveCommand()
-                Log.d("ADD COMMAND", "Save command ")
-            }
-        }
-
+        // Get all clients
         clientVM.allClientsLiveData().observe(viewLifecycleOwner){
             Log.d("[Client Fragment", "Client observed map : ${it.map { it.toNameString() }}")
             val clientAdapter: ArrayAdapter<AppClient> = ArrayAdapter<AppClient>(
@@ -126,28 +123,47 @@ class AddCommandDialogFragment : BottomSheetDialogFragment() {
         }
 
         setupListenerForAutoCompleteTvClient()
-
         setupDateEditText()
 
-        ib_add_client.onClick {
-            showAddClientDialog()
-        }
-
-        bt_add_article.onClick {
-            dismiss()
-            // Redirect to add article fragment
-            findNavController().navigate(HomeFragmentDirections.actionNavHomeToNavArticle())
-        }
-
+        // Filter articles
         bt_sweet.onClick {
             updateDisplayByCategory(ArticleCategory.SWEET.code)
-            articleAdapter.filterItemByCategory(ArticleCategory.SWEET.code)
+            articleAdapter.setItems(addCommandVM.allArticlesLiveData.value?.filter { it.article.category == ArticleCategory.SWEET.code } ?: emptyList(), true)
         }
 
         bt_salt.onClick {
             updateDisplayByCategory(ArticleCategory.SALTED.code)
-            articleAdapter.filterItemByCategory(ArticleCategory.SALTED.code)
+            articleAdapter.setItems(addCommandVM.allArticlesLiveData.value?.filter { it.article.category == ArticleCategory.SALTED.code } ?: emptyList(), true)
         }
+
+        // Add data (client, article)
+        ib_add_client.onClick {
+            showAddClientDialog()
+        }
+        bt_add_article.onClick {
+            dismiss()
+            // Redirect to add article fragment
+            findNavController().navigate(CommandListFragmentDirections.actionNavCommandListToNavArticle())
+        }
+
+        if(currentCommand != null) fillElements()
+
+        // Next step
+        bt_next.onClick {
+            // Display previous button
+            if(isEditMode)
+                changeEditModeDisplay()
+            else {
+                // Save command
+                saveCommand()
+                Log.d("ADD COMMAND", "Save command ")
+            }
+        }
+    }
+
+    private fun fillElements() {
+        et_client.setText(currentCommand?.client?.firstname)
+        et_delivery_date.setText(currentCommand?.deliveryDate)
     }
 
     private fun updateDisplayByCategory(code: Int) {
@@ -221,8 +237,9 @@ class AddCommandDialogFragment : BottomSheetDialogFragment() {
         ll_bt_category.visibility = if(isEditMode) VISIBLE else GONE
         ib_add_client.visibility = if(isEditMode) VISIBLE else GONE
         setupPreviousCloseButton()
-        articleAdapter.setItems(articlesActualized, isEditMode)
+        articleAdapter.setItems(addCommandVM.allArticlesLiveData.value ?: emptyList(), isEditMode)
         setupElements()
+        bottomSheetDialog.fullScreen()
     }
 
     private fun setupElements() {
@@ -231,32 +248,26 @@ class AddCommandDialogFragment : BottomSheetDialogFragment() {
         et_delivery_date.isEnabled = isEditMode
         ib_add_client.isEnabled = isEditMode // TODO Color selector enable
 
-        Log.d(
-            "TAG",
-            "${
-                articlesActualized.filter { it.count > 0 }
-                    .map { it.count * it.totalArticleWrapperPrice!! }.sum()
-            }"
-        )
-
         tv_total_price.visibility = if(isEditMode) GONE else VISIBLE
         if(!isEditMode)  tv_total_price.text = getString(R.string.total_price,
-            articlesActualized.filter { it.count > 0 }.map { it.count * it.article.price }.sum()
-                .formatDouble()
+            addCommandVM.allArticlesLiveData.value?.filter { it.count > 0 }?.map { it.count * it.article.price }?.sum()?.formatDouble()
         )
     }
 
     private fun setupPreviousCloseButton() {
-        bt_previous_or_close.background = getDrawable(
+        bt_previous_or_close.imageDrawable = getDrawable(
             requireContext(),
             if (isEditMode) R.drawable.ic_close else R.drawable.ic_left_arrow
         )
     }
 
     private fun setupHeaders() {
+        if(currentCommand != null) {
+            tv_add_command_title.text = "Modifier la commande"
+            bt_next.text = "Mettre à jour "
+        }
         bt_previous_or_close.setOnClickListener {
             if (isEditMode) {
-                articlesActualized = mutableListOf()
                 dismiss()
             } else
                 changeEditModeDisplay()
@@ -267,8 +278,7 @@ class AddCommandDialogFragment : BottomSheetDialogFragment() {
         val command = Command(
             deliveryDate = et_delivery_date.text.toString(),
             client = selectedClient,
-            totalPrice = articlesActualized.sumByDouble { it.totalArticleWrapperPrice ?: 0.0 },
-            articleWrappers = articlesActualized.filter { it.count > 0 }
+            articleWrappers = addCommandVM.allArticlesLiveData.value?.filter { it.count > 0 } ?: emptyList()
         )
         Log.d("[AddCommand Fragment]", "Command to save $command")
 
@@ -312,6 +322,6 @@ class AddCommandDialogFragment : BottomSheetDialogFragment() {
     }
 
     companion object {
-        fun newInstance() = AddCommandDialogFragment()
+        fun newInstance(command : Command?= null) = AddCommandDialogFragment(command)
     }
 }

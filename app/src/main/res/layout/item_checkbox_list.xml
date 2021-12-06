@@ -19,6 +19,7 @@
         android:maxWidth="200dp"
         android:maxLines="1"
         android:ellipsize="end"
+        android:scrollbars="vertical"
         android:text="Pain au chocolat x10 et vas-y que j'e"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toEndOf="@id/cb_item"

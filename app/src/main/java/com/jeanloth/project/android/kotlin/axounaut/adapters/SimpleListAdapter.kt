@@ -13,14 +13,17 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat.getColor
 import androidx.recyclerview.widget.RecyclerView
 import com.jeanloth.project.android.kotlin.axounaut.R
+import com.jeanloth.project.android.kotlin.domain_models.entities.Command
 import com.jeanloth.project.android.kotlin.domain_models.entities.ItemList
 import kotlinx.android.synthetic.main.item_dot_list.view.*
+import splitties.views.onClick
 
 class SimpleListAdapter(
     private var items : List<ItemList>,
     private val context : Context
 ) : RecyclerView.Adapter<SimpleListAdapter.ItemHolder>()  {
 
+    var onClickItem : (() -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemHolder {
         val itemView = LayoutInflater.from(parent.context)
@@ -45,6 +48,10 @@ class SimpleListAdapter(
     inner class ItemHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         fun bind(item : ItemList){
+
+            itemView.onClick {
+                onClickItem?.invoke()
+            }
 
             itemView.tv_quantity.text = if(!item.isDone && !item.isCanceled){
                 item.quantity

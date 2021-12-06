@@ -78,7 +78,7 @@ val appModule = module {
     // Mappers
     single{ ArticleEntityMapper() }
     single{ AppClientEntityMapper() }
-    single{ CommandEntityMapper( get(), get(), get()) }
+    single{ CommandEntityMapper( get(), get()) }
     single{ ArticleWrapperEntityMapper( get()) }
 
     single { provideBoxStore(get())}
