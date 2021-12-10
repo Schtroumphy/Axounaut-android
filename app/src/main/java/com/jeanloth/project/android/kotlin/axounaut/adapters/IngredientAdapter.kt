@@ -7,30 +7,28 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat.getColor
 import androidx.core.content.ContextCompat.getDrawable
-import androidx.core.view.marginBottom
 import androidx.recyclerview.widget.RecyclerView
 import com.jeanloth.project.android.kotlin.axounaut.R
-import com.jeanloth.project.android.kotlin.domain_models.entities.ProductWrapper
+import com.jeanloth.project.android.kotlin.domain_models.entities.IngredientWrapper
 import kotlinx.android.synthetic.main.item_article.view.ib_add
 import kotlinx.android.synthetic.main.item_article.view.ib_minus
 import kotlinx.android.synthetic.main.item_article.view.tv_count
 import kotlinx.android.synthetic.main.item_article.view.tv_name
-import kotlinx.android.synthetic.main.item_stock_product.view.*
+import kotlinx.android.synthetic.main.item_stock_ingredient.view.*
 
-class ProductAdapter(
-    private var products : List<ProductWrapper>,
+class IngredientAdapter(
+    private var ingredients : List<IngredientWrapper>,
     private var isEditMode : Boolean = true,
     private val context : Context
-) : RecyclerView.Adapter<ProductAdapter.ArticleHolder>()  {
+) : RecyclerView.Adapter<IngredientAdapter.ArticleHolder>()  {
 
-    var onAddMinusClick : ((ProductWrapper) -> Unit)? = null
+    var onAddMinusClick : ((IngredientWrapper) -> Unit)? = null
     var displayNoArticlesError : ((Boolean) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArticleHolder {
         val itemView = LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_stock_product, parent, false)
+                .inflate(R.layout.item_stock_ingredient, parent, false)
         return ArticleHolder(itemView)
     }
 
@@ -39,12 +37,12 @@ class ProductAdapter(
     }
 
     override fun onBindViewHolder(holder: ArticleHolder, position: Int) {
-        val product = products[position]
+        val ingredient = ingredients[position]
 
-        val productsByCountStatus = products.filter { it.countStatusType == product.countStatusType  }
-        val size = productsByCountStatus.size -1
+        val ingredientsByCountStatus = ingredients.filter { it.countStatusType == ingredient.countStatusType  }
+        val size = ingredientsByCountStatus.size -1
 
-        val positionOfMyItem = productsByCountStatus.indexOf(product)
+        val positionOfMyItem = ingredientsByCountStatus.indexOf(ingredient)
         val positionInList = when{
             positionOfMyItem == size -> if(size == 0) PositionInList.ALONE else PositionInList.LAST
             positionOfMyItem == 0 && size > 0 -> PositionInList.FIRST
@@ -52,31 +50,31 @@ class ProductAdapter(
             else -> PositionInList.BETWEEN
         }
 
-        holder.bind(product, position, positionInList)
+        holder.bind(ingredient, position, positionInList)
     }
 
     override fun getItemCount(): Int {
-        return products.size
+        return ingredients.size
     }
 
     init {
-        sortProducts(false)
+        sortIngredients(false)
     }
 
-    fun setItems(products : List<ProductWrapper>, isEditMode : Boolean = true){
-        this.products = products
+    fun setItems(ingredients : List<IngredientWrapper>, isEditMode : Boolean = true){
+        this.ingredients = ingredients
         this.isEditMode = isEditMode
-        sortProducts()
+        sortIngredients()
     }
 
     inner class ArticleHolder(view: View) : RecyclerView.ViewHolder(view){
 
-        fun bind(productWrapper: ProductWrapper, position: Int, positionInList: PositionInList){
+        fun bind(ingredientWrapper: IngredientWrapper, position: Int, positionInList: PositionInList){
 
-            itemView.tv_name.text= productWrapper.product.label
-            itemView.tv_quantity_type.text= productWrapper.quantityType.label
+            itemView.tv_name.text= ingredientWrapper.ingredient.label
+            itemView.tv_quantity_type.text= ingredientWrapper.quantityType.label
 
-            val count = productWrapper.quantity
+            val count = ingredientWrapper.quantity
 
             setupElementVisibility(count.toString(), isEditMode)
 
@@ -89,10 +87,10 @@ class ProductAdapter(
             })
 
             // Line color by count status type
-            itemView.iv_line.backgroundTintList = ColorStateList.valueOf(context.resources.getColor(when(productWrapper.countStatusType){
-                ProductWrapper.CountStatus.LOW -> R.color.red_002
-                ProductWrapper.CountStatus.MEDIUM -> R.color.orange_002
-                ProductWrapper.CountStatus.LARGE -> R.color.green_light_2
+            itemView.iv_line.backgroundTintList = ColorStateList.valueOf(context.resources.getColor(when(ingredientWrapper.countStatusType){
+                IngredientWrapper.CountStatus.LOW -> R.color.red_002
+                IngredientWrapper.CountStatus.MEDIUM -> R.color.orange_002
+                IngredientWrapper.CountStatus.LARGE -> R.color.green_light_2
             }))
 
             // Add margin bottom if last item of count status type list
@@ -103,17 +101,17 @@ class ProductAdapter(
                 itemView.ib_minus.visibility = if(count > 0) VISIBLE else GONE
 
                 itemView.ib_add.setOnClickListener {
-                    productWrapper.quantity = count + 0.5
-                    onAddMinusClick?.invoke(productWrapper)
-                    sortProducts()
+                    ingredientWrapper.quantity = count + 0.5
+                    onAddMinusClick?.invoke(ingredientWrapper)
+                    sortIngredients()
                 }
 
                 itemView.ib_minus.setOnClickListener {
                     if(count > 0) {
-                        productWrapper.quantity = count - 0.5
+                        ingredientWrapper.quantity = count - 0.5
                     }
-                    onAddMinusClick?.invoke(productWrapper)
-                    sortProducts()
+                    onAddMinusClick?.invoke(ingredientWrapper)
+                    sortIngredients()
                 }
             }
 
@@ -127,8 +125,8 @@ class ProductAdapter(
 
     }
 
-    private fun sortProducts(reload : Boolean = true){
-        products = products.sortedBy { it.quantityType }.sortedBy { it.countStatusType }
+    private fun sortIngredients(reload : Boolean = true){
+        ingredients = ingredients.sortedBy { it.quantityType }.sortedBy { it.countStatusType }
         if(reload) notifyDataSetChanged()
     }
 

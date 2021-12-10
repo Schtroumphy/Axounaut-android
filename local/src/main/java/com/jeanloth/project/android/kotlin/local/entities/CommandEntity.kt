@@ -1,15 +1,11 @@
 package com.jeanloth.project.android.kotlin.local.entities
 
 import com.jeanloth.project.android.kotlin.domain_models.entities.CommandStatusType
-import com.jeanloth.project.android.kotlin.local.converters.DateConverter
 import io.objectbox.BoxStore
 import io.objectbox.annotation.Backlink
-import io.objectbox.annotation.Convert
 import io.objectbox.annotation.Id
 import io.objectbox.relation.ToMany
 import io.objectbox.relation.ToOne
-import java.text.SimpleDateFormat
-import java.time.LocalDate
 import java.util.*
 
 @io.objectbox.annotation.Entity

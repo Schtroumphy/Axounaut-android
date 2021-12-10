@@ -13,12 +13,10 @@ import com.anychart.chart.common.dataentry.ValueDataEntry
 import com.jeanloth.project.android.kotlin.axounaut.MainActivity
 import com.jeanloth.project.android.kotlin.axounaut.R
 import com.jeanloth.project.android.kotlin.axounaut.adapters.AnalysisListAdapter
-import com.jeanloth.project.android.kotlin.axounaut.adapters.ArticleAdapter
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.ArticleVM
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.CommandVM
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.MainVM
 import com.jeanloth.project.android.kotlin.domain_models.entities.*
-import kotlinx.android.synthetic.main.fragment_add_command_dialog.*
 import kotlinx.android.synthetic.main.fragment_analysis.*
 import org.koin.android.viewmodel.ext.android.sharedViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -41,7 +39,7 @@ class AnalysisFragment: Fragment() {
     private var allArticles : List<Article> = emptyList()
 
     enum class AnalysisDisplayMode{
-        PRODUCTS,
+        INGREDIENTS,
         CLIENTS,
         INPUT_OUTPUT,
     }
@@ -59,7 +57,7 @@ class AnalysisFragment: Fragment() {
         setupHeader()
 
         allArticles = articleVM.getAllArticles()
-        Log.d("[Analyse]", "All articles : ${allArticles.map { it.name }}")
+        Log.d("[Analyse]", "All articles : ${allArticles.map { it.label }}")
 
         setupChart(allArticles)
 
@@ -79,8 +77,8 @@ class AnalysisFragment: Fragment() {
         // Entries : Article label - CommandTimes
         val data: MutableList<DataEntry> = ArrayList()
         allArticles.forEach {
-            Log.d("[Analysis]", "${it.name} - ${it.timeOrdered}")
-            data.add(ValueDataEntry(it.name, it.timeOrdered))
+            Log.d("[Analysis]", "${it.label} - ${it.timeOrdered}")
+            data.add(ValueDataEntry(it.label, it.timeOrdered))
         }
         pie.data(data)
 
@@ -90,7 +88,6 @@ class AnalysisFragment: Fragment() {
     private fun setupHeader() {
         mainVM.setHeaderTitle("Analyses")
         val mainActivity = requireActivity() as MainActivity
-        mainActivity.hideOrShowMenuButton(false)
         mainActivity.replaceHeaderLogoByBackButton(false)
     }
 
@@ -106,7 +103,7 @@ class AnalysisFragment: Fragment() {
     fun convertArticleToItemList(articles : List<Article>) : List<AnalysisList>{
         val list = mutableListOf<AnalysisList>()
         articles.forEach {
-            val articleLabel = requireContext().getString(R.string.article_name, it.name)
+            val articleLabel = requireContext().getString(R.string.article_name, it.label)
             list.add(
                 AnalysisList(
                     articleLabel,

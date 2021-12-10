@@ -18,7 +18,6 @@ class CommandEntityMapper(
             idCommand = t.idCommand,
             deliveryDate = t.deliveryDate,
             statusCode = t.statusCode,
-            articleWrappers = mutableListOf<ArticleWrapper>(),
             client = clientMapper.from(t.client.target),
             reduction = t.reduction,
             paymentAmount = t.paymentAmount,

@@ -171,7 +171,6 @@ class CommandDetailFragment : Fragment() {
             ), getString(R.string.command_delivery_date_label, args.commandToDetail.deliveryDate)
         )
         val mainActivity = requireActivity() as MainActivity
-        mainActivity.hideOrShowMenuButton(false)
         mainActivity.replaceHeaderLogoByBackButton(true)
         tv_command_client.text = args.commandToDetail.client?.toNameString()
     }

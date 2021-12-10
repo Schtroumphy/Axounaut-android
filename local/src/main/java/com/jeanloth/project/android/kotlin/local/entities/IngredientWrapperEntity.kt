@@ -1,23 +1,21 @@
 package com.jeanloth.project.android.kotlin.local.entities
 
-import com.jeanloth.project.android.kotlin.domain_models.entities.ProductQuantityType
-import com.jeanloth.project.android.kotlin.local.entities.ArticleWrapperEntity_.command
+import com.jeanloth.project.android.kotlin.domain_models.entities.IngredientQuantityType
 import io.objectbox.BoxStore
 import io.objectbox.annotation.Id
 import io.objectbox.relation.ToOne
 
 @io.objectbox.annotation.Entity
-class ProductWrapperEntity(
+class IngredientWrapperEntity(
     @Id
-    var productWrapperId : Long = 0,
+    var ingredientWrapperId : Long = 0,
 
-    var quantity : Double = 0.0 ,
-    var quantityTypeLabel : String = ProductQuantityType.KG.label
+    var quantity : Double = 0.0,
+    var quantityTypeLabel : String = IngredientQuantityType.KG.label
 
 ) : Entity {
 
-    var stock: ToOne<StockEntity> = ToOne(this, ProductWrapperEntity_.stock)
-    var product: ToOne<ProductEntity> = ToOne(this, ProductWrapperEntity_.product)
+    var ingredient: ToOne<IngredientEntity> = ToOne(this, IngredientWrapperEntity_.ingredient)
 
     // Add BoxStore field
     @JvmField

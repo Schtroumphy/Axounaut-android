@@ -1,16 +1,12 @@
 package com.jeanloth.project.android.kotlin.axounaut.di
 
 import android.content.Context
+import com.jeanloth.project.android.kotlin.axounaut.datastore.StockManager
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.*
-import com.jeanloth.project.android.kotlin.data.contracts.AppClientContract
-import com.jeanloth.project.android.kotlin.data.repositories.ArticleRepository
-import com.jeanloth.project.android.kotlin.data.contracts.ArticleContract
-import com.jeanloth.project.android.kotlin.data.contracts.ArticleWrapperContract
-import com.jeanloth.project.android.kotlin.data.contracts.CommandContract
-import com.jeanloth.project.android.kotlin.data.repositories.AppClientRepository
-import com.jeanloth.project.android.kotlin.data.repositories.ArticleWrapperRepository
-import com.jeanloth.project.android.kotlin.data.repositories.CommandRepository
+import com.jeanloth.project.android.kotlin.data.contracts.*
+import com.jeanloth.project.android.kotlin.data.repositories.*
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.GetCommandByIdUseCase
+import com.jeanloth.project.android.kotlin.domain.usescases.usecases.ingredientWrapper.ObserveAllIngredientWrappersUseCase
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.ObserveArticleWrappersByCommandIdUseCase
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.ObserveCommandByIdUseCase
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.appClient.DeleteClientsUseCase
@@ -18,23 +14,13 @@ import com.jeanloth.project.android.kotlin.domain.usescases.usecases.appClient.O
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.appClient.SaveClientUseCase
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.article.*
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.command.*
-import com.jeanloth.project.android.kotlin.local.contracts.LocalAppClientDatasourceContract
-import com.jeanloth.project.android.kotlin.local.contracts.LocalArticleDatasourceContract
-import com.jeanloth.project.android.kotlin.local.contracts.LocalArticleWrapperDatasourceContract
-import com.jeanloth.project.android.kotlin.local.contracts.LocalCommandDatasourceContract
-import com.jeanloth.project.android.kotlin.local.database.AppClientDAO
-import com.jeanloth.project.android.kotlin.local.database.ArticleDAO
-import com.jeanloth.project.android.kotlin.local.database.ArticleWrapperDAO
-import com.jeanloth.project.android.kotlin.local.database.CommandDAO
+import com.jeanloth.project.android.kotlin.domain.usescases.usecases.ingredientWrapper.DeleteIngredientWrapperUseCase
+import com.jeanloth.project.android.kotlin.domain.usescases.usecases.ingredientWrapper.SaveIngredientWrapperUseCase
+import com.jeanloth.project.android.kotlin.local.contracts.*
+import com.jeanloth.project.android.kotlin.local.database.*
 import com.jeanloth.project.android.kotlin.local.entities.MyObjectBox
-import com.jeanloth.project.android.kotlin.local.mappers.AppClientEntityMapper
-import com.jeanloth.project.android.kotlin.local.mappers.ArticleEntityMapper
-import com.jeanloth.project.android.kotlin.local.mappers.ArticleWrapperEntityMapper
-import com.jeanloth.project.android.kotlin.local.mappers.CommandEntityMapper
-import com.jeanloth.project.android.kotlin.local.repository.AppClientLocalDatasourceRepository
-import com.jeanloth.project.android.kotlin.local.repository.ArticleLocalDatasourceRepository
-import com.jeanloth.project.android.kotlin.local.repository.ArticleWrapperLocalDatasourceRepository
-import com.jeanloth.project.android.kotlin.local.repository.CommandLocalDatasourceRepository
+import com.jeanloth.project.android.kotlin.local.mappers.*
+import com.jeanloth.project.android.kotlin.local.repository.*
 import io.objectbox.BoxStore
 import org.koin.android.viewmodel.dsl.viewModel
 import org.koin.dsl.bind
@@ -47,6 +33,7 @@ val appModule = module {
     viewModel { ClientVM( get(), get(), get()) }
     viewModel { AddCommandVM() }
     viewModel { CommandVM(get(), get(), get(), get(), get(), get()) }
+    viewModel { StockVM(get(), get(), get()) }
 
     // Uses cases
     factory{ GetAllArticlesUseCase(get()) }
@@ -69,17 +56,26 @@ val appModule = module {
     factory{ ObserveArticleWrappersByCommandIdUseCase(get()) }
     factory{ DeleteArticleWrapperUseCase(get()) }
 
+    factory{ ObserveAllIngredientWrappersUseCase(get()) }
+    factory{ SaveIngredientWrapperUseCase(get()) }
+    factory{ DeleteIngredientWrapperUseCase(get()) }
+
     // Data repository
     single { ArticleRepository(get()) } bind ArticleContract::class
     single { AppClientRepository(get()) } bind AppClientContract::class
     single { CommandRepository(get()) } bind CommandContract::class
     single { ArticleWrapperRepository(get()) } bind ArticleWrapperContract::class
+    single { IngredientWrapperRepository(get()) } bind IngredientWrapperContract::class
 
     // Mappers
-    single{ ArticleEntityMapper() }
+    single{ ArticleEntityMapper(get()) }
+    single{ IngredientEntityMapper() }
     single{ AppClientEntityMapper() }
     single{ CommandEntityMapper( get(), get()) }
+    single{ StockEntityMapper( get()) }
     single{ ArticleWrapperEntityMapper( get()) }
+    single{ IngredientWrapperEntityMapper( get()) }
+    single{ RecipeWrapperEntityMapper( get()) }
 
     single { provideBoxStore(get())}
 
@@ -88,13 +84,20 @@ val appModule = module {
     single { AppClientLocalDatasourceRepository(get(), get()) } bind LocalAppClientDatasourceContract::class
     single { CommandLocalDatasourceRepository(get(), get(), get(), get(), get(), get(), get(), get()) } bind LocalCommandDatasourceContract::class
     single { ArticleWrapperLocalDatasourceRepository(get(), get(), get()) } bind LocalArticleWrapperDatasourceContract::class
+    single { IngredientWrapperLocalDatasourceRepository(get(), get()) } bind LocalIngredientWrapperDatasourceContract::class
 
     // Factory DAO
     factory { ArticleDAO(get()) }
     factory { AppClientDAO(get()) }
     factory { CommandDAO(get()) }
     factory { ArticleWrapperDAO(get()) }
+    factory { IngredientDAO(get()) }
+    factory { IngredientWrapperDAO(get()) }
+    factory { StockDAO(get()) }
+    factory { RecipeWrapperDAO(get()) }
 
+    // Other
+    single { StockManager(get())}
 }
 
 fun provideBoxStore(context : Context) : BoxStore? {

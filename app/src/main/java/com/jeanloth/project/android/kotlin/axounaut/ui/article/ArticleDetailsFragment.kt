@@ -7,11 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.ArrayAdapter
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
-import com.jeanloth.project.android.kotlin.axounaut.MainActivity
 import com.jeanloth.project.android.kotlin.axounaut.R
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.ArticleVM
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.MainVM
@@ -19,7 +17,6 @@ import com.jeanloth.project.android.kotlin.domain_models.entities.Article
 import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleCategory
 import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleCategory.Companion.getArticleCategoryFromLabel
 import kotlinx.android.synthetic.main.fragment_article_details.*
-import kotlinx.android.synthetic.main.layout_header.*
 import org.koin.android.viewmodel.ext.android.sharedViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -63,8 +60,6 @@ class ArticleDetailsFragment : Fragment() {
 
     private fun setupHeader() {
         mainVM.setHeaderTitle("Ajouter un article")
-        val mainActivity = requireActivity() as MainActivity
-        mainActivity.hideOrShowMenuButton(false)
     }
 
     private fun addArticle() {
@@ -77,7 +72,7 @@ class ArticleDetailsFragment : Fragment() {
                 Snackbar.LENGTH_LONG).show()
         } else {
             val articleToAdd = Article(
-                name = articleName,
+                label = articleName,
                 price = articlePrice.toDouble(),
                 category = articleCategory.code
             )

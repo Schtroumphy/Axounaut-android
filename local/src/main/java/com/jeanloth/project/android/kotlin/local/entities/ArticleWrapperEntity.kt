@@ -12,7 +12,6 @@ class ArticleWrapperEntity(
     var articleWrapperId : Long = 0,
 
     var count : Int = 0,
-    var totalArticleWrapperPrice : Double? = 0.0,
     var statusCode : Int = ArticleWrapperStatusType.TO_DO.code
 
     //var article : Article,

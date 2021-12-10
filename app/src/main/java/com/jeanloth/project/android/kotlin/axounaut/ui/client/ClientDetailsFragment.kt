@@ -39,9 +39,6 @@ class ClientDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val mainActivity = requireActivity() as MainActivity
-        mainActivity.hideOrShowMenuButton(false)
-
         mainVM.setHeaderTitle("Ajouter un client")
 
         bt_add_client.setOnClickListener {

@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.activity_home.fab_add_command
 import kotlinx.android.synthetic.main.activity_main.*
 import splitties.views.onClick
 
-class HomeActivity : AppCompatActivity() {
+class  HomeActivity : AppCompatActivity() {
 
     private lateinit var binding : ActivityHomeBinding
     private var fragmentToShow : String = "COMMANDS"

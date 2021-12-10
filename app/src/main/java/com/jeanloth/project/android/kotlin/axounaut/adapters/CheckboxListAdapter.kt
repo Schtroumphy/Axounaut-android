@@ -61,7 +61,7 @@ class CheckboxListAdapter(
 
         fun bind(item : ArticleWrapper, position : Int){
 
-            val articleLabel = itemView.context.getString(R.string.article_name, item.article.name)
+            val articleLabel = itemView.context.getString(R.string.article_name, item.article.label)
             val quantity = itemView.context.getString(R.string.article_quantity, item.count)
 
             itemView.tv_label.text= if(item.statusCode != ArticleWrapperStatusType.DONE.code && item.statusCode != ArticleWrapperStatusType.CANCELED.code) articleLabel else stringBuilderLabel(articleLabel)

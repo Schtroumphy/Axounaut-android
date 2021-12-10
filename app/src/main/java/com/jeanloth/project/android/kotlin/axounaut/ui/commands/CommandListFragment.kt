@@ -79,7 +79,7 @@ class CommandListFragment : Fragment() {
 
         lifecycleScope.launchWhenStarted {
             commandVM.commandToDisplayMediatorLiveData.observe(viewLifecycleOwner) {
-                Log.d("[Article Fragment", "Article observed : $it")
+                Log.d("[Command list Fragment", "Command observed : $it")
 
                 commandAdapter.setItems(it)
                 tv_error_no_commands.visibility = if (it.isEmpty()) VISIBLE else GONE
@@ -129,7 +129,6 @@ class CommandListFragment : Fragment() {
     private fun setupHeader() {
         mainVM.setHeaderTitle("Commandes")
         val mainActivity = requireActivity() as MainActivity
-        mainActivity.hideOrShowMenuButton(true)
         mainActivity.replaceHeaderLogoByBackButton(false)
         commandAdapter = CommandAdapter(emptyList(), requireContext())
     }

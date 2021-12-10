@@ -1,12 +1,10 @@
 package com.jeanloth.project.android.kotlin.axounaut
 
-import android.app.Activity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
-import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.ContextCompat
@@ -31,13 +29,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         navController = findNavController(R.id.nav_host_fragment)
-
-        mainVM.setHeaderTitle(when(intent.getStringExtra("FRAGMENT_TO_SHOW")){
-            "COMMANDS" -> "Commandes"
-            "ANALYSIS" -> "Analyses"
-            "STOCK" -> "Stocks"
-            else -> "Kreyol Baker"
-        })
 
         when(intent.getStringExtra("FRAGMENT_TO_SHOW")){
             "COMMANDS" -> navigateToCommands()
@@ -79,7 +70,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun navigateToStock(){
-        navController.navigate(R.id.nav_dashboard)
+        navController.navigate(R.id.nav_stock)
     }
 
     fun navigateToAnalysis(){
@@ -109,10 +100,6 @@ class MainActivity : AppCompatActivity() {
             }
             popup.show() //showing popup menu
         }
-    }
-
-    fun hideOrShowMenuButton(makeVisible : Boolean){
-        fab_menu.visibility = if(makeVisible) VISIBLE else GONE
     }
 
     fun hideOrShowAddCommandButton(makeVisible : Boolean){

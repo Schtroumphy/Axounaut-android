@@ -10,12 +10,8 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat.getColor
 import androidx.recyclerview.widget.RecyclerView
 import com.jeanloth.project.android.kotlin.axounaut.R
-import com.jeanloth.project.android.kotlin.domain_models.entities.Article
-import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleCategory
 import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleWrapper
 import kotlinx.android.synthetic.main.item_article.view.*
-import splitties.systemservices.notificationManager
-import splitties.views.verticalPadding
 
 class ArticleAdapter(
     private var articleList : List<ArticleWrapper>,
@@ -42,7 +38,6 @@ class ArticleAdapter(
     }
 
     fun setItems(articles : List<ArticleWrapper>, isEditMode : Boolean = false){
-        //this.articleList = if(isEditMode) articles else articles.filter { it.count > 0 }
         this.articleList = articles
         this.isEditMode = isEditMode
         notifyDataSetChanged()
@@ -52,9 +47,9 @@ class ArticleAdapter(
 
         fun bind(articleWrapper : ArticleWrapper, position : Int){
 
-            itemView.cl_article.visibility = VISIBLE
+            //itemView.cl_article.visibility = VISIBLE
 
-            itemView.tv_name.text= articleWrapper.article.name
+            itemView.tv_name.text= articleWrapper.article.label
 
             val count = articleWrapper.count
 
@@ -71,7 +66,6 @@ class ArticleAdapter(
 
                 itemView.ib_add.setOnClickListener {
                     articleWrapper.count = count + 1
-                    //articleWrapper.totalArticleWrapperPrice = articleWrapper.count * articleWrapper.article.price
                     onAddMinusClick?.invoke(articleList)
                     notifyItemChanged(position)
                 }

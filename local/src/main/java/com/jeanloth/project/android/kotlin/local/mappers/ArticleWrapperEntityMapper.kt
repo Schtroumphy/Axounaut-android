@@ -21,7 +21,6 @@ class ArticleWrapperEntityMapper(val articleMapper : ArticleEntityMapper) : Mapp
         val articleWrapperEntity =  ArticleWrapperEntity(
             articleWrapperId = t.articleWrapperId,
             count = t.count,
-            totalArticleWrapperPrice = t.totalArticleWrapperPrice,
             statusCode = t.statusCode
         )
         articleWrapperEntity.command.targetId = t.commandId

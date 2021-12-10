@@ -21,10 +21,22 @@
     </fragment>
 
     <fragment
-        android:id="@+id/nav_dashboard"
-        android:name="com.jeanloth.project.android.kotlin.axounaut.ui.dashboard.DashboardFragment"
+        android:id="@+id/nav_stock"
+        android:name="com.jeanloth.project.android.kotlin.axounaut.ui.dashboard.StockFragment"
         android:label="@string/title_stock"
-        tools:layout="@layout/fragment_dashboard" />
+        tools:layout="@layout/fragment_stocks">
+
+        <action
+            android:id="@+id/action_nav_stock_to_nav_previsional"
+            app:destination="@id/nav_previsional" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_previsional"
+        android:name="com.jeanloth.project.android.kotlin.axounaut.ui.dashboard.PrevisionalFragment"
+        android:label="Previsionnel"
+        tools:layout="@layout/fragment_previsional" />
 
     <fragment
         android:id="@+id/nav_analysis"

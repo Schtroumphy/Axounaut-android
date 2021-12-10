@@ -3,19 +3,18 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-android-extensions'
     id 'androidx.navigation.safeargs.kotlin'
-    id 'io.objectbox'
     id 'kotlin-kapt'
-
+    id 'io.objectbox'
 }
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion "30.0.0"
+    compileSdkVersion 30
+    buildToolsVersion "30.0.2"
 
     defaultConfig {
         applicationId "com.jeanloth.project.android.kotlin.axounaut"
         minSdkVersion 26
-        targetSdkVersion 29
+        targetSdkVersion 30
         versionCode 1
         versionName "1.0"
         multiDexEnabled = true
@@ -96,6 +95,9 @@ dependencies {
 
     // Multidex
     implementation 'com.android.support:multidex:1.0.3'
+
+    // Datastore (to replace SharedPrefs)
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
 
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'

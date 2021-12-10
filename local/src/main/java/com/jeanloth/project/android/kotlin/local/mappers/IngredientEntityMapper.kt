@@ -1,11 +1,11 @@
 package com.jeanloth.project.android.kotlin.local.mappers
 
 import com.jeanloth.project.android.kotlin.domain_models.entities.Ingredient
-import com.jeanloth.project.android.kotlin.local.entities.ProductEntity
+import com.jeanloth.project.android.kotlin.local.entities.IngredientEntity
 
-class ProductEntityMapper : Mapper<Ingredient, ProductEntity> {
+class IngredientEntityMapper : Mapper<Ingredient, IngredientEntity> {
 
-    override fun from(t: ProductEntity): Ingredient{
+    override fun from(t: IngredientEntity): Ingredient{
         return Ingredient(
             id = t.id,
             label = t.label,
@@ -13,8 +13,8 @@ class ProductEntityMapper : Mapper<Ingredient, ProductEntity> {
         )
     }
 
-    override fun to(t: Ingredient): ProductEntity {
-        return ProductEntity(
+    override fun to(t: Ingredient): IngredientEntity {
+        return IngredientEntity(
             id = t.id,
             label = t.label,
             price = t.price

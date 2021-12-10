@@ -2,17 +2,16 @@ package com.jeanloth.project.android.kotlin.domain_models.entities
 
 import java.io.Serializable
 
-data class ProductWrapper(
+data class IngredientWrapper(
     val id : Long = 0,
-    var stockId : Long? = null,
-    var product : Ingredient,
+    var ingredient : Ingredient,
     var quantity : Double = 0.0,
-    var quantityType : ProductQuantityType = ProductQuantityType.KG
+    var quantityType : IngredientQuantityType = IngredientQuantityType.KG
 
 ) : Serializable  {
 
-    val totalProductWrapperPrice : Double
-    get() = quantity * product.price
+    val totalIngredientWrapperPrice : Double
+    get() = quantity * ingredient.price
 
     val countStatusType : CountStatus
     get() = when{
@@ -23,12 +22,12 @@ data class ProductWrapper(
 
     companion object {
 
-        fun createWrapperList(products : List<Ingredient>) : List<ProductWrapper>{
-            val listResult = mutableListOf<ProductWrapper>()
-            products.forEach { product ->
+        fun createWrapperList(ingredients : List<Ingredient>) : List<IngredientWrapper>{
+            val listResult = mutableListOf<IngredientWrapper>()
+            ingredients.forEach { ingredient ->
                 listResult.add(
-                    ProductWrapper(
-                        product = product
+                    IngredientWrapper(
+                        ingredient = ingredient
                     )
                 )
             }

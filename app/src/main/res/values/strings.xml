@@ -78,9 +78,9 @@
         <item formatted="true" quantity="other">Les %1$d clients ont bien été supprimés.</item>
     </plurals>
 
-    <plurals name="productCount">
-        <item formatted="true" quantity="one">%1$d of %2$d product</item>
-        <item formatted="true" quantity="other">%1$d of %2$d products</item>
+    <plurals name="ingredientCount">
+        <item formatted="true" quantity="one">%1$d of %2$d ingredient</item>
+        <item formatted="true" quantity="other">%1$d of %2$d ingredient</item>
     </plurals>
 
     <!-- Preference Titles -->
@@ -112,4 +112,6 @@
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

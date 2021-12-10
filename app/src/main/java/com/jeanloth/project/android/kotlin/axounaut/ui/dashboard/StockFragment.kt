@@ -1,70 +1,119 @@
 package com.jeanloth.project.android.kotlin.axounaut.ui.dashboard
 
+import android.R
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import com.jeanloth.project.android.kotlin.axounaut.R
-import kotlinx.android.synthetic.main.fragment_dashboard.*
+import androidx.navigation.fragment.findNavController
+import com.jeanloth.project.android.kotlin.axounaut.adapters.IngredientAdapter
+import com.jeanloth.project.android.kotlin.axounaut.databinding.FragmentStocksBinding
+import com.jeanloth.project.android.kotlin.axounaut.datastore.StockManager
+import com.jeanloth.project.android.kotlin.axounaut.viewModels.MainVM
+import com.jeanloth.project.android.kotlin.axounaut.viewModels.StockVM
+import com.jeanloth.project.android.kotlin.domain_models.entities.Ingredient
+import com.jeanloth.project.android.kotlin.domain_models.entities.IngredientQuantityType
+import com.jeanloth.project.android.kotlin.domain_models.entities.IngredientQuantityType.Companion.fromVal
+import com.jeanloth.project.android.kotlin.domain_models.entities.IngredientWrapper
+import kotlinx.android.synthetic.main.fragment_stocks.*
+import org.koin.android.ext.android.inject
+import org.koin.android.viewmodel.ext.android.viewModel
+import splitties.views.onClick
 
-class DashboardFragment : Fragment() {
+class StockFragment : Fragment() {
 
-    private lateinit var dashboardViewModel: DashboardViewModel
+    private val mainVM : MainVM by viewModel()
+    private val stockVM : StockVM by viewModel()
+    private lateinit var binding: FragmentStocksBinding
+
+    private val stockManager: StockManager by inject()
+
+    private lateinit var ingredientAdapter: IngredientAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        dashboardViewModel =
-                ViewModelProvider(this).get(DashboardViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_dashboard, container, false)
-        val textView: TextView = root.findViewById(R.id.text_dashboard)
-        dashboardViewModel.text.observe(viewLifecycleOwner, Observer {
-            textView.text = it
-        })
-        return root
+    ): View {
+        binding = FragmentStocksBinding.inflate(layoutInflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val clients = listOf(
-            "Test",
-            "Quentin",
-            "Annabelle",
-            "Pénélope",
-            "Archimède",
-            "Axel",
-            "Thess",
-            "Teresa",
-            "Testeur"
+        setupHeader()
+        setupSpinner()
+
+        val mock = mutableListOf(
+            IngredientWrapper(ingredient = Ingredient(label = "Farine"), quantity = 4.0),
+            IngredientWrapper(ingredient = Ingredient(label = "Beurre 500g"), quantity = 4.0, quantityType = IngredientQuantityType.G),
+            IngredientWrapper(ingredient = Ingredient(label = "Lait 1L"), quantity = 0.0, quantityType = IngredientQuantityType.L),
+            IngredientWrapper(ingredient = Ingredient(label = "Epices"), quantity = 1.0, quantityType = IngredientQuantityType.G),
+            IngredientWrapper(ingredient = Ingredient(label = "Autre 1"), quantity = 1.0, quantityType = IngredientQuantityType.L),
+            IngredientWrapper(ingredient = Ingredient(label = "Test"), quantity = 0.0, quantityType = IngredientQuantityType.ML),
+            IngredientWrapper(ingredient = Ingredient(label = "Test 2"), quantity = 2.0, quantityType = IngredientQuantityType.KG),
+            IngredientWrapper(ingredient = Ingredient(label = "Test 3"), quantity = 2.0, quantityType = IngredientQuantityType.G),
+            IngredientWrapper(ingredient = Ingredient(label = "Test 4"), quantity = 0.0, quantityType = IngredientQuantityType.G),
         )
-        val clientAdapter: ArrayAdapter<String> = ArrayAdapter<String>(
-            requireContext(),
-            android.R.layout.simple_dropdown_item_1line, clients
-        )
-        clientAdapter.setNotifyOnChange(true)
-        ac_test.threshold = 1
-        ac_test.setAdapter(clientAdapter)
-        ac_test.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+        // Setup adapter
+        ingredientAdapter = IngredientAdapter(emptyList(), true, requireContext()).apply {
+            onAddMinusClick = {
+                Log.d("ADD COMMAND", "  articles list : $it")
+                stockVM.saveIngredientWrapper(it)
+                stockVM.updateStockLastUpdateDate()
             }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            displayNoArticlesError = {
+                //tv_error_no_articles.visibility = if(it) VISIBLE else GONE
             }
+        }
+        rv_ingredients.adapter = ingredientAdapter
 
-            override fun afterTextChanged(s: Editable?) {
-            }
+        // Observe all pws
+        stockVM.observePWLiveData().observe(viewLifecycleOwner){
+            ingredientAdapter.setItems(it)
+        }
 
-        })
+        // Click listeners
+        tv_add_ingredient.onClick {
+            ll_add_ingredient.visibility = VISIBLE
+            tv_add_ingredient.visibility = GONE
+        }
 
+        tv_validate_ingredient.onClick {
+            stockVM.saveIngredientWrapper(IngredientWrapper(ingredient = Ingredient(label = et_ingredient.text.toString()), quantityType = spinner_quantity_type.selectedItem.toString().fromVal()))
+            ingredientAdapter.setItems(mock)
+            tv_add_ingredient.visibility = VISIBLE
+            ll_add_ingredient.visibility = GONE
+        }
+
+        bt_see_previsional.onClick {
+            findNavController().navigate(StockFragmentDirections.actionNavStockToNavPrevisional())
+        }
     }
+
+    private fun setupSpinner() {
+        val adapter: ArrayAdapter<String> = ArrayAdapter<String>(
+            requireContext(),
+            R.layout.simple_spinner_item,
+            IngredientQuantityType.values().map { it.label }
+        )
+
+        adapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item)
+        spinner_quantity_type.adapter = adapter
+
+        val selected: String = spinner_quantity_type.selectedItem.toString()
+    }
+
+    private fun setupHeader() {
+        mainVM.setHeaderTitle("Stock")
+    }
+
+
 }

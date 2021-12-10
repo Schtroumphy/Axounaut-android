@@ -1,27 +1,27 @@
 package com.jeanloth.project.android.kotlin.data.repositories
 
-import com.jeanloth.project.android.kotlin.data.contracts.ProductWrapperContract
-import com.jeanloth.project.android.kotlin.domain_models.entities.ProductWrapper
-import com.jeanloth.project.android.kotlin.local.contracts.LocalProductWrapperDatasourceContract
+import com.jeanloth.project.android.kotlin.data.contracts.IngredientWrapperContract
+import com.jeanloth.project.android.kotlin.domain_models.entities.IngredientWrapper
+import com.jeanloth.project.android.kotlin.local.contracts.LocalIngredientWrapperDatasourceContract
 import kotlinx.coroutines.flow.Flow
 
-class ProductWrapperRepository(
-    private val localProductWrapperDatasourceContract: LocalProductWrapperDatasourceContract
-) : ProductWrapperContract {
+class IngredientWrapperRepository(
+    private val localIngredientWrapperDatasourceContract: LocalIngredientWrapperDatasourceContract
+) : IngredientWrapperContract {
 
-    override fun getAllProductWrappers(): List<ProductWrapper> {
-        return localProductWrapperDatasourceContract.getAllProductWrappers()
+    override fun getAllIngredientWrappers(): List<IngredientWrapper> {
+        return localIngredientWrapperDatasourceContract.getAllIngredientWrappers()
     }
 
-    override fun observeAllProductWrappers(): Flow<List<ProductWrapper>> {
-        return localProductWrapperDatasourceContract.observeAllProductWrappers()
+    override fun observeAllIngredientWrappers(): Flow<List<IngredientWrapper>> {
+        return localIngredientWrapperDatasourceContract.observeAllIngredientWrappers()
     }
 
-    override fun saveProductWrapper(productWrapper: ProductWrapper): Long {
-        return localProductWrapperDatasourceContract.saveProductWrapper(productWrapper)
+    override fun saveIngredientWrapper(ingredientWrapper: IngredientWrapper): Long {
+        return localIngredientWrapperDatasourceContract.saveIngredientWrapper(ingredientWrapper)
     }
 
-    override fun deleteProductWrapper(productWrapper: ProductWrapper): Boolean {
-        return localProductWrapperDatasourceContract.deleteProductWrapper(productWrapper)
+    override fun deleteIngredientWrapper(ingredientWrapper: IngredientWrapper): Boolean {
+        return localIngredientWrapperDatasourceContract.deleteIngredientWrapper(ingredientWrapper)
     }
 }

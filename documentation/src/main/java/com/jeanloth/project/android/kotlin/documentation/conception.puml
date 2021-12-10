@@ -25,7 +25,7 @@ object Command{
 }
 
 object ArticleWrapper {
-    <u>idCommandProduct</u> : Int auto_increment
+    <u>idCommandIngredient</u> : Int auto_increment
     article : Article
     count : Int
     totalArticleWrapperPrice : Double
@@ -58,7 +58,7 @@ object Article{
     <u>idArticle</u> : Int auto_increment
     label : String
     price : Double
-    composedProducts : List<Product>
+    composedIngredients : List<IngredientWrapper>
 }
 
 object ArticleCategory {
@@ -67,9 +67,16 @@ object ArticleCategory {
     OTHER
 }
 
-object ProductWrapper{
-    <u>idProductWrapper</u> : Int auto_increment
-    product : Product
+object IngredientWrapper{
+    <u>idIngredientWrapper</u> : Int auto_increment
+    ingredient : Ingredient
+    quantity : Double
+    quantityType : QuantityType
+}
+
+object RecipeWrapper{
+    <u>idRecipeWrapper</u> : Int auto_increment
+    ingredient : Ingredient
     quantity : Double
     quantityType : QuantityType
 }
@@ -81,11 +88,10 @@ object QuantityType {
     KG
 }
 
-object Product{
-    <u>idArticle</u> : Int auto_increment
+object Ingredient{
+    <u>idIngredient</u> : Int auto_increment
     label : String
     price : Double
-    provider : Provider
 }
 
 object Provider{
@@ -96,9 +102,9 @@ object Provider{
 
 object Stock{
     <u>idStock</u> : Int auto_increment
-    inventoryDate : LocalDateTime
-    label : String (auto))
-    productAndQuantity : Map<Product, Int>
+    lastUpdateDate : LocalDateTime
+    label : String (name)
+    IngredientWrappers : List<IngredientWrapper>
 }
 
 Command "1" -right- "1" PaymentType : a
@@ -106,12 +112,15 @@ Command "1" --left- "1" Client : pour
 Command "1" --down- "1" ArticleWrapper : possède
 Command "1" --up- "1" CommandStatusType : a
 ArticleWrapper "1" --right- "1" ArticleWrapperStatus : a
-Article "1..n" -up- "1" ArticleCategory : est
+Article "1..n" -left- "1" ArticleCategory : est
 Article "1..n" -right- "1" ArticleWrapper : contient
-Article "1..n" -down- "1" ProductWrapper : contient
-Product "1..n" -right- "1" Provider : de
-ProductWrapper "1" -right- "1..n" Product : de
-Product "1..n" -down- "1..n" Stock : a
+Ingredient "1..n" -right- "1" Provider : de
+IngredientWrapper "1..n" -right- "1" Ingredient : de
+IngredientWrapper "1..n" -up- "1..n" Stock : a
+IngredientWrapper "1" -down- QuantityType : a
+RecipeWrapper "1..n" -up- "1" Ingredient : de
+RecipeWrapper "1..n" -down- "1..n" Article : a
+RecipeWrapper "1" -left- QuantityType : a
 
 @enduml
 

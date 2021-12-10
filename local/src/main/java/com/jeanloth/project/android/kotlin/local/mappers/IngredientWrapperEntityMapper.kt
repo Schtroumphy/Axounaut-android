@@ -1,32 +1,28 @@
 package com.jeanloth.project.android.kotlin.local.mappers
 
-import com.jeanloth.project.android.kotlin.domain_models.entities.ProductQuantityType.Companion.fromVal
-import com.jeanloth.project.android.kotlin.domain_models.entities.ProductWrapper
-import com.jeanloth.project.android.kotlin.local.entities.ProductWrapperEntity
+import com.jeanloth.project.android.kotlin.domain_models.entities.IngredientQuantityType.Companion.fromVal
+import com.jeanloth.project.android.kotlin.domain_models.entities.IngredientWrapper
+import com.jeanloth.project.android.kotlin.local.entities.IngredientWrapperEntity
 
-class ProductWrapperEntityMapper(val productEntityMapper : ProductEntityMapper) : Mapper<ProductWrapper, ProductWrapperEntity> {
+class IngredientWrapperEntityMapper(val ingredientEntityMapper : IngredientEntityMapper) : Mapper<IngredientWrapper, IngredientWrapperEntity> {
 
-    override fun from(t: ProductWrapperEntity): ProductWrapper {
+    override fun from(t: IngredientWrapperEntity): IngredientWrapper {
 
-        return ProductWrapper(
-            id = t.productWrapperId,
-            stockId = t.stock.targetId, // TO one
-            product = productEntityMapper.from(t.product.target),
+        return IngredientWrapper(
+            id = t.ingredientWrapperId,
+            ingredient = ingredientEntityMapper.from(t.ingredient.target),
             quantity = t.quantity,
             quantityType = t.quantityTypeLabel.fromVal()
         )
     }
 
-    override fun to(t: ProductWrapper): ProductWrapperEntity {
-        val articleWrapperEntity =  ProductWrapperEntity(
-            productWrapperId = t.id,
+    override fun to(t: IngredientWrapper): IngredientWrapperEntity {
+        val articleWrapperEntity =  IngredientWrapperEntity(
+            ingredientWrapperId = t.id,
             quantity = t.quantity,
             quantityTypeLabel = t.quantityType.label
         )
-        t.stockId?.let {
-            articleWrapperEntity.stock.targetId = it
-        }
-        articleWrapperEntity.product.target = productEntityMapper.to(t.product)
+        articleWrapperEntity.ingredient.target = ingredientEntityMapper.to(t.ingredient)
         return articleWrapperEntity
     }
 }

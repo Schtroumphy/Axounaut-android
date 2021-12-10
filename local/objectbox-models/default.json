@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "1:474612300085983869",
-      "lastPropertyId": "7:1206798818198070539",
+      "lastPropertyId": "8:5201928558511954579",
       "name": "ArticleEntity",
       "properties": [
         {
@@ -13,11 +13,6 @@
           "name": "id",
           "type": 6,
           "flags": 1
-        },
-        {
-          "id": "2:9143207142557765175",
-          "name": "name",
-          "type": 9
         },
         {
           "id": "5:5876382283187354600",
@@ -36,6 +31,11 @@
           "name": "timeOrdered",
           "type": 5,
           "flags": 4
+        },
+        {
+          "id": "8:5201928558511954579",
+          "name": "label",
+          "type": 9
         }
       ],
       "relations": []
@@ -106,12 +106,6 @@
           "name": "count",
           "type": 5,
           "flags": 4
-        },
-        {
-          "id": "8:6516841837090673503",
-          "name": "totalArticleWrapperPrice",
-          "type": 8,
-          "flags": 2
         },
         {
           "id": "10:2277333302652746765",
@@ -185,16 +179,141 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "6:1971370719939334379",
+      "lastPropertyId": "2:3444245204899928333",
+      "name": "StockEntity",
+      "properties": [
+        {
+          "id": "1:8427733681317105068",
+          "name": "idStock",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:3444245204899928333",
+          "name": "lastUpdateDate",
+          "type": 9
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "8:4397368800279881710",
+      "lastPropertyId": "5:7181684184051860298",
+      "name": "IngredientWrapperEntity",
+      "properties": [
+        {
+          "id": "1:7430107517082704612",
+          "name": "ingredientWrapperId",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:2169357321323135503",
+          "name": "quantity",
+          "type": 8,
+          "flags": 4
+        },
+        {
+          "id": "3:377674955838172918",
+          "name": "quantityTypeLabel",
+          "type": 9
+        },
+        {
+          "id": "5:7181684184051860298",
+          "name": "ingredientId",
+          "indexId": "7:3161999255731078319",
+          "type": 11,
+          "flags": 1548,
+          "relationTarget": "IngredientEntity"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "9:6615848381750596936",
+      "lastPropertyId": "3:6188143173871284346",
+      "name": "IngredientEntity",
+      "properties": [
+        {
+          "id": "1:6661708127203360764",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:376890429894315831",
+          "name": "label",
+          "type": 9
+        },
+        {
+          "id": "3:6188143173871284346",
+          "name": "price",
+          "type": 8,
+          "flags": 4
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "10:234958991115622695",
+      "lastPropertyId": "5:3790719812495970965",
+      "name": "RecipeWrapperEntity",
+      "properties": [
+        {
+          "id": "1:8466547750200469753",
+          "name": "ingredientWrapperId",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:395805698330625465",
+          "name": "quantity",
+          "type": 8,
+          "flags": 4
+        },
+        {
+          "id": "3:1747764972029456942",
+          "name": "quantityTypeLabel",
+          "type": 9
+        },
+        {
+          "id": "4:3159849483109978116",
+          "name": "articleId",
+          "indexId": "8:2559187524249233381",
+          "type": 11,
+          "flags": 1548,
+          "relationTarget": "ArticleEntity"
+        },
+        {
+          "id": "5:3790719812495970965",
+          "name": "ingredientId",
+          "indexId": "9:4269056847031145953",
+          "type": 11,
+          "flags": 1548,
+          "relationTarget": "IngredientEntity"
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "4:591053467257610499",
-  "lastIndexId": "3:2859684733600798343",
+  "lastEntityId": "10:234958991115622695",
+  "lastIndexId": "9:4269056847031145953",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
   "modelVersionParserMinimum": 5,
-  "retiredEntityUids": [],
-  "retiredIndexUids": [],
+  "retiredEntityUids": [
+    5448915674921014306,
+    1573851197102980942
+  ],
+  "retiredIndexUids": [
+    1587984599627855345,
+    7806001009017746263,
+    8361938139333560265
+  ],
   "retiredPropertyUids": [
     3605987420131221416,
     3390431500996534402,
@@ -206,7 +325,18 @@
     348032214652240965,
     904232837602124631,
     1029198425942674685,
-    6621335919446060664
+    6621335919446060664,
+    9143207142557765175,
+    6516841837090673503,
+    2159684701544988540,
+    4416694799149068499,
+    5012548197612399188,
+    757214500283442547,
+    7815545472843172364,
+    1847008063571552717,
+    8290738965387635489,
+    7926824571818768432,
+    8931958119939407683
   ],
   "retiredRelationUids": [],
   "version": 1

@@ -52,7 +52,6 @@ class ClientFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         mainVM.setHeaderTitle("Clients")
-        (activity as MainActivity).hideOrShowMenuButton(true)
 
         clientAdapter = ClientAdapter(emptyList(), requireContext()).apply {
             onCheckboxClick = { client, isSelected ->

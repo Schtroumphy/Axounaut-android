@@ -1,7 +1,6 @@
 package com.jeanloth.project.android.kotlin.axounaut.adapters
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,8 +11,6 @@ import com.jeanloth.project.android.kotlin.axounaut.R
 import com.jeanloth.project.android.kotlin.domain_models.entities.*
 import com.jeanloth.project.android.kotlin.domain_models.entities.CommandStatusType.Companion.getCommandStatusByCode
 import kotlinx.android.synthetic.main.item_command.view.*
-import splitties.resources.color
-import splitties.views.backgroundColor
 import splitties.views.onClick
 
 class CommandAdapter(
@@ -95,7 +92,7 @@ class CommandAdapter(
     fun convertArticleWrapperToItemList(articleWrappers: List<ArticleWrapper>): List<ItemList> {
         val list = mutableListOf<ItemList>()
         articleWrappers.forEach {
-            val articleLabel = context.getString(R.string.article_name, it.article.name)
+            val articleLabel = context.getString(R.string.article_name, it.article.label)
             val quantity = context.getString(R.string.cross_quantity, it.count.toString())
             list.add(
                 ItemList(

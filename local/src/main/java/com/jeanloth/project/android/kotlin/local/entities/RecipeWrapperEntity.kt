@@ -6,7 +6,7 @@ import io.objectbox.annotation.Id
 import io.objectbox.relation.ToOne
 
 @io.objectbox.annotation.Entity
-class IngredientWrapperEntity(
+class RecipeWrapperEntity(
     @Id
     var ingredientWrapperId : Long = 0,
 
@@ -15,7 +15,8 @@ class IngredientWrapperEntity(
 
 ) : Entity {
 
-    var ingredient: ToOne<IngredientEntity> = ToOne(this, IngredientWrapperEntity_.ingredient)
+    var ingredient: ToOne<IngredientEntity> = ToOne(this, RecipeWrapperEntity_.ingredient)
+    var article: ToOne<ArticleEntity> = ToOne(this, RecipeWrapperEntity_.article)
 
     // Add BoxStore field
     @JvmField

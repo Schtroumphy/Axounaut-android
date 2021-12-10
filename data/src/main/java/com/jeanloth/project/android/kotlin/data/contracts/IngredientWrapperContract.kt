@@ -1,15 +1,15 @@
 package com.jeanloth.project.android.kotlin.data.contracts
 
-import com.jeanloth.project.android.kotlin.domain_models.entities.ProductWrapper
+import com.jeanloth.project.android.kotlin.domain_models.entities.IngredientWrapper
 import kotlinx.coroutines.flow.Flow
 
-interface ProductWrapperContract {
+interface IngredientWrapperContract {
 
-    fun getAllProductWrappers() : List<ProductWrapper>
+    fun getAllIngredientWrappers() : List<IngredientWrapper>
 
-    fun observeAllProductWrappers() : Flow<List<ProductWrapper>>
+    fun observeAllIngredientWrappers() : Flow<List<IngredientWrapper>>
 
-    fun saveProductWrapper(productWrapper: ProductWrapper) : Long
+    fun saveIngredientWrapper(ingredientWrapper: IngredientWrapper) : Long
 
-    fun deleteProductWrapper(productWrapper: ProductWrapper) : Boolean
+    fun deleteIngredientWrapper(ingredientWrapper: IngredientWrapper) : Boolean
 }

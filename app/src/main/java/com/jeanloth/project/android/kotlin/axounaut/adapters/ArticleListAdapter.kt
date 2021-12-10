@@ -47,7 +47,7 @@ class ArticleListAdapter(
     inner class ArticleHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
 
         fun bind(article : Article){
-            itemView.tv_name.text= article.name
+            itemView.tv_name.text= article.label
             itemView.tv_price.text= context.getString(R.string.price_euro, article.price.toString())
             //itemView.tv_article_stat.text= context.getString(R.string.article_command_number, article.price.toString())
 

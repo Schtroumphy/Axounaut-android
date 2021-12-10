@@ -1,32 +1,32 @@
 package com.jeanloth.project.android.kotlin.local.mappers
 
 import com.jeanloth.project.android.kotlin.domain_models.entities.IngredientQuantityType.Companion.fromVal
-import com.jeanloth.project.android.kotlin.domain_models.entities.IngredientWrapper
-import com.jeanloth.project.android.kotlin.local.entities.IngredientWrapperEntity
+import com.jeanloth.project.android.kotlin.domain_models.entities.RecipeWrapper
+import com.jeanloth.project.android.kotlin.local.entities.RecipeWrapperEntity
 
-class IngredientWrapperEntityMapper(val ingredientEntityMapper : IngredientEntityMapper) : Mapper<IngredientWrapper, IngredientWrapperEntity> {
+class RecipeWrapperEntityMapper(val ingredientEntityMapper : IngredientEntityMapper) : Mapper<RecipeWrapper, RecipeWrapperEntity> {
 
-    override fun from(t: IngredientWrapperEntity): IngredientWrapper {
+    override fun from(t: RecipeWrapperEntity): RecipeWrapper {
 
-        return IngredientWrapper(
+        return RecipeWrapper(
             id = t.ingredientWrapperId,
-            stockId = t.stock.targetId, // TO one
+            articleId = t.article.targetId, // TO one
             ingredient = ingredientEntityMapper.from(t.ingredient.target),
             quantity = t.quantity,
             quantityType = t.quantityTypeLabel.fromVal()
         )
     }
 
-    override fun to(t: IngredientWrapper): IngredientWrapperEntity {
-        val articleWrapperEntity =  IngredientWrapperEntity(
+    override fun to(t: RecipeWrapper): RecipeWrapperEntity {
+        val recipeWrapperEntity =  RecipeWrapperEntity(
             ingredientWrapperId = t.id,
             quantity = t.quantity,
             quantityTypeLabel = t.quantityType.label
         )
-        t.stockId?.let {
-            articleWrapperEntity.stock.targetId = it
+        t.articleId?.let {
+            recipeWrapperEntity.article.targetId = it
         }
-        articleWrapperEntity.ingredient.target = ingredientEntityMapper.to(t.ingredient)
-        return articleWrapperEntity
+        recipeWrapperEntity.ingredient.target = ingredientEntityMapper.to(t.ingredient)
+        return recipeWrapperEntity
     }
 }

@@ -1,26 +1,35 @@
 package com.jeanloth.project.android.kotlin.local.mappers
 
 import com.jeanloth.project.android.kotlin.domain_models.entities.Article
-import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleCategory
-import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleCategory.Companion.getArticleCategoryFromLabel
+import com.jeanloth.project.android.kotlin.domain_models.entities.RecipeWrapper
 import com.jeanloth.project.android.kotlin.local.entities.ArticleEntity
 
-class ArticleEntityMapper : Mapper<Article, ArticleEntity> {
+class ArticleEntityMapper(
+    private val recipeWrapperEntityMapper: RecipeWrapperEntityMapper
+) : Mapper<Article, ArticleEntity> {
 
     override fun from(t: ArticleEntity): Article {
-        return Article(
+        val article =  Article(
             id = t.id,
-            name = t.name,
+            label = t.label,
             price = t.price,
             timeOrdered = t.timeOrdered,
             category = t.category
         )
+
+        // Add article wrappers
+        val recipeWrapperList = mutableListOf<RecipeWrapper>()
+        t.recipeWrappers.map { recipeWrapperEntityMapper.from(it) }.forEach {
+            recipeWrapperList.add(it)
+        }
+        article.recipeIngredients = recipeWrapperList
+        return article
     }
 
     override fun to(t: Article): ArticleEntity {
         return ArticleEntity(
             id = t.id,
-            name = t.name,
+            label = t.label,
             price = t.price,
             timeOrdered = t.timeOrdered,
             category = t.category

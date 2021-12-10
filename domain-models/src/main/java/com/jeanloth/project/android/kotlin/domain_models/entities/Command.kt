@@ -10,7 +10,7 @@ data class Command(
     val deliveryDate : String? = null,
     var statusCode : Int = CommandStatusType.TO_DO.code,
     var client : AppClient? = null,
-    var articleWrappers : List<ArticleWrapper>,
+    var articleWrappers : List<ArticleWrapper> = mutableListOf<ArticleWrapper>(),
     var reduction : Double? = 0.0,
     var paymentAmount : Double? = null,
     var paymentTypeCode : String? = null

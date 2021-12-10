@@ -1,38 +1,38 @@
 package com.jeanloth.project.android.kotlin.local.repository
 
-import com.jeanloth.project.android.kotlin.domain_models.entities.ProductWrapper
-import com.jeanloth.project.android.kotlin.local.contracts.LocalProductWrapperDatasourceContract
-import com.jeanloth.project.android.kotlin.local.database.ProductWrapperDAO
-import com.jeanloth.project.android.kotlin.local.entities.ProductWrapperEntity
-import com.jeanloth.project.android.kotlin.local.mappers.ProductWrapperEntityMapper
+import com.jeanloth.project.android.kotlin.domain_models.entities.IngredientWrapper
+import com.jeanloth.project.android.kotlin.local.contracts.LocalIngredientWrapperDatasourceContract
+import com.jeanloth.project.android.kotlin.local.database.IngredientWrapperDAO
+import com.jeanloth.project.android.kotlin.local.entities.IngredientWrapperEntity
+import com.jeanloth.project.android.kotlin.local.mappers.IngredientWrapperEntityMapper
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-class ProductWrapperLocalDatasourceRepository(
-    private val dao : ProductWrapperDAO,
-    private val mapper : ProductWrapperEntityMapper,
-) : LocalProductWrapperDatasourceContract {
+class IngredientWrapperLocalDatasourceRepository(
+    private val dao : IngredientWrapperDAO,
+    private val mapper : IngredientWrapperEntityMapper,
+) : LocalIngredientWrapperDatasourceContract {
 
-    override fun getAllProductWrappers(): List<ProductWrapper> {
-        return dao.all.map { mapper.from(it as ProductWrapperEntity) }
+    override fun getAllIngredientWrappers(): List<IngredientWrapper> {
+        return dao.all.map { mapper.from(it as IngredientWrapperEntity) }
     }
 
-    override fun observeAllProductWrappers(): Flow<List<ProductWrapper>> {
+    override fun observeAllIngredientWrappers(): Flow<List<IngredientWrapper>> {
         return dao.observeAll { it.filter { true } }.map {
             it.map { mapper.from(it) }
         }
     }
 
-    override fun saveProductWrapper(productWrapper: ProductWrapper): Long {
-        val productWrapperEntity = mapper.to(productWrapper)
+    override fun saveIngredientWrapper(ingredientWrapper: IngredientWrapper): Long {
+        val ingredientWrapperEntity = mapper.to(ingredientWrapper)
 
-        // Save the product wrapper entity
-        return dao.box.put(productWrapperEntity)
+        // Save the ingredient wrapper entity
+        return dao.box.put(ingredientWrapperEntity)
     }
 
-    override fun deleteProductWrapper(productWrapper: ProductWrapper): Boolean {
-        val result = dao.box.remove(mapper.to(productWrapper))
-        print("[ProductWrapperLocalDatasourceRepository] : delete ProductWrapper result : $result")
+    override fun deleteIngredientWrapper(ingredientWrapper: IngredientWrapper): Boolean {
+        val result = dao.box.remove(mapper.to(ingredientWrapper))
+        print("[IngredientWrapperLocalDatasourceRepository] : delete IngredientWrapper result : $result")
         return true
     }
 

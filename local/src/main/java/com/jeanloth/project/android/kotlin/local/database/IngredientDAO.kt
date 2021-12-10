@@ -1,9 +1,9 @@
 package com.jeanloth.project.android.kotlin.local.database
 
-import com.jeanloth.project.android.kotlin.local.entities.ProductEntity
+import com.jeanloth.project.android.kotlin.local.entities.IngredientEntity
 import io.objectbox.Box
 import io.objectbox.BoxStore
 
-class ProductDAO constructor(boxStore: BoxStore) : BaseDAO<ProductEntity>() {
-    public override val box: Box<ProductEntity> = boxStore.boxFor(ProductEntity::class.java)
+class IngredientDAO constructor(boxStore: BoxStore) : BaseDAO<IngredientEntity>() {
+    public override val box: Box<IngredientEntity> = boxStore.boxFor(IngredientEntity::class.java)
 }
