@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/cl_article"
+    android:animateLayoutChanges="true"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <ImageView
+        android:id="@+id/iv_line"
+        android:layout_width="8dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"
+        android:backgroundTint="@color/ginger"
+        android:background="@drawable/rounded_bottom_line"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:fontFamily="@font/roboto_light"
+        android:maxLines="1"
+        android:textColor="@color/black"
+        android:paddingStart="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/ib_minus"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/iv_line"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.516"
+        tools:text="Pain au beurre 1kg" />
+
+    <ImageButton
+        android:id="@+id/ib_minus"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:tint="@color/gray_2"
+        android:src="@drawable/ic_minus"
+        app:layout_constraintEnd_toStartOf="@id/tv_count"
+        app:layout_constraintTop_toTopOf="@id/tv_count"
+        app:layout_constraintBottom_toBottomOf="@id/tv_count"
+        android:background="?attr/selectableItemBackgroundBorderless" />
+
+    <TextView
+        android:id="@+id/tv_count"
+        android:layout_width="55dp"
+        tools:text="2"
+        android:text="0"
+        android:textColor="@color/black"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/ib_add"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginHorizontal="5dp"
+        android:layout_height="wrap_content" />
+
+    <ImageButton
+        android:id="@+id/ib_add"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/ic_add"
+        android:tint="@color/gray_2"
+        android:layout_marginEnd="10dp"
+        app:layout_constraintEnd_toStartOf="@id/tv_quantity_type"
+        app:layout_constraintTop_toTopOf="@id/tv_count"
+        app:layout_constraintBottom_toBottomOf="@id/tv_count"
+        android:background="?attr/selectableItemBackgroundBorderless" />
+
+    <TextView
+        android:id="@+id/tv_quantity_type"
+        android:layout_width="25dp"
+        android:layout_height="wrap_content"
+        android:text="KG"
+        android:gravity="center"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tv_count"
+        app:layout_constraintBottom_toBottomOf="@id/tv_count" />
+</androidx.constraintlayout.widget.ConstraintLayout>
