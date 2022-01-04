@@ -19,7 +19,8 @@
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="app/src/main/res/layout/add_client_dialog.xml" value="0.33760683760683763" />
         <entry key="app/src/main/res/layout/fragment_add_command_dialog.xml" value="0.2878737725907589" />
-        <entry key="app/src/main/res/layout/fragment_article_details.xml" value="0.5254629629629629" />
+        <entry key="app/src/main/res/layout/fragment_article_details.xml" value="0.335" />
+        <entry key="app/src/main/res/layout/fragment_article_details_step_two.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_command_detail.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_command_list.xml" value="0.37318840579710144" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.24427083333333333" />
@@ -27,11 +28,14 @@
         <entry key="app/src/main/res/layout/fragment_previsional.xml" value="0.35324074074074074" />
         <entry key="app/src/main/res/layout/fragment_stocks.xml" value="0.5" />
         <entry key="app/src/main/res/layout/item_article.xml" value="0.5" />
+        <entry key="app/src/main/res/layout/item_checkbox_article.xml" value="0.3902777777777778" />
         <entry key="app/src/main/res/layout/item_checkbox_list.xml" value="0.29003937007255826" />
         <entry key="app/src/main/res/layout/item_command.xml" value="0.5" />
         <entry key="app/src/main/res/layout/item_dot_list.xml" value="0.3587962962962963" />
+        <entry key="app/src/main/res/layout/item_ingredient_previsional.xml" value="0.36574074074074076" />
         <entry key="app/src/main/res/layout/item_product_previsional.xml" value="0.36574074074074076" />
         <entry key="app/src/main/res/layout/item_stock_article.xml" value="0.5254629629629629" />
+        <entry key="app/src/main/res/layout/item_stock_ingredient.xml" value="0.36574074074074076" />
         <entry key="app/src/main/res/layout/item_stock_product.xml" value="0.36574074074074076" />
         <entry key="app/src/main/res/menu/bottom_nav_menu.xml" value="0.14166666666666666" />
       </map>

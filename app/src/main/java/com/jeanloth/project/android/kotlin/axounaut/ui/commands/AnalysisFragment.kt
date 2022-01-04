@@ -48,13 +48,12 @@ class AnalysisFragment: Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        setupHeader()
         return inflater.inflate(R.layout.fragment_analysis, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        setupHeader()
 
         allArticles = articleVM.getAllArticles()
         Log.d("[Analyse]", "All articles : ${allArticles.map { it.label }}")

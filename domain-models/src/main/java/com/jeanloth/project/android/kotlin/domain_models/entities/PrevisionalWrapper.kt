@@ -4,9 +4,12 @@ import java.io.Serializable
 
 data class PrevisionalWrapper(
     val id : Long = 0,
-    var actualIngredientWrappers : List<IngredientWrapper>,
-    val neededRecipeIngredientWrappers : List<IngredientWrapper>
+    val ingredient : Ingredient,
+    var actual : Float = 0f,
+    val needed : Float = 0f
 
-) : Serializable  {
+)  {
 
+    val delta : Float
+    get() = actual - needed
 }

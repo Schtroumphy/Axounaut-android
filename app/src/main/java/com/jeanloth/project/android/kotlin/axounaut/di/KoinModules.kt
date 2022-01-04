@@ -32,7 +32,7 @@ val appModule = module {
     viewModel { ArticleVM( get(), get(), get(), get()) }
     viewModel { ClientVM( get(), get(), get()) }
     viewModel { AddCommandVM() }
-    viewModel { CommandVM(get(), get(), get(), get(), get(), get()) }
+    viewModel { CommandVM(get(), get(), get(), get(), get(), get(), get()) }
     viewModel { StockVM(get(), get(), get()) }
 
     // Uses cases
@@ -49,6 +49,7 @@ val appModule = module {
     factory{ GetAllCommandsUseCase(get()) }
     factory{ GetCommandByIdUseCase(get()) }
     factory{ ObserveCommandsUseCase(get()) }
+    factory{ ObserveCommandsByStatusUseCase(get()) }
     factory{ DeleteCommandUseCase(get()) }
     factory{ ObserveCommandByIdUseCase(get()) }
 

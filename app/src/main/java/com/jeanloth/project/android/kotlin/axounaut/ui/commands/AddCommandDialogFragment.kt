@@ -8,12 +8,13 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.*
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.core.content.ContextCompat.getColor
-import androidx.navigation.fragment.findNavController
+import androidx.navigation.Navigation
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.snackbar.Snackbar
@@ -28,17 +29,16 @@ import com.jeanloth.project.android.kotlin.domain_models.entities.*
 import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleWrapper.Companion.createWrapperList
 import kotlinx.android.synthetic.main.add_client_dialog.view.*
 import kotlinx.android.synthetic.main.fragment_add_command_dialog.*
-import org.koin.android.scope.currentScope
 import org.koin.android.viewmodel.ext.android.sharedViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
-import splitties.alertdialog.appcompat.*
-import java.time.LocalDate
-import java.util.*
+import splitties.alertdialog.appcompat.negativeButton
+import splitties.alertdialog.appcompat.positiveButton
 import splitties.alertdialog.material.materialAlertDialog
 import splitties.views.imageDrawable
-import splitties.views.imageResource
 import splitties.views.onClick
+import java.time.LocalDate
+import java.util.*
 
 
 /**
@@ -68,6 +68,9 @@ class AddCommandDialogFragment (
     private lateinit var datePickerDialog : DatePickerDialog
 
     lateinit var bottomSheetDialog: BottomSheetDialog
+
+    private val SHORT_DATE_FORMAT_YEAR_FIRST = "yyyy-MM-dd"
+    private val SHORT_DATE_FORMAT_DATE_FIRST = "dd-MM-yyyy"
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         bottomSheetDialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
@@ -142,8 +145,9 @@ class AddCommandDialogFragment (
         }
         bt_add_article.onClick {
             dismiss()
+
             // Redirect to add article fragment
-            findNavController().navigate(CommandListFragmentDirections.actionNavCommandListToNavArticle())
+            Navigation.findNavController(requireActivity(), R.id.nav_host_fragment).navigate(CommandListFragmentDirections.actionNavCommandListToNavArticle())
         }
 
         if(currentCommand != null) fillElements()
@@ -182,7 +186,6 @@ class AddCommandDialogFragment (
                 bt_salt.setTextColor(getColor(requireContext(), R.color.orange_001))
                 salt_divider.visibility = VISIBLE
             }
-            ArticleCategory.OTHER.code -> {}
         }
     }
 
@@ -193,13 +196,13 @@ class AddCommandDialogFragment (
         val day = calendar.get(Calendar.DAY_OF_MONTH)
 
         et_delivery_date.setOnClickListener {
-                datePickerDialog = DatePickerDialog( requireContext(),{ view, year, monthOfYear, dayOfMonth ->
+                datePickerDialog = DatePickerDialog( requireContext(),{ _, year, monthOfYear, dayOfMonth ->
                     val dateSelected = LocalDate.of(year, monthOfYear+1, dayOfMonth)
                     Log.d("[DATE SELECTED]", "$dateSelected")
-                    Log.d("[DATE SELECTED]", "${dateSelected.formatDateToOtherFormat("yyyy-MM-dd", "dd-MM-yyyy")}")
+                    Log.d("[DATE SELECTED]", "${dateSelected.formatDateToOtherFormat(SHORT_DATE_FORMAT_YEAR_FIRST, SHORT_DATE_FORMAT_DATE_FIRST)}")
 
-                    et_delivery_date.setText("${dateSelected.formatDateToOtherFormat("yyyy-MM-dd", "dd-MM-yyyy")}")
-                    addCommandVM.setDeliveryDate(dateSelected.formatDateToOtherFormat("yyyy-MM-dd", "dd-MM-yyyy"))
+                    et_delivery_date.setText("${dateSelected.formatDateToOtherFormat(SHORT_DATE_FORMAT_YEAR_FIRST, SHORT_DATE_FORMAT_DATE_FIRST)}")
+                    addCommandVM.setDeliveryDate(dateSelected.formatDateToOtherFormat(SHORT_DATE_FORMAT_YEAR_FIRST, SHORT_DATE_FORMAT_DATE_FIRST))
                     et_delivery_date.clearFocus()
                 }, year, month, day)
             datePickerDialog.show()
@@ -209,17 +212,14 @@ class AddCommandDialogFragment (
     private fun setupListenerForAutoCompleteTvClient() {
         // IMPORTANT : If not implemented, the autocompletion won't work
         et_client.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            }
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
-            override fun afterTextChanged(s: Editable?) {
-            }
+            override fun afterTextChanged(s: Editable?) {}
         })
 
-        et_client.setOnItemClickListener { parent, view, position, id ->
+        et_client.setOnItemClickListener { parent, _, position, _ ->
             val item: Any = parent.getItemAtPosition(position)
             if (item is AppClient) {
                 Log.d("[Client Fragment]", "Client selected : $item")
@@ -246,7 +246,7 @@ class AddCommandDialogFragment (
         tv_add_command_title.text = getString(if (isEditMode) R.string.add_command_title else R.string.recap)
         et_client.isEnabled = isEditMode
         et_delivery_date.isEnabled = isEditMode
-        ib_add_client.isEnabled = isEditMode // TODO Color selector enable
+        ib_add_client.isEnabled = isEditMode
 
         tv_total_price.visibility = if(isEditMode) GONE else VISIBLE
         if(!isEditMode)  tv_total_price.text = getString(R.string.total_price,

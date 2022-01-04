@@ -5,7 +5,7 @@ import java.io.Serializable
 data class IngredientWrapper(
     val id : Long = 0,
     var ingredient : Ingredient,
-    var quantity : Double = 0.0,
+    var quantity : Float = 0f,
     var quantityType : IngredientQuantityType = IngredientQuantityType.KG
 
 ) : Serializable  {
@@ -15,7 +15,7 @@ data class IngredientWrapper(
 
     val countStatusType : CountStatus
     get() = when{
-        quantity == 0.0 -> CountStatus.LOW
+        quantity == 0f -> CountStatus.LOW
         quantity < 2 -> CountStatus.MEDIUM
         else -> CountStatus.LARGE
     }

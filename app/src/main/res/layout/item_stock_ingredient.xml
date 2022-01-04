@@ -68,18 +68,7 @@
         android:src="@drawable/ic_add"
         android:tint="@color/gray_2"
         android:layout_marginEnd="10dp"
-        app:layout_constraintEnd_toStartOf="@id/tv_quantity_type"
-        app:layout_constraintTop_toTopOf="@id/tv_count"
-        app:layout_constraintBottom_toBottomOf="@id/tv_count"
-        android:background="?attr/selectableItemBackgroundBorderless" />
-
-    <TextView
-        android:id="@+id/tv_quantity_type"
-        android:layout_width="25dp"
-        android:layout_height="wrap_content"
-        android:text="KG"
-        android:gravity="center"
-        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:background="?attr/selectableItemBackgroundBorderless"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/tv_count"
         app:layout_constraintBottom_toBottomOf="@id/tv_count" />

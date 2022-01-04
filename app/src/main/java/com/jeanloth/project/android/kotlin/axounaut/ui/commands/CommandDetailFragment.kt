@@ -17,6 +17,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.jeanloth.project.android.kotlin.axounaut.MainActivity
 import com.jeanloth.project.android.kotlin.axounaut.R
 import com.jeanloth.project.android.kotlin.axounaut.adapters.CheckboxListAdapter
+import com.jeanloth.project.android.kotlin.axounaut.adapters.CheckboxTextViewAdapter
 import com.jeanloth.project.android.kotlin.axounaut.extensions.SwipeToCancelCallback
 import com.jeanloth.project.android.kotlin.axounaut.extensions.displayDialog
 import com.jeanloth.project.android.kotlin.axounaut.extensions.notCanceled
@@ -37,7 +38,7 @@ class CommandDetailFragment : Fragment() {
     private val mainVM: MainVM by sharedViewModel()
 
     val args: CommandDetailFragmentArgs by navArgs()
-    private lateinit var checkboxListAdapter: CheckboxListAdapter
+    private lateinit var checkboxTextViewAdapter: CheckboxListAdapter
     private val commandVM: CommandVM by viewModel()
 
     override fun onCreateView(
@@ -56,7 +57,7 @@ class CommandDetailFragment : Fragment() {
         commandVM.currentCommandId = args.commandToDetail.idCommand
         commandVM.observeCurrentCommand()
 
-        checkboxListAdapter = CheckboxListAdapter(args.commandToDetail.articleWrappers.toMutableList()).apply {
+        checkboxTextViewAdapter = CheckboxListAdapter(args.commandToDetail.articleWrappers.toMutableList()).apply {
             onCheckedItem = { item, isChecked ->
                 item.statusCode =
                     if (isChecked) ArticleWrapperStatusType.DONE.code else ArticleWrapperStatusType.IN_PROGRESS.code
@@ -71,7 +72,7 @@ class CommandDetailFragment : Fragment() {
         // Set the recyclerView
         rv_command_articles.apply {
             layoutManager = LinearLayoutManager(context)
-            adapter = checkboxListAdapter
+            adapter = checkboxTextViewAdapter
         }
 
         // Swipe to cancel an article
@@ -83,7 +84,7 @@ class CommandDetailFragment : Fragment() {
             ): Boolean { return true }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                checkboxListAdapter.updateArticleStatus(viewHolder.absoluteAdapterPosition)
+                checkboxTextViewAdapter.updateArticleStatus(viewHolder.absoluteAdapterPosition)
             }
         }
         val itemTouchHelper = ItemTouchHelper(swipeHandler)
@@ -97,7 +98,7 @@ class CommandDetailFragment : Fragment() {
                 goBack()
             } else {
                 Log.d("[Command details]", "current command AWs observed for command id ${args.commandToDetail.idCommand} : ${it.articleWrappers}")
-                checkboxListAdapter.setItems(it.articleWrappers, it.statusCode == CommandStatusType.TO_DO.code || it.statusCode == CommandStatusType.IN_PROGRESS.code || it.statusCode == CommandStatusType.DONE.code)
+                checkboxTextViewAdapter.setItems(it.articleWrappers, it.statusCode == CommandStatusType.TO_DO.code || it.statusCode == CommandStatusType.IN_PROGRESS.code || it.statusCode == CommandStatusType.DONE.code)
 
                 // Update status
                 tv_command_status.text = getCommandStatusByCode(it.statusCode).label.toUpperCase()
@@ -243,7 +244,7 @@ class CommandDetailFragment : Fragment() {
             negativeButtonLabelRef = R.string.delete_article,
             negativeAction = {
                 commandVM.deleteArticleWrapperFromCurrentCommand(articleWrapper)
-                checkboxListAdapter.onItemDelete(position)
+                checkboxTextViewAdapter.onItemDelete(position)
             })
     }
 

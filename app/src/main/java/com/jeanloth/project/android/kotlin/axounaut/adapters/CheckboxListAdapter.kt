@@ -90,7 +90,8 @@ class CheckboxListAdapter(
             }
         }
         }
-    }
+
+}
 
     fun stringBuilderLabel(label : String) : SpannableStringBuilder{
         return SpannableStringBuilder().apply {

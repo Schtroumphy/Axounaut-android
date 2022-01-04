@@ -11,15 +11,16 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.jeanloth.project.android.kotlin.axounaut.R
+import com.jeanloth.project.android.kotlin.axounaut.adapters.CheckboxTextViewAdapter
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.ArticleVM
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.MainVM
+import com.jeanloth.project.android.kotlin.axounaut.viewModels.StockVM
 import com.jeanloth.project.android.kotlin.domain_models.entities.Article
 import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleCategory
 import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleCategory.Companion.getArticleCategoryFromLabel
 import kotlinx.android.synthetic.main.fragment_article_details.*
 import org.koin.android.viewmodel.ext.android.sharedViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
-
 
 /**
  * A simple [Fragment] subclass.
@@ -29,6 +30,9 @@ class ArticleDetailsFragment : Fragment() {
 
     private val articleVM : ArticleVM by viewModel()
     private val mainVM : MainVM by sharedViewModel()
+    private val stockVM : StockVM by viewModel()
+
+    private lateinit var checkboxTextViewAdapter: CheckboxTextViewAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,12 +47,20 @@ class ArticleDetailsFragment : Fragment() {
 
         setupHeader()
 
+        checkboxTextViewAdapter = CheckboxTextViewAdapter(mutableListOf())
+
         // Clear focus on typing done
-        et_article_price.setOnEditorActionListener { v, actionId, event ->
+        et_article_price.setOnEditorActionListener { _, actionId, _ ->
             if(actionId == EditorInfo.IME_ACTION_DONE){
                 et_article_price.clearFocus()
             }
             true
+        }
+
+        rv_recipe_articles.adapter = checkboxTextViewAdapter
+
+        stockVM.observePWLiveData().observe(viewLifecycleOwner){
+            checkboxTextViewAdapter.setItems(it)
         }
 
         setupSpinner()
@@ -94,10 +106,6 @@ class ArticleDetailsFragment : Fragment() {
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinner_categories.adapter = adapter
-
-        val selected: String = spinner_categories.selectedItem.toString()
-        if (selected == "what ever the option was") {
-        }
     }
 
 }

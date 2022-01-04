@@ -41,6 +41,19 @@ class CommandLocalDatasourceRepository(
         return result
     }
 
+    override fun observeCommandsByStatus(statuses: List<CommandStatusType>): Flow<List<Command>> {
+        val codes = statuses.map { it.code }
+        return dao.observeAll {
+            it.filter{ command ->
+                codes.contains(command.statusCode)
+            }
+        }.map {
+            it.map {
+                mapper.from(it)
+            }
+        }
+    }
+
     override fun observeCommandById(commandId: Long): Flow<Command?> {
         try {
             val result = dao.observeFirst { it.equal(CommandEntity_.idCommand, commandId) }

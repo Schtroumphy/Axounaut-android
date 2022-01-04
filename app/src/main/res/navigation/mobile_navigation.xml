@@ -3,7 +3,35 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/nav_command_list">
+    app:startDestination="@+id/nav_home">
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.jeanloth.project.android.kotlin.axounaut.ui.home.HomeFragment"
+        android:label="Accueil"
+        tools:layout="@layout/fragment_home" >
+
+        <action
+            android:id="@+id/action_nav_home_to_nav_command_list"
+            app:destination="@id/nav_command_list" />
+
+        <action
+            android:id="@+id/action_nav_home_to_nav_analysis"
+            app:destination="@id/nav_analysis" />
+
+        <action
+            android:id="@+id/action_nav_home_to_nav_stock"
+            app:destination="@id/nav_stock" />
+
+        <action
+            android:id="@+id/action_nav_home_to_nav_article"
+            app:destination="@id/nav_article" />
+
+        <action
+            android:id="@+id/action_nav_home_to_nav_client"
+            app:destination="@id/nav_clients" />
+
+    </fragment>
 
     <fragment
         android:id="@+id/nav_command_list"

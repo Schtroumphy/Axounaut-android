@@ -22,12 +22,13 @@ import com.jeanloth.project.android.kotlin.domain_models.entities.IngredientQuan
 import com.jeanloth.project.android.kotlin.domain_models.entities.IngredientWrapper
 import kotlinx.android.synthetic.main.fragment_stocks.*
 import org.koin.android.ext.android.inject
+import org.koin.android.viewmodel.ext.android.sharedViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
 import splitties.views.onClick
 
 class StockFragment : Fragment() {
 
-    private val mainVM : MainVM by viewModel()
+    private val mainVM : MainVM by sharedViewModel()
     private val stockVM : StockVM by viewModel()
     private lateinit var binding: FragmentStocksBinding
 
@@ -40,6 +41,8 @@ class StockFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        setupHeader()
+        setupSpinner()
         binding = FragmentStocksBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
@@ -47,19 +50,16 @@ class StockFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupHeader()
-        setupSpinner()
-
         val mock = mutableListOf(
-            IngredientWrapper(ingredient = Ingredient(label = "Farine"), quantity = 4.0),
-            IngredientWrapper(ingredient = Ingredient(label = "Beurre 500g"), quantity = 4.0, quantityType = IngredientQuantityType.G),
-            IngredientWrapper(ingredient = Ingredient(label = "Lait 1L"), quantity = 0.0, quantityType = IngredientQuantityType.L),
-            IngredientWrapper(ingredient = Ingredient(label = "Epices"), quantity = 1.0, quantityType = IngredientQuantityType.G),
-            IngredientWrapper(ingredient = Ingredient(label = "Autre 1"), quantity = 1.0, quantityType = IngredientQuantityType.L),
-            IngredientWrapper(ingredient = Ingredient(label = "Test"), quantity = 0.0, quantityType = IngredientQuantityType.ML),
-            IngredientWrapper(ingredient = Ingredient(label = "Test 2"), quantity = 2.0, quantityType = IngredientQuantityType.KG),
-            IngredientWrapper(ingredient = Ingredient(label = "Test 3"), quantity = 2.0, quantityType = IngredientQuantityType.G),
-            IngredientWrapper(ingredient = Ingredient(label = "Test 4"), quantity = 0.0, quantityType = IngredientQuantityType.G),
+            IngredientWrapper(ingredient = Ingredient(label = "Farine"), quantity = 4.0f),
+            IngredientWrapper(ingredient = Ingredient(label = "Beurre 500g"), quantity = 4.0f, quantityType = IngredientQuantityType.G),
+            IngredientWrapper(ingredient = Ingredient(label = "Lait 1L"), quantity = 0.0f, quantityType = IngredientQuantityType.L),
+            IngredientWrapper(ingredient = Ingredient(label = "Epices"), quantity = 1.0f, quantityType = IngredientQuantityType.G),
+            IngredientWrapper(ingredient = Ingredient(label = "Autre 1"), quantity = 1.0f, quantityType = IngredientQuantityType.L),
+            IngredientWrapper(ingredient = Ingredient(label = "Test"), quantity = 0.0f, quantityType = IngredientQuantityType.ML),
+            IngredientWrapper(ingredient = Ingredient(label = "Test 2"), quantity = 2.0f, quantityType = IngredientQuantityType.KG),
+            IngredientWrapper(ingredient = Ingredient(label = "Test 3"), quantity = 2.0f, quantityType = IngredientQuantityType.G),
+            IngredientWrapper(ingredient = Ingredient(label = "Test 4"), quantity = 0.0f, quantityType = IngredientQuantityType.G),
         )
 
         // Setup adapter

@@ -5,11 +5,14 @@ import android.util.Log
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
+import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import com.jeanloth.project.android.kotlin.axounaut.databinding.ActivityHomeBinding
+import com.jeanloth.project.android.kotlin.axounaut.databinding.ActivityMainBinding
 import com.jeanloth.project.android.kotlin.axounaut.ui.commands.AddCommandDialogFragment
 import com.jeanloth.project.android.kotlin.axounaut.ui.commands.PayCommandDialogFragment
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.MainVM
@@ -17,43 +20,53 @@ import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.viewmodel.ext.android.viewModel
 import splitties.views.imageDrawable
 import splitties.views.onClick
+import android.widget.LinearLayout
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var navController : NavController
-    private val mainVM : MainVM by viewModel()
+    private lateinit var navController: NavController
+    private val mainVM: MainVM by viewModel()
+
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         navController = findNavController(R.id.nav_host_fragment)
 
-        when(intent.getStringExtra("FRAGMENT_TO_SHOW")){
+        when (intent.getStringExtra("FRAGMENT_TO_SHOW")) {
             "COMMANDS" -> navigateToCommands()
             "ANALYSIS" -> navigateToAnalysis()
             "STOCK" -> navigateToStock()
             else -> "Kreyol Baker"
         }
 
+        //val params = binding.flNavFragment.layoutParams as ConstraintLayout.LayoutParams
+
         mainVM.headerTitleLiveData().observe(this, {
             Log.d("[Main Activity]", "Title observed : $it")
-            tv_header_title.text = it.first
-            tv_header_subtitle.text = it.second
+            binding.tvHeaderTitle.text = it.first
+            binding.tvHeaderSubtitle.text = it.second
         })
 
         bt_tb_menu_more.setOnClickListener {
             openPopUpMenu(it)
         }
 
-        navController.addOnDestinationChangedListener { _, destination, classe ->
-            if(destination.id == R.id.nav_article_details) {
-                //fab_menu.visibility = GONE
-            } else {
-                //fab_menu.visibility = VISIBLE
-            }
+        navController.addOnDestinationChangedListener { _, destination, _ ->
             hideOrShowAddCommandButton(destination.id == R.id.nav_command_list)
+            binding.llMainHeader.visibility = if (destination.id == R.id.nav_home) GONE else VISIBLE
+
+
+            //params.setMargins(0, if(destination.id == R.id.nav_home) 0 else 75, 0, 0)
+            //binding.flNavFragment.layoutParams = params
+            //binding.flNavFragment.invalidate()
+            //binding.flNavFragment.requestLayout()
         }
 
         iv_header_logo.onClick {
@@ -92,8 +105,7 @@ class MainActivity : AppCompatActivity() {
                         navController.navigateUp() // to clear previous navigation history
                         navController.navigate(R.id.nav_clients)
                     }
-                    else -> {
-                    }
+                    else -> { }
 
                 }
                 true

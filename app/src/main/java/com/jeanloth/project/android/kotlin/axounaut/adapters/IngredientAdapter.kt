@@ -72,7 +72,6 @@ class IngredientAdapter(
         fun bind(ingredientWrapper: IngredientWrapper, position: Int, positionInList: PositionInList){
 
             itemView.tv_name.text= ingredientWrapper.ingredient.label
-            itemView.tv_quantity_type.text= ingredientWrapper.quantityType.label
 
             val count = ingredientWrapper.quantity
 
@@ -101,14 +100,14 @@ class IngredientAdapter(
                 itemView.ib_minus.visibility = if(count > 0) VISIBLE else GONE
 
                 itemView.ib_add.setOnClickListener {
-                    ingredientWrapper.quantity = count + 0.5
+                    ingredientWrapper.quantity = count + 0.5f
                     onAddMinusClick?.invoke(ingredientWrapper)
                     sortIngredients()
                 }
 
                 itemView.ib_minus.setOnClickListener {
                     if(count > 0) {
-                        ingredientWrapper.quantity = count - 0.5
+                        ingredientWrapper.quantity = count - 0.5f
                     }
                     onAddMinusClick?.invoke(ingredientWrapper)
                     sortIngredients()

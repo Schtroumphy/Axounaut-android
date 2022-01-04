@@ -10,19 +10,18 @@ import com.jeanloth.project.android.kotlin.domain.usescases.usecases.command.Del
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.command.DeleteCommandUseCase
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.command.SaveArticleWrapperUseCase
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.command.SaveCommandUseCase
-import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleWrapper
-import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleWrapperStatusType
-import com.jeanloth.project.android.kotlin.domain_models.entities.Command
-import com.jeanloth.project.android.kotlin.domain_models.entities.CommandStatusType
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.lang.Exception
 import androidx.lifecycle.MediatorLiveData
 import com.jeanloth.project.android.kotlin.axounaut.extensions.toLocalDate
+import com.jeanloth.project.android.kotlin.domain.usescases.usecases.article.ObserveCommandsByStatusUseCase
+import com.jeanloth.project.android.kotlin.domain_models.entities.*
 import java.time.LocalDate
 
 class CommandVM (
     private val observeCommandsUseCase: ObserveCommandsUseCase,
+    private val observeCommandsByStatusUseCase: ObserveCommandsByStatusUseCase,
     private val observeCommandByIdUseCase: ObserveCommandByIdUseCase,
     private val saveCommandUseCase: SaveCommandUseCase,
     private val deleteCommandUseCase: DeleteCommandUseCase,
@@ -36,6 +35,9 @@ class CommandVM (
 
     var allCommandMutableLiveData : MutableLiveData<List<Command>> = MutableLiveData(emptyList())
     fun allCommandsLiveData() : LiveData<List<Command>> = allCommandMutableLiveData
+
+    var allNotDeliveredCommandMutableLiveData : MutableLiveData<List<RecipeWrapper>> = MutableLiveData(emptyList()) // ToDo and InProgress commands
+    fun allNotDeliveredCommandLiveData() : LiveData<List<RecipeWrapper>> = allNotDeliveredCommandMutableLiveData
 
     var currentCommandMutableLiveData : MutableLiveData<Command?> = MutableLiveData()
     fun currentCommandLiveData() : LiveData<Command?> = currentCommandMutableLiveData
@@ -52,6 +54,13 @@ class CommandVM (
         viewModelScope.launch {
             observeCommandsUseCase.invoke().collect {
                 allCommandMutableLiveData.postValue(it)
+            }
+        }
+
+        viewModelScope.launch {
+            observeCommandsByStatusUseCase.invoke(listOf(CommandStatusType.TO_DO, CommandStatusType.IN_PROGRESS)).collect {
+                val list : List<RecipeWrapper> = it.map { it.articleWrappers.map { it.article }.map { it.recipeIngredients }.flatten() }.flatten()
+                allNotDeliveredCommandMutableLiveData.postValue(list) // TODO map by recipe wrappers
             }
         }
 
