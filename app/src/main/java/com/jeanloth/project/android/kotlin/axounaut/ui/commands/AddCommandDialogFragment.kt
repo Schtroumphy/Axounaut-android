@@ -57,6 +57,7 @@ class AddCommandDialogFragment (
 ): BottomSheetDialogFragment() {
 
     var isEditMode = true
+    var isEditCommandMode = false
     private lateinit var articleAdapter: ArticleAdapter
     private val clientVM : ClientVM by sharedViewModel()
     private val articleVM : ArticleVM by viewModel()
@@ -95,7 +96,13 @@ class AddCommandDialogFragment (
         val articles : List<Article> = articleVM.getAllArticles()
         addCommandVM.setAllArticlesLiveData(createWrapperList(articles))
 
-        if(currentCommand != null) addCommandVM.setArticlesLiveData(currentCommand.articleWrappers)
+        if(currentCommand != null) {
+            addCommandVM.setDeliveryDate(currentCommand.deliveryDate)
+            addCommandVM.setClientLiveData(currentCommand.client)
+            addCommandVM.setArticlesLiveData(currentCommand.articleWrappers)
+            isEditCommandMode = true
+            setupElements()
+        }
 
         tv_error_no_articles.visibility = if(addCommandVM.allArticlesLiveData.value?.isEmpty() == true) VISIBLE else GONE
         articleAdapter = ArticleAdapter(addCommandVM.allArticlesLiveData.value?.filter { it.article.category == ArticleCategory.SWEET.code } ?: emptyList(), true, requireContext()).apply {
@@ -160,8 +167,7 @@ class AddCommandDialogFragment (
                 changeEditModeDisplay()
             else {
                 // Save command
-                saveCommand()
-                Log.d("ADD COMMAND", "Save command ")
+                saveCommand(currentCommand)
             }
         }
     }
@@ -245,6 +251,10 @@ class AddCommandDialogFragment (
 
     private fun setupElements() {
         tv_add_command_title.text = getString(if (isEditMode) R.string.add_command_title else R.string.recap)
+        if(isEditCommandMode){
+            tv_add_command_title.text = "Modifier la commande"
+            bt_next.text = "Mettre à jour "
+        }
         et_client.isEnabled = isEditMode
         et_delivery_date.isEnabled = isEditMode
         ib_add_client.isEnabled = isEditMode
@@ -265,28 +275,25 @@ class AddCommandDialogFragment (
     }
 
     private fun setupHeaders() {
-        if(currentCommand != null) {
-            tv_add_command_title.text = "Modifier la commande"
-            bt_next.text = "Mettre à jour "
-        }
         bt_previous_or_close.setOnClickListener {
-            if (isEditMode) {
-                dismiss()
-            } else
-                changeEditModeDisplay()
+            if (isEditMode) dismiss() else changeEditModeDisplay()
         }
     }
 
-    private fun saveCommand(){
-        val command = Command(
+    private fun saveCommand(command: Command? = null){
+        val commandToSave = command?.apply {
+            deliveryDate = et_delivery_date.text.toString()
+            if(selectedClient != null) client = selectedClient
+            articleWrappers = addCommandVM.allArticlesLiveData.value?.filter { it.count > 0 } ?: emptyList()
+        } ?: Command(
             deliveryDate = et_delivery_date.text.toString(),
             client = selectedClient,
             articleWrappers = addCommandVM.allArticlesLiveData.value?.filter { it.count > 0 } ?: emptyList()
         )
-        Log.d("[AddCommand Fragment]", "Command to save $command")
+        Log.d("[AddCommand Fragment]", "Command to save $commandToSave")
 
         // Call VM to save Command
-        commandVM.saveCommand(command)
+        commandVM.saveCommand(commandToSave)
         dialog?.dismiss()
     }
 

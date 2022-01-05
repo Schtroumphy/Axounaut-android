@@ -30,7 +30,7 @@ class AddCommandVM : ViewModel() {
         canResume()
     }
 
-    fun setClientLiveData(client: AppClient ){
+    fun setClientLiveData(client: AppClient?){
         clientLiveData.postValue(client)
         canResume()
     }

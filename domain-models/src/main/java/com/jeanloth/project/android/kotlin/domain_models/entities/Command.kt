@@ -7,7 +7,7 @@ import java.util.*
 
 data class Command(
     val idCommand : Long = 0L,
-    val deliveryDate : String? = null,
+    var deliveryDate : String? = null,
     var statusCode : Int = CommandStatusType.TO_DO.code,
     var client : AppClient? = null,
     var articleWrappers : List<ArticleWrapper> = mutableListOf<ArticleWrapper>(),
