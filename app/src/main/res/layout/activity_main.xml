@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
@@ -12,8 +12,11 @@
         android:layout_height="90dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         android:background="@drawable/bg_rounded_header"
-        android:paddingStart="15dp">
+        android:paddingStart="15dp"
+        tools:ignore="RtlSymmetry">
 
         <ImageView
             android:id="@+id/iv_header_logo"
@@ -67,7 +70,8 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="@id/iv_header_logo"
             app:layout_constraintEnd_toEndOf="parent"
-            android:src="@drawable/ic_more" />
+            android:src="@drawable/ic_more"
+            android:contentDescription="TODO" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -75,11 +79,12 @@
         android:id="@+id/nav_host_fragment"
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         app:defaultNavHost="true"
-        app:layout_anchor="@id/ll_main_header"
-        app:layout_anchorGravity="bottom"
-        android:layout_gravity="bottom"
+        android:layout_marginTop="75dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ll_main_header"
+        app:layout_constraintStart_toStartOf="parent"
         app:navGraph="@navigation/mobile_navigation"
         tools:layout="@layout/fragment_command_list" />
 
@@ -95,6 +100,8 @@
         app:tint="@color/white"
         android:backgroundTint="@color/green_light_1"
         android:src="@android:drawable/ic_input_add"
-        />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:contentDescription="TODO" />
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
