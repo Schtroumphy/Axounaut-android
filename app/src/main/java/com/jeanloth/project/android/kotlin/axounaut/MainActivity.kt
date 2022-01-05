@@ -23,6 +23,10 @@ import splitties.views.onClick
 import android.widget.LinearLayout
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import com.jeanloth.project.android.kotlin.axounaut.Constants.ANALYSIS
+import com.jeanloth.project.android.kotlin.axounaut.Constants.COMMANDS
+import com.jeanloth.project.android.kotlin.axounaut.Constants.STOCK
+import java.lang.IllegalArgumentException
 
 
 class MainActivity : AppCompatActivity() {
@@ -40,13 +44,11 @@ class MainActivity : AppCompatActivity() {
         navController = findNavController(R.id.nav_host_fragment)
 
         when (intent.getStringExtra("FRAGMENT_TO_SHOW")) {
-            "COMMANDS" -> navigateToCommands()
-            "ANALYSIS" -> navigateToAnalysis()
-            "STOCK" -> navigateToStock()
-            else -> "Kreyol Baker"
+            COMMANDS -> navigateToCommands()
+            ANALYSIS -> navigateToAnalysis()
+            STOCK -> navigateToStock()
+            else -> throw IllegalArgumentException("Fargment to show not recohnized.")
         }
-
-        //val params = binding.flNavFragment.layoutParams as ConstraintLayout.LayoutParams
 
         mainVM.headerTitleLiveData().observe(this, {
             Log.d("[Main Activity]", "Title observed : $it")
@@ -61,12 +63,6 @@ class MainActivity : AppCompatActivity() {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             hideOrShowAddCommandButton(destination.id == R.id.nav_command_list)
             binding.llMainHeader.visibility = if (destination.id == R.id.nav_home) GONE else VISIBLE
-
-
-            //params.setMargins(0, if(destination.id == R.id.nav_home) 0 else 75, 0, 0)
-            //binding.flNavFragment.layoutParams = params
-            //binding.flNavFragment.invalidate()
-            //binding.flNavFragment.requestLayout()
         }
 
         iv_header_logo.onClick {

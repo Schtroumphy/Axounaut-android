@@ -33,6 +33,8 @@ class CommandVM (
     var currentCommand : Command? = null
     var currentCommandId : Long = 0L
 
+    val TAG= "[Command VM]"
+
     var allCommandMutableLiveData : MutableLiveData<List<Command>> = MutableLiveData(emptyList())
     fun allCommandsLiveData() : LiveData<List<Command>> = allCommandMutableLiveData
 
@@ -93,7 +95,7 @@ class CommandVM (
             if(currentCommandId != 0L) {
                 try {
                     observeCommandByIdUseCase.invoke(currentCommandId).collect {
-                        Log.d("[CommandVM]", " Current AWs from command Id $currentCommandId observed : $it")
+                        Log.d(TAG, " Current AWs from command Id $currentCommandId observed : $it")
                         currentCommandMutableLiveData.postValue(it)
                         currentCommand = it
                         setPaymentReceived(it!!.totalPrice!!)
@@ -104,7 +106,7 @@ class CommandVM (
                         }
                     }
                 } catch (e:Exception){
-                    Log.d("[CommandVM]", " Exception AWs from command Id $currentCommandId observed : $e")
+                    Log.d(TAG, " Exception AWs from command Id $currentCommandId observed : $e")
                 }
             }
         }
@@ -127,7 +129,7 @@ class CommandVM (
     }
 
     fun updateStatusCommand(status: CommandStatusType) {
-        Log.d("[CommandVM]", "Make command $status")
+        Log.d(TAG, "Make command $status")
         saveCommandUseCase.updateCommandStatus(currentCommand!!, status)
     }
 
@@ -139,13 +141,13 @@ class CommandVM (
         val command = currentCommand!!
         when (statusCode) {
             CommandStatusType.TO_DO.code -> {
-                Log.d("[Command details]", "TODO")
+                Log.d(TAG, "TODO")
                 if (command.articleWrappers.any { it.statusCode == ArticleWrapperStatusType.DONE.code || it.statusCode == ArticleWrapperStatusType.CANCELED.code }) {
                     updateStatusCommand(CommandStatusType.IN_PROGRESS)
                 }
             }
             CommandStatusType.IN_PROGRESS.code -> {
-                Log.d("[Command details]", "In progress")
+                Log.d(TAG, "In progress")
                 if (command.articleWrappers.notCanceled().all { it.statusCode == ArticleWrapperStatusType.DONE.code}) {
                     updateStatusCommand(CommandStatusType.DONE)
                 } else if (command.articleWrappers.all { it.statusCode == ArticleWrapperStatusType.CANCELED.code }) {
@@ -153,19 +155,19 @@ class CommandVM (
                 }
             }
             CommandStatusType.DONE.code -> {
-                Log.d("[Command details]", "Terminé")
+                Log.d(TAG, "Terminé")
                 if (!command.articleWrappers.notCanceled().all { it.statusCode == ArticleWrapperStatusType.DONE.code}) {
                     updateStatusCommand(CommandStatusType.IN_PROGRESS)
                 }
             }
             CommandStatusType.DELIVERED.code -> {
-                Log.d("[Command details]", "Livré")
+                Log.d(TAG, "Livré")
             }
             CommandStatusType.PAYED.code -> {
-                Log.d("[Command details]", "Payé")
+                Log.d(TAG, "Payé")
             }
             CommandStatusType.CANCELED.code -> {
-                Log.d("[Command details]", "Cancel")
+                Log.d(TAG, "Cancel")
             }
         }
 

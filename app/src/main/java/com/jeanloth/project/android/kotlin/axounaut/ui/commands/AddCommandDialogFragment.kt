@@ -18,6 +18,8 @@ import androidx.navigation.Navigation
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.snackbar.Snackbar
+import com.jeanloth.project.android.kotlin.axounaut.Constants.SHORT_DATE_FORMAT_DATE_FIRST
+import com.jeanloth.project.android.kotlin.axounaut.Constants.SHORT_DATE_FORMAT_YEAR_FIRST
 import com.jeanloth.project.android.kotlin.axounaut.R
 import com.jeanloth.project.android.kotlin.axounaut.adapters.ArticleAdapter
 import com.jeanloth.project.android.kotlin.axounaut.extensions.*
@@ -69,8 +71,7 @@ class AddCommandDialogFragment (
 
     lateinit var bottomSheetDialog: BottomSheetDialog
 
-    private val SHORT_DATE_FORMAT_YEAR_FIRST = "yyyy-MM-dd"
-    private val SHORT_DATE_FORMAT_DATE_FIRST = "dd-MM-yyyy"
+
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         bottomSheetDialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
@@ -252,6 +253,8 @@ class AddCommandDialogFragment (
         if(!isEditMode)  tv_total_price.text = getString(R.string.total_price,
             addCommandVM.allArticlesLiveData.value?.filter { it.count > 0 }?.map { it.count * it.article.price }?.sum()?.formatDouble()
         )
+
+
     }
 
     private fun setupPreviousCloseButton() {

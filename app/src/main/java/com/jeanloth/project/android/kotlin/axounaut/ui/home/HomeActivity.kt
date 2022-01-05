@@ -5,6 +5,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.navigation.Navigation.findNavController
 import androidx.navigation.fragment.findNavController
+import com.jeanloth.project.android.kotlin.axounaut.Constants.ANALYSIS
+import com.jeanloth.project.android.kotlin.axounaut.Constants.COMMANDS
+import com.jeanloth.project.android.kotlin.axounaut.Constants.STOCK
 import com.jeanloth.project.android.kotlin.axounaut.MainActivity
 import com.jeanloth.project.android.kotlin.axounaut.R
 import com.jeanloth.project.android.kotlin.axounaut.databinding.ActivityHomeBinding
@@ -18,7 +21,7 @@ import splitties.views.onClick
 class  HomeActivity : AppCompatActivity() {
 
     private lateinit var binding : ActivityHomeBinding
-    private var fragmentToShow : String = "COMMANDS"
+    private var fragmentToShow : String = COMMANDS
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,17 +30,17 @@ class  HomeActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.cvCommands.onClick {
-            fragmentToShow = "COMMANDS"
+            fragmentToShow = COMMANDS
             goToMainActivity()
         }
 
         binding.cvAnalysis.onClick {
-            fragmentToShow = "ANALYSIS"
+            fragmentToShow = ANALYSIS
             goToMainActivity()
         }
 
         binding.cvStock.onClick {
-            fragmentToShow = "STOCK"
+            fragmentToShow = STOCK
             goToMainActivity()
         }
 
