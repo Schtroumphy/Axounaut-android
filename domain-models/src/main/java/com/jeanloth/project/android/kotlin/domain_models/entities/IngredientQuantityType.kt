@@ -7,7 +7,7 @@ enum class IngredientQuantityType (val label: String, val description : String){
     KG("kg", "kilogrammes");
 
     companion object{
-        fun String.fromVal(): IngredientQuantityType{
+        fun String.fromVal(): IngredientQuantityType {
             return values().first { it.label == this } ?: ML
         }
     }

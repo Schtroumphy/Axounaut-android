@@ -29,7 +29,7 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.cvCommands.onClick {
+        /*binding.cvCommands.onClick {
             goToCommands()
         }
 
@@ -47,7 +47,7 @@ class HomeFragment : Fragment() {
 
         binding.cvClients.onClick {
             goToClientFragment()
-        }
+        }*/
     }
 
     private fun goToCommands() {

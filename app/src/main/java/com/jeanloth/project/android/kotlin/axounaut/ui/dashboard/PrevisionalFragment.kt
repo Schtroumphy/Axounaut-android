@@ -13,7 +13,7 @@ import com.jeanloth.project.android.kotlin.axounaut.viewModels.CommandVM
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.StockVM
 import com.jeanloth.project.android.kotlin.domain_models.entities.*
 import kotlinx.android.synthetic.main.fragment_previsional.*
-import model.PrevisionalWrapper
+import com.jeanloth.project.android.kotlin.domain_models.entities.PrevisionalWrapper
 import org.koin.android.viewmodel.ext.android.sharedViewModel
 
 class PrevisionalFragment : Fragment() {

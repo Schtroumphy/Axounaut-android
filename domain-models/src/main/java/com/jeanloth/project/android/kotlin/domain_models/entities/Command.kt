@@ -1,16 +1,13 @@
 package com.jeanloth.project.android.kotlin.domain_models.entities
 
 import java.io.Serializable
-import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.util.*
 
 data class Command(
     val idCommand : Long = 0L,
     var deliveryDate : String? = null,
     var statusCode : Int = CommandStatusType.TO_DO.code,
     var client : AppClient? = null,
-    var articleWrappers : List<ArticleWrapper> = mutableListOf<ArticleWrapper>(),
+    var articleWrappers : List<ArticleWrapper> = mutableListOf(),
     var reduction : Double? = 0.0,
     var paymentAmount : Double? = null,
     var paymentTypeCode : String? = null

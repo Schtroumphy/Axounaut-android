@@ -19,7 +19,8 @@ import com.jeanloth.project.android.kotlin.axounaut.R
 import com.jeanloth.project.android.kotlin.axounaut.extensions.fullScreen
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.CommandVM
 import com.jeanloth.project.android.kotlin.domain_models.entities.CommandStatusType
-import model.PaymentType
+import com.jeanloth.project.android.kotlin.domain_models.entities.PaymentType
+import com.jeanloth.project.android.kotlin.domain_models.entities.toNameString
 import kotlinx.android.synthetic.main.fragment_pay_command_dialog.*
 import org.koin.android.viewmodel.ext.android.sharedViewModel
 import splitties.views.onClick

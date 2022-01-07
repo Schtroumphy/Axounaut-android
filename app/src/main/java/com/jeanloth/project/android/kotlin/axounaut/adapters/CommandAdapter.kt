@@ -11,6 +11,7 @@ import com.jeanloth.project.android.kotlin.axounaut.R
 import com.jeanloth.project.android.kotlin.domain_models.entities.*
 import com.jeanloth.project.android.kotlin.domain_models.entities.CommandStatusType.Companion.getCommandStatusByCode
 import kotlinx.android.synthetic.main.item_command.view.*
+import com.jeanloth.project.android.kotlin.domain_models.entities.ItemList
 import splitties.views.onClick
 
 class CommandAdapter(

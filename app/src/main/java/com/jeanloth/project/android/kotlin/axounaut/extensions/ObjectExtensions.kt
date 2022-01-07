@@ -2,7 +2,7 @@ package com.jeanloth.project.android.kotlin.axounaut.extensions
 
 import android.content.Context
 import com.jeanloth.project.android.kotlin.axounaut.R
-import model.AnalysisList
+import com.jeanloth.project.android.kotlin.domain_models.entities.AnalysisList
 import com.jeanloth.project.android.kotlin.domain_models.entities.Article
 import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleWrapper
 import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleWrapperStatusType

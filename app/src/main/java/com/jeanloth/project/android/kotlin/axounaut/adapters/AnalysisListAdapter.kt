@@ -13,10 +13,7 @@ import androidx.core.content.ContextCompat.getColor
 import androidx.recyclerview.widget.RecyclerView
 import com.jeanloth.project.android.kotlin.axounaut.R
 import com.jeanloth.project.android.kotlin.domain_models.entities.AnalysisList
-import com.jeanloth.project.android.kotlin.domain_models.entities.ItemList
 import kotlinx.android.synthetic.main.item_analysis_list.view.*
-import kotlinx.android.synthetic.main.item_dot_list.view.*
-import kotlinx.android.synthetic.main.item_dot_list.view.tv_quantity
 
 class AnalysisListAdapter(
     private var items : List<AnalysisList>,

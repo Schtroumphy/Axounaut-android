@@ -3,15 +3,12 @@ package com.jeanloth.project.android.kotlin.axounaut.adapters
 import android.content.Context
 import android.content.res.ColorStateList
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat.getDrawable
 import androidx.recyclerview.widget.RecyclerView
 import com.jeanloth.project.android.kotlin.axounaut.R
 import com.jeanloth.project.android.kotlin.axounaut.databinding.ItemIngredientPrevisionalBinding
-import com.jeanloth.project.android.kotlin.axounaut.databinding.ItemStockIngredientBinding
 import com.jeanloth.project.android.kotlin.domain_models.entities.PrevisionalWrapper
-import kotlinx.android.synthetic.main.item_article.view.tv_name
 import kotlinx.android.synthetic.main.item_stock_ingredient.view.*
 
 class PrevisionalIngredientAdapter(
