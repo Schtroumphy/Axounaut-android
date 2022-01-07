@@ -4,9 +4,14 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.jeanloth.project.android.kotlin.domain_models.entities.AppClient
 import com.jeanloth.project.android.kotlin.domain_models.entities.Article
 import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleWrapper
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
 class AddCommandVM : ViewModel() {
 
@@ -17,12 +22,20 @@ class AddCommandVM : ViewModel() {
     var canResumeMutableLiveData : MutableLiveData<Boolean> = MutableLiveData(false)
     var canResumeLiveData : LiveData<Boolean> = canResumeMutableLiveData
 
+    private var _canResumeStateFlow = MutableStateFlow(false)
+    var canResumeStateFlow = _canResumeStateFlow.asStateFlow()
+
+
+
     fun canResume(){
         val isOk = !deliveryDateLiveData.value.isNullOrEmpty() /* && deliveryDate.isDateIsValid()*/
                 && clientLiveData.value != null && !allArticlesLiveData.value.isNullOrEmpty()
                 && allArticlesLiveData.value!!.any { it.count > 0 }
         Log.d("[AddCommandVM]", "Can resume ? $isOk")
         canResumeMutableLiveData.postValue(isOk)
+        viewModelScope.launch {
+            _canResumeStateFlow.emit(isOk)
+        }
     }
 
     fun setDeliveryDate(deliveryDate : String?){

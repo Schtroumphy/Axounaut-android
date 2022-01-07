@@ -14,10 +14,12 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.core.content.ContextCompat.getColor
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.snackbar.Snackbar
+import com.jeanloth.project.android.kotlin.axounaut.AppLogger.logD
 import com.jeanloth.project.android.kotlin.axounaut.Constants.SHORT_DATE_FORMAT_DATE_FIRST
 import com.jeanloth.project.android.kotlin.axounaut.Constants.SHORT_DATE_FORMAT_YEAR_FIRST
 import com.jeanloth.project.android.kotlin.axounaut.R
@@ -31,6 +33,7 @@ import com.jeanloth.project.android.kotlin.domain_models.entities.*
 import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleWrapper.Companion.createWrapperList
 import kotlinx.android.synthetic.main.add_client_dialog.view.*
 import kotlinx.android.synthetic.main.fragment_add_command_dialog.*
+import kotlinx.coroutines.flow.collectLatest
 import org.koin.android.viewmodel.ext.android.sharedViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
@@ -56,9 +59,19 @@ class AddCommandDialogFragment (
     val currentCommand: Command?= null
 ): BottomSheetDialogFragment() {
 
-    var isEditMode = true
-    var isEditCommandMode = false
+    // Varaiables
+    private var isEditMode = true
+    private var isEditCommandMode = false
+
+    private var selectedClient : AppClient? = null
+
+    private lateinit var datePickerDialog : DatePickerDialog
+    lateinit var bottomSheetDialog: BottomSheetDialog
+
+    // Adapters
     private lateinit var articleAdapter: ArticleAdapter
+
+    // View models
     private val clientVM : ClientVM by sharedViewModel()
     private val articleVM : ArticleVM by viewModel()
     private val addCommandVM : AddCommandVM by viewModel()
@@ -67,12 +80,6 @@ class AddCommandDialogFragment (
             0L
         )
     }
-    private var selectedClient : AppClient? = null
-    private lateinit var datePickerDialog : DatePickerDialog
-
-    lateinit var bottomSheetDialog: BottomSheetDialog
-
-
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         bottomSheetDialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
@@ -87,11 +94,9 @@ class AddCommandDialogFragment (
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
         setupHeaders()
 
-        Log.d("[Add command fragment]", "Clients : ${clientVM.allClientsMutableLiveData.value}")
-        Log.d("[Current command to edit]", "$currentCommand")
+        javaClass.logD("Clients : ${clientVM.allClientsMutableLiveData.value}", "Current command $currentCommand")
 
         val articles : List<Article> = articleVM.getAllArticles()
         addCommandVM.setAllArticlesLiveData(createWrapperList(articles))
@@ -107,7 +112,7 @@ class AddCommandDialogFragment (
         tv_error_no_articles.visibility = if(addCommandVM.allArticlesLiveData.value?.isEmpty() == true) VISIBLE else GONE
         articleAdapter = ArticleAdapter(addCommandVM.allArticlesLiveData.value?.filter { it.article.category == ArticleCategory.SWEET.code } ?: emptyList(), true, requireContext()).apply {
             onAddMinusClick = {
-                Log.d("ADD COMMAND", "  articles list : $it")
+                javaClass.logD("Articles list : $it")
                 addCommandVM.setArticlesLiveData(it)
             }
             displayNoArticlesError = {
@@ -118,7 +123,7 @@ class AddCommandDialogFragment (
 
         // Get all clients
         clientVM.allClientsLiveData().observe(viewLifecycleOwner){
-            Log.d("[Client Fragment", "Client observed map : ${it.map { it.toNameString() }}")
+            javaClass.logD("Client observed map : ${it.map { it.toNameString() }}")
             val clientAdapter: ArrayAdapter<AppClient> = ArrayAdapter<AppClient>(
                 requireContext(),
                 android.R.layout.simple_list_item_1, it
@@ -128,9 +133,11 @@ class AddCommandDialogFragment (
             et_client.setAdapter(clientAdapter)
         }
 
-        addCommandVM.canResumeLiveData.observe(viewLifecycleOwner){
-            Log.d("[AddCommandDialog]", "Can resume ? $it")
-            bt_next.isEnabled = it
+        lifecycleScope.launchWhenStarted {
+            addCommandVM.canResumeStateFlow.collectLatest {
+                javaClass.logD("Can resume ? $it")
+                bt_next.isEnabled = it
+            }
         }
 
         setupListenerForAutoCompleteTvClient()
@@ -205,8 +212,8 @@ class AddCommandDialogFragment (
         et_delivery_date.setOnClickListener {
                 datePickerDialog = DatePickerDialog( requireContext(),{ _, year, monthOfYear, dayOfMonth ->
                     val dateSelected = LocalDate.of(year, monthOfYear+1, dayOfMonth)
-                    Log.d("[DATE SELECTED]", "$dateSelected")
-                    Log.d("[DATE SELECTED]", "${dateSelected.formatDateToOtherFormat(SHORT_DATE_FORMAT_YEAR_FIRST, SHORT_DATE_FORMAT_DATE_FIRST)}")
+                    javaClass.logD("[DATE SELECTED] $dateSelected")
+                    javaClass.logD("[DATE SELECTED] ${dateSelected.formatDateToOtherFormat(SHORT_DATE_FORMAT_YEAR_FIRST, SHORT_DATE_FORMAT_DATE_FIRST)}")
 
                     et_delivery_date.setText("${dateSelected.formatDateToOtherFormat(SHORT_DATE_FORMAT_YEAR_FIRST, SHORT_DATE_FORMAT_DATE_FIRST)}")
                     addCommandVM.setDeliveryDate(dateSelected.formatDateToOtherFormat(SHORT_DATE_FORMAT_YEAR_FIRST, SHORT_DATE_FORMAT_DATE_FIRST))
@@ -290,7 +297,7 @@ class AddCommandDialogFragment (
             client = selectedClient,
             articleWrappers = addCommandVM.allArticlesLiveData.value?.filter { it.count > 0 } ?: emptyList()
         )
-        Log.d("[AddCommand Fragment]", "Command to save $commandToSave")
+        javaClass.logD("Command to save $commandToSave")
 
         // Call VM to save Command
         commandVM.saveCommand(commandToSave)
@@ -302,7 +309,7 @@ class AddCommandDialogFragment (
         requireContext().materialAlertDialog {
             setView(dialogView)
             positiveButton(R.string.validate) {
-                Log.d("[ADD COMMAND]", "Clic sur ok")
+                javaClass.logD("Clic sur ok")
                 addClient(dialogView)
             }
             negativeButton(R.string.cancel){
@@ -324,7 +331,8 @@ class AddCommandDialogFragment (
                 lastname = "",
                 phoneNumber = clientPhoneNumber.toInt(),
             )
-            Log.d("[Article Details Fragment", "Client to add : $clientToAdd")
+            javaClass.logD("Client to add : $clientToAdd")
+
             clientVM.saveClient(clientToAdd)
             Snackbar.make(requireView(), "Client ajouté avec succès.",
                 Snackbar.LENGTH_SHORT).show()

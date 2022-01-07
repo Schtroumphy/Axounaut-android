@@ -7,6 +7,7 @@ import androidx.navigation.Navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.jeanloth.project.android.kotlin.axounaut.Constants.ANALYSIS
 import com.jeanloth.project.android.kotlin.axounaut.Constants.COMMANDS
+import com.jeanloth.project.android.kotlin.axounaut.Constants.FRAGMENT_TO_SHOW
 import com.jeanloth.project.android.kotlin.axounaut.Constants.STOCK
 import com.jeanloth.project.android.kotlin.axounaut.MainActivity
 import com.jeanloth.project.android.kotlin.axounaut.R
@@ -52,7 +53,7 @@ class  HomeActivity : AppCompatActivity() {
 
     private fun goToMainActivity() {
         startActivity(Intent(this, MainActivity::class.java).apply {
-            putExtra("FRAGMENT_TO_SHOW", fragmentToShow)
+            putExtra(FRAGMENT_TO_SHOW, fragmentToShow)
         })
     }
 }

@@ -7,4 +7,6 @@ data class Article(
         var timeOrdered : Int = 0,
         val category : Int = ArticleCategory.SALTED.code,
         var recipeIngredients : List<RecipeWrapper> = emptyList()
-)
+){
+
+}

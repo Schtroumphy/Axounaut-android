@@ -5,13 +5,16 @@ import android.util.Log
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
-import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
-import com.jeanloth.project.android.kotlin.axounaut.databinding.ActivityHomeBinding
+import com.jeanloth.project.android.kotlin.axounaut.AppLogger.logD
+import com.jeanloth.project.android.kotlin.axounaut.Constants.ANALYSIS
+import com.jeanloth.project.android.kotlin.axounaut.Constants.COMMANDS
+import com.jeanloth.project.android.kotlin.axounaut.Constants.FRAGMENT_TO_SHOW
+import com.jeanloth.project.android.kotlin.axounaut.Constants.STOCK
 import com.jeanloth.project.android.kotlin.axounaut.databinding.ActivityMainBinding
 import com.jeanloth.project.android.kotlin.axounaut.ui.commands.AddCommandDialogFragment
 import com.jeanloth.project.android.kotlin.axounaut.ui.commands.PayCommandDialogFragment
@@ -20,14 +23,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.viewmodel.ext.android.viewModel
 import splitties.views.imageDrawable
 import splitties.views.onClick
-import android.widget.LinearLayout
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.coordinatorlayout.widget.CoordinatorLayout
-import com.jeanloth.project.android.kotlin.axounaut.Constants.ANALYSIS
-import com.jeanloth.project.android.kotlin.axounaut.Constants.COMMANDS
-import com.jeanloth.project.android.kotlin.axounaut.Constants.STOCK
-import java.lang.IllegalArgumentException
-
 
 class MainActivity : AppCompatActivity() {
 
@@ -43,20 +38,21 @@ class MainActivity : AppCompatActivity() {
 
         navController = findNavController(R.id.nav_host_fragment)
 
-        when (intent.getStringExtra("FRAGMENT_TO_SHOW")) {
+        when (intent.getStringExtra(FRAGMENT_TO_SHOW)) {
             COMMANDS -> navigateToCommands()
             ANALYSIS -> navigateToAnalysis()
             STOCK -> navigateToStock()
-            else -> throw IllegalArgumentException("Fargment to show not recohnized.")
+            else -> throw IllegalArgumentException("Fragment to show not recognized.")
         }
 
         mainVM.headerTitleLiveData().observe(this, {
-            Log.d("[Main Activity]", "Title observed : $it")
+            javaClass.logD("Title observed : ${it.first}")
+
             binding.tvHeaderTitle.text = it.first
             binding.tvHeaderSubtitle.text = it.second
         })
 
-        bt_tb_menu_more.setOnClickListener {
+        binding.btTbMenuMore.setOnClickListener {
             openPopUpMenu(it)
         }
 
@@ -65,28 +61,28 @@ class MainActivity : AppCompatActivity() {
             binding.llMainHeader.visibility = if (destination.id == R.id.nav_home) GONE else VISIBLE
         }
 
-        iv_header_logo.onClick {
+        binding.ivHeaderLogo.onClick {
             onBackPressed()
         }
 
-        fab_add_command.onClick {
+        binding.fabAddCommand.onClick {
             displayAddCommandFragment()
         }
     }
 
-    fun navigateToCommands(){
+    private fun navigateToCommands(){
         navController.navigate(R.id.nav_command_list)
     }
 
-    fun navigateToStock(){
+    private fun navigateToStock(){
         navController.navigate(R.id.nav_stock)
     }
 
-    fun navigateToAnalysis(){
+    private fun navigateToAnalysis(){
         navController.navigate(R.id.nav_analysis)
     }
 
-    fun openPopUpMenu(view : View) {
+    private fun openPopUpMenu(view : View) {
         view.setOnClickListener {
             //Creating the instance of PopupMenu
             val popup = PopupMenu(this, view)
@@ -101,8 +97,6 @@ class MainActivity : AppCompatActivity() {
                         navController.navigateUp() // to clear previous navigation history
                         navController.navigate(R.id.nav_clients)
                     }
-                    else -> { }
-
                 }
                 true
             }
@@ -110,11 +104,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun hideOrShowAddCommandButton(makeVisible : Boolean){
-        fab_add_command.visibility = if(makeVisible) VISIBLE else GONE
+    private fun hideOrShowAddCommandButton(makeVisible : Boolean){
+        binding.fabAddCommand.visibility = if(makeVisible) VISIBLE else GONE
     }
 
-    fun displayAddCommandFragment(){
+    private fun displayAddCommandFragment(){
         AddCommandDialogFragment.newInstance().show(supportFragmentManager, "dialog")
     }
 
@@ -123,10 +117,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun replaceHeaderLogoByBackButton(replaceByBackButton : Boolean){
-        iv_header_logo.imageDrawable = ContextCompat.getDrawable(this, if(replaceByBackButton) R.drawable.ic_back_button else R.drawable.logo_kb_002)
-        iv_header_logo.layoutParams.width = if(replaceByBackButton) 46 else 130
-        iv_header_logo.layoutParams.height = if(replaceByBackButton) 46 else 130
+        binding.ivHeaderLogo.imageDrawable = ContextCompat.getDrawable(this, if(replaceByBackButton) R.drawable.ic_back_button else R.drawable.logo_kb_002)
+        binding.ivHeaderLogo.layoutParams.width = if(replaceByBackButton) 46 else 130
+        binding.ivHeaderLogo.layoutParams.height = if(replaceByBackButton) 46 else 130
     }
-
-
 }

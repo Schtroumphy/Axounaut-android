@@ -10,9 +10,11 @@ import androidx.navigation.fragment.findNavController
 import com.anychart.AnyChart
 import com.anychart.chart.common.dataentry.DataEntry
 import com.anychart.chart.common.dataentry.ValueDataEntry
+import com.jeanloth.project.android.kotlin.axounaut.AppLogger.logD
 import com.jeanloth.project.android.kotlin.axounaut.MainActivity
 import com.jeanloth.project.android.kotlin.axounaut.R
 import com.jeanloth.project.android.kotlin.axounaut.adapters.AnalysisListAdapter
+import com.jeanloth.project.android.kotlin.axounaut.extensions.convertArticleToItemList
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.ArticleVM
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.CommandVM
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.MainVM
@@ -56,7 +58,7 @@ class AnalysisFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         allArticles = articleVM.getAllArticles()
-        Log.d("[Analyse]", "All articles : ${allArticles.map { it.label }}")
+        javaClass.logD("All articles : ${allArticles.map { it.label }}")
 
         setupChart(allArticles)
 
@@ -66,7 +68,7 @@ class AnalysisFragment: Fragment() {
 
     private fun setupBestSeller() {
         // TODO Get 3 most commanded article
-        analysisAdapter = AnalysisListAdapter(convertArticleToItemList(allArticles.sortedByDescending { it.timeOrdered }.take(3)), requireContext())
+        analysisAdapter = AnalysisListAdapter(allArticles.sortedByDescending { it.timeOrdered }.take(3).convertArticleToItemList(requireContext()), requireContext())
         rv_analysis.adapter = analysisAdapter
     }
 
@@ -99,18 +101,5 @@ class AnalysisFragment: Fragment() {
         )
     }
 
-    fun convertArticleToItemList(articles : List<Article>) : List<AnalysisList>{
-        val list = mutableListOf<AnalysisList>()
-        articles.forEach {
-            val articleLabel = requireContext().getString(R.string.article_name, it.label)
-            list.add(
-                AnalysisList(
-                    articleLabel,
-                    it.timeOrdered,
-                    totalAmount = it.timeOrdered * it.price
-                )
-            )
-        }
-        return list
-    }
+
 }

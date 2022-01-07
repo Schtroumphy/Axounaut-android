@@ -1,7 +1,6 @@
 package com.jeanloth.project.android.kotlin.axounaut.adapters
 
 import android.content.Context
-import android.graphics.Color
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.Spanned

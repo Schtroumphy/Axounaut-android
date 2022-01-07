@@ -14,6 +14,7 @@
     <color name="salamander_attenue">#F17746</color>
     <color name="ginger">#BE5504</color>
     <color name="sandstone">#D7722C</color>
+    <color name="orange_light">#70DD9D1D</color>
     <color name="orange_001">#E1A735</color>
     <color name="orange_002">#C6932E</color>
     <color name="orange_003">#B5862B</color>
@@ -34,6 +35,7 @@
     <color name="green_dark_1">#0E5E20</color>
     <color name="green_dark_2">#1C5C2A</color>
 
+    <color name="gray_light">#E9EAE7</color>
     <color name="gray_0">#EDEFE9</color>
     <color name="gray_1">#B3B5AE</color>
     <color name="gray_2">#747571</color>
