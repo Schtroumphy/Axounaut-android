@@ -18,7 +18,7 @@ fun Date.formatDateToOtherFormat(): String{
 fun LocalDate.formatDateToOtherFormat(initDateFormat: String, endDateFormat: String): String? {
     val initDate = SimpleDateFormat(initDateFormat).parse(this.toString())
     val formatter = SimpleDateFormat(endDateFormat)
-    return formatter.format(initDate)
+    return formatter.format(initDate ?: Date())
 }
 
 fun String.toLocalDate() = LocalDate.parse(this, DateTimeFormatter.ofPattern("dd-MM-yyyy", Locale.FRANCE))

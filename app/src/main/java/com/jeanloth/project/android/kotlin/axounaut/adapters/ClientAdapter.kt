@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getColor
 import androidx.recyclerview.widget.RecyclerView
 import com.jeanloth.project.android.kotlin.axounaut.R
 import com.jeanloth.project.android.kotlin.domain_models.entities.AppClient
@@ -46,13 +47,13 @@ class ClientAdapter(
     inner class ClientHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         fun bind(client : AppClient){
-            itemView.tv_client_name.text= context.getString(R.string.client_name_label, client.lastname?.toUpperCase(), client.firstname.toLowerCase())
+            itemView.tv_client_name.text= context.getString(R.string.client_name_label, client.lastname?.uppercase(), client.firstname.lowercase())
             itemView.tv_fidelity.text= context.getString(R.string.client_fidelity_label, client.fidelityPoint.toString())
 
             if(client.isFavorite){
-                itemView.ib_favorite.backgroundTintList = ColorStateList.valueOf(context.resources.getColor(R.color.salamander));
+                itemView.ib_favorite.backgroundTintList = ColorStateList.valueOf(getColor(context, R.color.salamander))
             } else {
-                itemView.ib_favorite.backgroundTintList = ColorStateList.valueOf(context.resources.getColor(R.color.gray_1));
+                itemView.ib_favorite.backgroundTintList = ColorStateList.valueOf(getColor(context, R.color.gray_1))
             }
 
             itemView.cb_client.isChecked = false

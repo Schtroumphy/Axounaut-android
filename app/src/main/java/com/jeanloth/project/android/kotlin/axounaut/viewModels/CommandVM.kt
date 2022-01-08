@@ -70,7 +70,7 @@ class CommandVM (
             commandToDisplayMediatorLiveData.setValue(value)
         }
         commandToDisplayMediatorLiveData.addSource(displayModeMutableLiveData) { value: CommandListFragment.CommandDisplayMode ->
-            var commandToDisplay: List<Command> = emptyList()
+            val commandToDisplay: List<Command>
             val commands = allCommandMutableLiveData.value ?: emptyList()
 
             commandToDisplay = commands.filter { it.statusCode in value.statusCode }.apply {
@@ -98,7 +98,7 @@ class CommandVM (
                         Log.d(TAG, " Current AWs from command Id $currentCommandId observed : $it")
                         currentCommandMutableLiveData.postValue(it)
                         currentCommand = it
-                        setPaymentReceived(it!!.totalPrice!!)
+                        setPaymentReceived(it!!.totalPrice)
 
                         if(it.articleWrappers.any { it.statusCode == ArticleWrapperStatusType.CANCELED.code }){
                             //it.totalPrice= realTotalPrice

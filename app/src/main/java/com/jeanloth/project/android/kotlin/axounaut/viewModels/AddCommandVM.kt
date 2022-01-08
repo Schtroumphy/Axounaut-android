@@ -55,10 +55,10 @@ class AddCommandVM : ViewModel() {
     fun setArticlesLiveData(articleWrapper: List<ArticleWrapper> ){
         Log.d("[AddCommandVM]", "BEFORE all articles ? ${allArticlesLiveData.value}")
 
-        articleWrapper.forEach { articleWrapper ->
+        articleWrapper.forEach { aw ->
             allArticlesLiveData.value?.find {
-                it.article.id == articleWrapper.article.id
-            }?.count = articleWrapper.count
+                it.article.id == aw.article.id
+            }?.count = aw.count
         }
         Log.d("[AddCommandVM]", "AFTER all articles ? ${allArticlesLiveData.value}")
 

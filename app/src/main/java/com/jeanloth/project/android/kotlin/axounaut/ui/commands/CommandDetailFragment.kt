@@ -100,7 +100,7 @@ class CommandDetailFragment : Fragment() {
                 checkboxTextViewAdapter.setItems(it.articleWrappers, it.statusCode == CommandStatusType.TO_DO.code || it.statusCode == CommandStatusType.IN_PROGRESS.code || it.statusCode == CommandStatusType.DONE.code)
 
                 // Update status
-                tv_command_status.text = getCommandStatusByCode(it.statusCode).label.toUpperCase()
+                tv_command_status.text = getCommandStatusByCode(it.statusCode).label.uppercase()
 
                 // Update total price
                 tv_total_price.text = getString(R.string.total_price, it.totalPrice.toString())

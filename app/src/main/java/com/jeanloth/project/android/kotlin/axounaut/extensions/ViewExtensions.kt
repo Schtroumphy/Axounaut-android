@@ -32,8 +32,6 @@ fun View.openPopUpMenu(context: Context, menu: Int, map: Map<Int, (() -> Unit)>)
             for ((key, value) in map) {
                 when (item.itemId) {
                     key -> value
-                    else -> {
-                    }
                 }
             }
             true

@@ -47,7 +47,7 @@ class StockVM (
         }
     }
 
-    fun deleteArticle(article : Article) {
+    fun deleteArticle(/*article : Article*/) {
         //deleteArticleUseCase.invoke(article)
     }
 

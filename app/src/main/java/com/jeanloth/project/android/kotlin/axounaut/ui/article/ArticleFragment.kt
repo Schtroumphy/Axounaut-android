@@ -52,9 +52,7 @@ class ArticleFragment : Fragment() {
         mainVM.setHeaderTitle("Mes articles")
 
         adapter = ArticleListAdapter(emptyList(), requireContext()).apply {
-            onEditClick = { article ->
-
-            }
+            onEditClick = { }
         }
         rv_articles_fragment.adapter = adapter
 

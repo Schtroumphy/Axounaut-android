@@ -35,7 +35,7 @@ class CheckboxListAdapter(
 
     override fun onBindViewHolder(holder: ItemHolder, position: Int) {
         val itemLabel: ArticleWrapper = items[position]
-        holder.bind(itemLabel, position)
+        holder.bind(itemLabel)
     }
 
     override fun getItemCount(): Int {
@@ -59,7 +59,7 @@ class CheckboxListAdapter(
 
     inner class ItemHolder(view: View) : RecyclerView.ViewHolder(view) {
 
-        fun bind(item : ArticleWrapper, position : Int){
+        fun bind(item : ArticleWrapper){
 
             val articleLabel = itemView.context.getString(R.string.article_name, item.article.label)
             val quantity = itemView.context.getString(R.string.article_quantity, item.count)

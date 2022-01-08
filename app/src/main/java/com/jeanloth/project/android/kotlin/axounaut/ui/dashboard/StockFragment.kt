@@ -108,7 +108,7 @@ class StockFragment : Fragment() {
         adapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item)
         spinner_quantity_type.adapter = adapter
 
-        val selected: String = spinner_quantity_type.selectedItem.toString()
+        //val selected: String = spinner_quantity_type.selectedItem.toString()
     }
 
     private fun setupHeader() {

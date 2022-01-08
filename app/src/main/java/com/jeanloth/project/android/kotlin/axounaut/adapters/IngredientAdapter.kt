@@ -7,6 +7,7 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat.getColor
 import androidx.core.content.ContextCompat.getDrawable
 import androidx.recyclerview.widget.RecyclerView
 import com.jeanloth.project.android.kotlin.axounaut.R
@@ -50,7 +51,7 @@ class IngredientAdapter(
             else -> PositionInList.BETWEEN
         }
 
-        holder.bind(ingredient, position, positionInList)
+        holder.bind(ingredient, positionInList)
     }
 
     override fun getItemCount(): Int {
@@ -69,13 +70,13 @@ class IngredientAdapter(
 
     inner class ArticleHolder(view: View) : RecyclerView.ViewHolder(view){
 
-        fun bind(ingredientWrapper: IngredientWrapper, position: Int, positionInList: PositionInList){
+        fun bind(ingredientWrapper: IngredientWrapper, positionInList: PositionInList){
 
             itemView.tv_name.text= ingredientWrapper.ingredient.label
 
             val count = ingredientWrapper.quantity
 
-            setupElementVisibility(count.toString(), isEditMode)
+            setupElementVisibility(count.toString())
 
             // Line background drawable
             itemView.iv_line.background = getDrawable(itemView.context, when(positionInList){
@@ -86,7 +87,7 @@ class IngredientAdapter(
             })
 
             // Line color by count status type
-            itemView.iv_line.backgroundTintList = ColorStateList.valueOf(context.resources.getColor(when(ingredientWrapper.countStatusType){
+            itemView.iv_line.backgroundTintList = ColorStateList.valueOf(getColor(context, when(ingredientWrapper.countStatusType){
                 IngredientWrapper.CountStatus.LOW -> R.color.red_002
                 IngredientWrapper.CountStatus.MEDIUM -> R.color.orange_002
                 IngredientWrapper.CountStatus.LARGE -> R.color.green_light_2
@@ -116,7 +117,7 @@ class IngredientAdapter(
 
         }
 
-        private fun setupElementVisibility(count : String, editMode: Boolean) {
+        private fun setupElementVisibility(count : String) {
             itemView.tv_count.text = if(isEditMode) count else context.resources.getString(R.string.x_count, count)
             itemView.ib_add.visibility = if(isEditMode) VISIBLE else GONE
             if(!isEditMode) itemView.ib_minus.visibility = GONE

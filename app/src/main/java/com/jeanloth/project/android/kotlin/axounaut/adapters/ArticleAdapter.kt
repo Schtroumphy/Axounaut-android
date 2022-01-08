@@ -53,7 +53,7 @@ class ArticleAdapter(
 
             val count = articleWrapper.count
 
-            setupElementVisibility(count.toString(), isEditMode)
+            setupElementVisibility(count.toString())
 
             itemView.tv_name.setTextColor(getColor(context, R.color.gray_1))
             itemView.tv_count.setTextColor(getColor(context, R.color.gray_1))
@@ -81,7 +81,7 @@ class ArticleAdapter(
 
         }
 
-        private fun setupElementVisibility(count : String, editMode: Boolean) {
+        private fun setupElementVisibility(count : String) {
             itemView.tv_count.text = if(isEditMode) count else context.resources.getString(R.string.x_count, count)
             itemView.ib_add.visibility = if(isEditMode) VISIBLE else GONE
             if(!isEditMode) itemView.ib_minus.visibility = GONE

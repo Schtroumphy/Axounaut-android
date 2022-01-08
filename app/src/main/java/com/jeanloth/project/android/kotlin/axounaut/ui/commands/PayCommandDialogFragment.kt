@@ -88,7 +88,7 @@ class PayCommandDialogFragment(
             et_payment_received.setText(it.toString())
         }
 
-        et_payment_received.doOnTextChanged { text, _, _, count ->
+        et_payment_received.doOnTextChanged { text, _, _, _ ->
             bt_proceed_payment.isEnabled = text!!.isNotEmpty() && text.toString().toDouble() > 0
 
             if(text.isNotEmpty()) {
@@ -148,7 +148,7 @@ class PayCommandDialogFragment(
                 reduction = if(et_reduction.text.toString().isNotEmpty()) et_reduction.text.toString().toDouble() else 0.0
                 statusCode = if(
                     commandVM.paymentReceivedLiveData().value == commandVM.currentCommand!!.totalPrice ||
-                    commandVM.paymentReceivedLiveData().value == commandVM.currentCommand!!.totalPrice?.minus(et_reduction.text.toString().toDouble()))
+                    commandVM.paymentReceivedLiveData().value == commandVM.currentCommand!!.totalPrice.minus(et_reduction.text.toString().toDouble()))
                             CommandStatusType.PAYED.code else CommandStatusType.INCOMPLETE_PAYMENT.code
             }
 

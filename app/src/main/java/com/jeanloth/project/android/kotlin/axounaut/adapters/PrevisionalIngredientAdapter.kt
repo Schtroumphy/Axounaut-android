@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat.getColor
 import androidx.core.content.ContextCompat.getDrawable
 import androidx.recyclerview.widget.RecyclerView
 import com.jeanloth.project.android.kotlin.axounaut.R
@@ -42,7 +43,7 @@ class PrevisionalIngredientAdapter(
             else -> PositionInList.BETWEEN
         }
 
-        holder.bind(ingredient, position, positionInList)
+        holder.bind(ingredient, positionInList)
     }
 
     override fun getItemCount(): Int {
@@ -63,7 +64,6 @@ class PrevisionalIngredientAdapter(
 
         fun bind(
             previsionalWrapper: PrevisionalWrapper,
-            position: Int,
             positionInList: PositionInList
         ) {
 
@@ -86,7 +86,8 @@ class PrevisionalIngredientAdapter(
 
                 // Line color by count status type
                 ivLine.backgroundTintList = ColorStateList.valueOf(
-                    context.resources.getColor(
+                   getColor(
+                       context,
                         when {
                             previsionalWrapper.delta < 0 -> R.color.red_002
                             previsionalWrapper.delta == 0f -> R.color.orange_002
@@ -97,7 +98,8 @@ class PrevisionalIngredientAdapter(
                 )
 
                 tvCountDelta.setTextColor(
-                    context.resources.getColor(
+                    getColor(
+                        context,
                         when {
                             previsionalWrapper.delta < 0 -> R.color.red_001
                             previsionalWrapper.delta == 0f -> R.color.orange_002
