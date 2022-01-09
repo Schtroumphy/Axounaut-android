@@ -8,10 +8,7 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat.getColor
-import androidx.core.graphics.drawable.DrawableCompat
-import androidx.core.widget.ImageViewCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
