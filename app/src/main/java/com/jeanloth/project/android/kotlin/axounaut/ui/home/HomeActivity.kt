@@ -30,7 +30,7 @@ class  HomeActivity : AppCompatActivity() {
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.cvCommands.onClick {
+        /*binding.cvCommands.onClick {
             fragmentToShow = COMMANDS
             goToMainActivity()
         }
@@ -47,7 +47,7 @@ class  HomeActivity : AppCompatActivity() {
 
         fab_add_command.onClick {
             AddCommandDialogFragment.newInstance().show(supportFragmentManager, "dialog")
-        }
+        }*/
 
     }
 

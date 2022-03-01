@@ -120,7 +120,7 @@
 
     <Button
         android:id="@+id/bt_pay"
-        style="@style/CustomGreenButton"
+        style="@style/CustomButton"
         android:text="@string/pay"
         android:visibility="gone"
         tools:visibility="visible"

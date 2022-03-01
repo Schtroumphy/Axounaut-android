@@ -27,7 +27,7 @@
         <item name="android:layout_marginBottom">20dp</item>
     </style>
 
-    <style name="CustomGreenButton" parent="Widget.AppCompat.Button">
+    <style name="CustomButton" parent="Widget.AppCompat.Button">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">36dp</item>
         <item name="android:background">@drawable/bg_rounded</item>
