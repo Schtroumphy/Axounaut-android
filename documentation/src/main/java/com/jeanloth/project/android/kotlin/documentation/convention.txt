@@ -1,0 +1,11 @@
+------- CONVENTION ----------
+
+
+* Git commits
+
+[FEATURE] xxx - xxx
+[FIX]
+[CONFIG]
+[UX/UI]
+[CLEAN]
+[OTHER]

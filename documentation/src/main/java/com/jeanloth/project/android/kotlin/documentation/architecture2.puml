@@ -8,11 +8,6 @@ skinparam object {
 }
 skinparam defaultTextAlignment center
 
-'COMMON
-'package "Common" {
-  'node Logging
-'}
-
 'PRESENTATION (Android Part)
 package "Presentation" {
   node "Application"
@@ -24,64 +19,49 @@ package "Presentation" {
 
 'DOMAIN MODEL
 package "Domain" {
-  () Command
-  () CommandStatus
-}
-
-'DATAS
-package "Data" {
-'LOCAL MODULE
-rectangle "LocalModule" {
-  node repositoriesLocal {
-    () CommandLocalDataSourceRepo
+  node Repository {
+      () CommandRepo
   }
-
-    node localMapper
-  node contractsLocal {
-    () CommandLocalDataSourceContract
+  node RepositoryImpl{
+      () CommandRepoImpl
   }
-}
-
-CommandLocalDataSourceRepo .up.> CommandLocalDataSourceContract #Red
-
-'EXTERNAL MODULE
-rectangle "ExternalModule" {
-  node apis {
-    () CommandService
-  }
-  node externalMapper
-  node repositoriesExternal {
-      () CommandExternalDataSourceRepo
-    }
-
-    node contractsExternal {
-      () CommandExternalDataSourceContract
-    }
-}
-CommandExternalDataSourceRepo .up.> CommandExternalDataSourceContract #Red : implements
-
-}
-
-'DOMAIN USE CASES
-package "Domain" {
-    node contracts {
-        () CommandDataSourceContract
-    }
-    node repositories{
-        () CommandRepo
-    }
-
-  node contractsDomain {
-      () CommandContract
-    }
 
   node UseCases {
     () getCommandsUseCase
   }
 }
-CommandRepo .up.> CommandDataSourceContract #Red
-getCommandsUseCase .up.> CommandContract #Red
 
+'DATAS
+package "Data" {
+'LOCAL MODULE
+rectangle "Local" {
+  node RepositoryLocal {
+    () CommandLocalDataSourceRepo
+  }
+
+  node localMapper
+
+  node RepositoryLocalImpl {
+    () CommandLocalDataSourceImpl
+  }
+
+  node commandDao
+}
+
+'EXTERNAL MODULE
+rectangle "External" {
+  node apis {
+    () CommandService
+  }
+  node externalMapper
+  node RepositoryExternal {
+      () CommandExternalDataSourceRepo
+  }
+  node RepositoryExternalImpl {
+      () CommandExternalDataSourceImpl
+  }
+}
+}
 
 'EXTERNAL DATA SOURCE
 rectangle API
@@ -93,32 +73,22 @@ database "MySql" {
 
 'RELATIONS
 Views -down--> ViewModels
-ViewModels .down.> Command #blue
-ViewModels -right-> getCommandsUseCase
-getCommandsUseCase -right-> CommandRepo
+ViewModels -down--> UseCases
 
-CommandRepo --> localMapper
-localMapper-down-> CommandLocalDataSourceRepo
+getCommandsUseCase --> CommandRepo
 
-CommandRepo --> externalMapper
+CommandRepo --> CommandRepoImpl
+CommandRepoImpl --> localMapper
+localMapper --> CommandLocalDataSourceRepo
+RepositoryLocalImpl ..up.|> RepositoryLocal
+CommandLocalDataSourceImpl --> commandDao
+commandDao --> CommandDB
+
+CommandRepoImpl --> externalMapper
 externalMapper --> CommandExternalDataSourceRepo
-CommandExternalDataSourceRepo --> CommandService
-CommandService -down-> API
-API --> CommandDB
-
-
-'Come back
-CommandLocalDataSourceRepo --> localMapper #purple
-localMapper --> CommandRepo #purple
-CommandExternalDataSourceRepo --> externalMapper #purple
-externalMapper --> CommandRepo #purple
-CommandService --> CommandExternalDataSourceRepo #purple
-
-CommandRepo -left-> getCommandsUseCase #purple
-
-
-Views ..> Command #blue
-Views ..> Club #blue
+RepositoryExternalImpl ..up.|> RepositoryExternal
+CommandExternalDataSourceImpl --> CommandService
+CommandService --> API
 
 'Hidden relations
 CommandExternalDataSourceRepo -[hidden]down- CommandService
