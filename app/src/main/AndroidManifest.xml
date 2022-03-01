@@ -13,6 +13,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Axounaut">
         <activity
+            android:name=".ui.home.HomeComposeActivity"
+            android:exported="false"
+            android:label="@string/title_activity_home_compose"
+            android:theme="@style/Theme.Axounaut" />
+        <activity
             android:name=".ui.home.HomeActivity"
             android:exported="true">
             <intent-filter>
