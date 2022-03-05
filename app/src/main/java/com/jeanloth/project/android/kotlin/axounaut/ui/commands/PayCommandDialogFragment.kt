@@ -16,15 +16,14 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.snackbar.Snackbar
 import com.jeanloth.project.android.kotlin.axounaut.R
+import com.jeanloth.project.android.kotlin.axounaut.databinding.FragmentPayCommandDialogBinding
 import com.jeanloth.project.android.kotlin.axounaut.extensions.fullScreen
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.CommandVM
 import com.jeanloth.project.android.kotlin.domain_models.entities.CommandStatusType
 import com.jeanloth.project.android.kotlin.domain_models.entities.PaymentType
 import com.jeanloth.project.android.kotlin.domain_models.entities.toNameString
-import kotlinx.android.synthetic.main.fragment_pay_command_dialog.*
 import org.koin.android.viewmodel.ext.android.sharedViewModel
 import splitties.views.onClick
-
 
 /**
  *
@@ -48,12 +47,14 @@ class PayCommandDialogFragment(
         return bottomSheetDialog.fullScreen()
     }
     var totalPrice : Double = 0.0
+    private lateinit var binding: FragmentPayCommandDialogBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_pay_command_dialog, container, false)
+        binding = FragmentPayCommandDialogBinding.inflate(layoutInflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -65,12 +66,12 @@ class PayCommandDialogFragment(
 
         commandVM.currentCommandMutableLiveData.observe(viewLifecycleOwner){
             // Setup header
-            tv_client_command_number.text = getString(
+            binding.tvClientCommandNumber.text = getString(
                 R.string.command_details_client_number,
                 it!!.client!!.toNameString(),
                 it.idCommand.toString()
             )
-            tv_total_command_price.text = getString(
+            binding.tvTotalCommandPrice.text = getString(
                 R.string.total_price_command_number_label,
                 it.totalPrice.toString()
             )
@@ -79,57 +80,56 @@ class PayCommandDialogFragment(
 
         commandVM.paymentReceivedLiveData().observe(viewLifecycleOwner){
 
-            if(et_reduction.text!!.isNotEmpty())
-                tv_total_price_with_reduction.visibility = if (et_reduction.text.toString().toInt() > 0) VISIBLE else INVISIBLE
-            else tv_total_price_with_reduction.visibility = INVISIBLE
+            if(binding.etReduction.text!!.isNotEmpty())
+                binding.tvTotalPriceWithReduction.visibility = if (binding.etReduction.text.toString().toInt() > 0) VISIBLE else INVISIBLE
+            else binding.tvTotalPriceWithReduction.visibility = INVISIBLE
 
-            tv_total_price_with_reduction.text = getString(R.string.total_price_command_after_reduction_label, it.toString())
+            binding.tvTotalPriceWithReduction.text = getString(R.string.total_price_command_after_reduction_label, it.toString())
 
-            et_payment_received.setText(it.toString())
+            binding.etPaymentReceived.setText(it.toString())
         }
 
-        et_payment_received.doOnTextChanged { text, _, _, _ ->
-            bt_proceed_payment.isEnabled = text!!.isNotEmpty() && text.toString().toDouble() > 0
+        binding.etPaymentReceived.doOnTextChanged { text, _, _, _ ->
+            binding.btProceedPayment.isEnabled = text!!.isNotEmpty() && text.toString().toDouble() > 0
 
             if(text.isNotEmpty()) {
                 when(text.toString().toDouble()){
                     in 0.1 ..commandVM.paymentReceivedMutableLiveData.value!! - 0.1 -> {
-                        cb_complete_payment.isChecked = false
-                        et_reduction.isEnabled = true
-                        tv_incomplete_payment.visibility = VISIBLE
+                        binding.cbCompletePayment.isChecked = false
+                        binding.etReduction.isEnabled = true
+                        binding.tvIncompletePayment.visibility = VISIBLE
                     }
                     commandVM.paymentReceivedMutableLiveData.value!! -> {
-                        cb_complete_payment.isChecked = true
-                        et_reduction.isEnabled = true
-                        tv_incomplete_payment.visibility = INVISIBLE
+                        binding.cbCompletePayment.isChecked = true
+                        binding.etReduction.isEnabled = true
+                        binding.tvIncompletePayment.visibility = INVISIBLE
                     }
                     else -> {
                         //cb_complete_payment.isChecked = false
-                        tv_incomplete_payment.visibility = VISIBLE
+                        binding.tvIncompletePayment.visibility = VISIBLE
                         // TODO Display other error
                     }
                 }
                } else {
-                et_reduction.isEnabled = false
-                tv_incomplete_payment.visibility = VISIBLE
+                binding.etReduction.isEnabled = false
+                binding.tvIncompletePayment.visibility = VISIBLE
             }
         }
 
-
         // Payment received
-        cb_complete_payment.setOnCheckedChangeListener { _, isChecked ->
-            et_payment_received.setText(if (isChecked) commandVM.paymentReceivedMutableLiveData.value!!.toString() else "0.0")
+        binding.cbCompletePayment.setOnCheckedChangeListener { _, isChecked ->
+            binding.etPaymentReceived.setText(if (isChecked) commandVM.paymentReceivedMutableLiveData.value!!.toString() else "0.0")
             if (!isChecked) {
-                tv_total_price_with_reduction.visibility = INVISIBLE
-                et_reduction.setText("")
+                binding.tvTotalPriceWithReduction.visibility = INVISIBLE
+                binding.etReduction.setText("")
             }
-            et_payment_received.setSelection(et_payment_received.text.toString().length)
+            binding.etPaymentReceived.setSelection(binding.etPaymentReceived.text.toString().length)
         }
 
         // Setup spinner
         setupSpinner()
 
-        et_reduction.setOnEditorActionListener { _, actionId, _ ->
+        binding.etReduction.setOnEditorActionListener { _, actionId, _ ->
             if(actionId == EditorInfo.IME_ACTION_DONE){
                 updateTotalPriceWithReduction()
             }
@@ -137,18 +137,18 @@ class PayCommandDialogFragment(
         }
 
         // Close button
-        bt_pay_close.onClick{
+        binding.btPayClose.onClick{
             bottomSheetDialog.dismiss()
         }
 
         //Confirm payment
-        bt_proceed_payment.onClick {
+        binding.btProceedPayment.onClick {
             commandVM.currentCommand?.apply {
                 paymentAmount = commandVM.paymentReceivedLiveData().value
-                reduction = if(et_reduction.text.toString().isNotEmpty()) et_reduction.text.toString().toDouble() else 0.0
+                reduction = if(binding.etReduction.text.toString().isNotEmpty()) binding.etReduction.text.toString().toDouble() else 0.0
                 statusCode = if(
                     commandVM.paymentReceivedLiveData().value == commandVM.currentCommand!!.totalPrice ||
-                    commandVM.paymentReceivedLiveData().value == commandVM.currentCommand!!.totalPrice.minus(et_reduction.text.toString().toDouble()))
+                    commandVM.paymentReceivedLiveData().value == commandVM.currentCommand!!.totalPrice.minus(binding.etReduction.text.toString().toDouble()))
                             CommandStatusType.PAYED.code else CommandStatusType.INCOMPLETE_PAYMENT.code
             }
 
@@ -165,31 +165,31 @@ class PayCommandDialogFragment(
             requireContext(), android.R.layout.simple_spinner_item, PaymentType.values()
         )
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinner_payment_type.adapter = adapter
-        spinner_payment_type.onItemSelectedListener = object : OnItemSelectedListener {
+        binding.spinnerPaymentType.adapter = adapter
+        binding.spinnerPaymentType.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(
                 adapterView: AdapterView<*>?, view: View,
                 position: Int, id: Long
             ) {
                 commandVM.currentCommand?.paymentTypeCode = adapter.getItem(position)?.code
-                et_payment_received.clearFocus()
-                et_reduction.clearFocus()
+                binding.etPaymentReceived.clearFocus()
+                binding.etReduction.clearFocus()
             }
 
             override fun onNothingSelected(adapter: AdapterView<*>?) {
-                et_payment_received.clearFocus()
-                et_reduction.clearFocus()
+                binding.etPaymentReceived.clearFocus()
+                binding.etReduction.clearFocus()
             }
         }
     }
 
     private fun updateTotalPriceWithReduction() {
-        if(et_reduction.text.toString().toInt() != 0){
+        if(binding.etReduction.text.toString().toInt() != 0){
             commandVM.setPaymentReceived(computeWithReduction(totalPrice))
         }
     }
 
-    private fun computeWithReduction(price : Double): Double = price - et_reduction.text.toString().toInt()
+    private fun computeWithReduction(price : Double): Double = price - binding.etReduction.text.toString().toInt()
 
     companion object {
         fun newInstance(commandId: Long) = PayCommandDialogFragment(commandId)

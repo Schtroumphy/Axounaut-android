@@ -14,16 +14,15 @@ import com.jeanloth.project.android.kotlin.axounaut.AppLogger.logD
 import com.jeanloth.project.android.kotlin.axounaut.MainActivity
 import com.jeanloth.project.android.kotlin.axounaut.R
 import com.jeanloth.project.android.kotlin.axounaut.adapters.AnalysisListAdapter
+import com.jeanloth.project.android.kotlin.axounaut.databinding.FragmentAnalysisBinding
 import com.jeanloth.project.android.kotlin.axounaut.extensions.convertArticleToItemList
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.ArticleVM
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.CommandVM
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.MainVM
 import com.jeanloth.project.android.kotlin.domain_models.entities.*
-import kotlinx.android.synthetic.main.fragment_analysis.*
 import org.koin.android.viewmodel.ext.android.sharedViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
-
 
 /**
  * A fragment for analysis.
@@ -40,6 +39,8 @@ class AnalysisFragment: Fragment() {
     private lateinit var analysisAdapter : AnalysisListAdapter
     private var allArticles : List<Article> = emptyList()
 
+    private lateinit var binding: FragmentAnalysisBinding
+
     enum class AnalysisDisplayMode{
         INGREDIENTS,
         CLIENTS,
@@ -51,7 +52,8 @@ class AnalysisFragment: Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         setupHeader()
-        return inflater.inflate(R.layout.fragment_analysis, container, false)
+        binding = FragmentAnalysisBinding.inflate(layoutInflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -69,7 +71,7 @@ class AnalysisFragment: Fragment() {
     private fun setupBestSeller() {
         // TODO Get 3 most commanded article
         analysisAdapter = AnalysisListAdapter(allArticles.sortedByDescending { it.timeOrdered }.take(3).convertArticleToItemList(requireContext()), requireContext())
-        rv_analysis.adapter = analysisAdapter
+        binding.rvAnalysis.adapter = analysisAdapter
     }
 
     private fun setupChart(allArticles: List<Article>) {
@@ -83,7 +85,7 @@ class AnalysisFragment: Fragment() {
         }
         pie.data(data)
 
-        any_chart_view.setChart(pie)
+        binding.anyChartView.setChart(pie)
     }
 
     private fun setupHeader() {

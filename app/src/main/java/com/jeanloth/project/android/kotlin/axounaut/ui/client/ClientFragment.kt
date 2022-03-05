@@ -13,19 +13,15 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
-import com.jeanloth.project.android.kotlin.axounaut.MainActivity
 import com.jeanloth.project.android.kotlin.axounaut.R
 import com.jeanloth.project.android.kotlin.axounaut.adapters.ClientAdapter
+import com.jeanloth.project.android.kotlin.axounaut.databinding.FragmentClientBinding
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.ClientVM
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.MainVM
 import com.jeanloth.project.android.kotlin.domain_models.entities.AppClient
-import kotlinx.android.synthetic.main.fragment_article.*
-import kotlinx.android.synthetic.main.fragment_client.*
-import kotlinx.android.synthetic.main.layout_header.*
 import org.koin.android.viewmodel.ext.android.sharedViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
 import splitties.views.onClick
-
 
 /**
  * A simple [Fragment] subclass.
@@ -40,12 +36,15 @@ class ClientFragment : Fragment() {
 
     private var clientListSelected : MutableList<AppClient> = mutableListOf()
 
+    private lateinit var binding: FragmentClientBinding
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_client, container, false)
+        binding = FragmentClientBinding.inflate(layoutInflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -69,23 +68,23 @@ class ClientFragment : Fragment() {
             }
 
         }
-        rv_clients.adapter = clientAdapter
+        binding.rvClients.adapter = clientAdapter
 
         lifecycleScope.launchWhenStarted {
             clientVM.allClientsLiveData().observe(viewLifecycleOwner){
                 Log.d("[Client Fragment", "Client observed : $it")
                 clientAdapter.setItems(it)
 
-                tv_no_client_error.visibility = if(it.isEmpty()) VISIBLE else GONE
+                binding.tvNoClientError.visibility = if(it.isEmpty()) VISIBLE else GONE
             }
         }
 
-        cl_add_client_btn.setOnClickListener {
+        binding.clAddClientBtn.setOnClickListener {
             // Go to ClientDetailFragment
             goToClientDetails()
         }
 
-        bt_btn_delete_client.onClick {
+        binding.btnDeleteClient.onClick {
             updateActionButtonDisplay(false)
             clientVM.deleteClients(clientListSelected)
             Snackbar.make(
@@ -105,8 +104,8 @@ class ClientFragment : Fragment() {
     }
 
     private fun updateActionButtonDisplay(isEditMode: Boolean) {
-        bt_btn_delete_client.visibility =  if(!isEditMode) VISIBLE else GONE
-        tv_btn_add_client.visibility =  if(!isEditMode) GONE else VISIBLE
+        binding.btnDeleteClient.visibility =  if(!isEditMode) VISIBLE else GONE
+        binding.tvBtnAddClient.visibility =  if(!isEditMode) GONE else VISIBLE
     }
 
     private fun updateSelectedClientList(client: AppClient, selected: Boolean) {

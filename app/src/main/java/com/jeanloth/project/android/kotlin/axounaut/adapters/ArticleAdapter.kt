@@ -10,8 +10,8 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat.getColor
 import androidx.recyclerview.widget.RecyclerView
 import com.jeanloth.project.android.kotlin.axounaut.R
+import com.jeanloth.project.android.kotlin.axounaut.databinding.ItemArticleBinding
 import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleWrapper
-import kotlinx.android.synthetic.main.item_article.view.*
 
 class ArticleAdapter(
     private var articleList : List<ArticleWrapper>,
@@ -45,32 +45,34 @@ class ArticleAdapter(
 
     inner class ArticleHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
 
+        private val binding = ItemArticleBinding.bind(view)
+
         fun bind(articleWrapper : ArticleWrapper, position : Int){
 
             //itemView.cl_article.visibility = VISIBLE
 
-            itemView.tv_name.text= articleWrapper.article.label
+            binding.tvName.text= articleWrapper.article.label
 
             val count = articleWrapper.count
 
             setupElementVisibility(count.toString())
 
-            itemView.tv_name.setTextColor(getColor(context, R.color.gray_1))
-            itemView.tv_count.setTextColor(getColor(context, R.color.gray_1))
+            binding.tvName.setTextColor(getColor(context, R.color.gray_1))
+            binding.tvCount.setTextColor(getColor(context, R.color.gray_1))
 
             if(isEditMode){
-                itemView.ib_minus.visibility = if(count > 0) VISIBLE else GONE
+                binding.ibMinus.visibility = if(count > 0) VISIBLE else GONE
 
-                itemView.tv_name.setTextColor(getColor(context, if(count > 0) R.color.orange_003 else R.color.gray_1))
-                itemView.tv_count.setTextColor(getColor(context, if(count > 0) R.color.orange_002 else R.color.gray_1))
+                binding.tvName.setTextColor(getColor(context, if(count > 0) R.color.orange_003 else R.color.gray_1))
+                binding.tvCount.setTextColor(getColor(context, if(count > 0) R.color.orange_002 else R.color.gray_1))
 
-                itemView.ib_add.setOnClickListener {
+                binding.ibAdd.setOnClickListener {
                     articleWrapper.count = count + 1
                     onAddMinusClick?.invoke(articleList)
                     notifyItemChanged(position)
                 }
 
-                itemView.ib_minus.setOnClickListener {
+                binding.ibMinus.setOnClickListener {
                     if(count > 0) {
                         articleWrapper.count = count - 1
                     }
@@ -82,9 +84,9 @@ class ArticleAdapter(
         }
 
         private fun setupElementVisibility(count : String) {
-            itemView.tv_count.text = if(isEditMode) count else context.resources.getString(R.string.x_count, count)
-            itemView.ib_add.visibility = if(isEditMode) VISIBLE else GONE
-            if(!isEditMode) itemView.ib_minus.visibility = GONE
+            binding.tvCount.text = if(isEditMode) count else context.resources.getString(R.string.x_count, count)
+            binding.ibAdd.visibility = if(isEditMode) VISIBLE else GONE
+            if(!isEditMode) binding.ibMinus.visibility = GONE
         }
 
         init {

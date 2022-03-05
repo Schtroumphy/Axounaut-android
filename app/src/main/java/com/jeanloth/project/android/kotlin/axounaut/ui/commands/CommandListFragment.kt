@@ -17,11 +17,11 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.jeanloth.project.android.kotlin.axounaut.MainActivity
 import com.jeanloth.project.android.kotlin.axounaut.R
 import com.jeanloth.project.android.kotlin.axounaut.adapters.CommandAdapter
+import com.jeanloth.project.android.kotlin.axounaut.databinding.FragmentCommandListBinding
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.CommandVM
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.MainVM
 import com.jeanloth.project.android.kotlin.domain_models.entities.Command
 import com.jeanloth.project.android.kotlin.domain_models.entities.CommandStatusType
-import kotlinx.android.synthetic.main.fragment_command_list.*
 import org.koin.android.viewmodel.ext.android.sharedViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
@@ -35,6 +35,8 @@ class CommandListFragment : Fragment() {
     private val mainVM: MainVM by sharedViewModel()
     private val commandVM: CommandVM by viewModel { parametersOf(0L) }
     private lateinit var commandAdapter: CommandAdapter
+
+    private lateinit var binding : FragmentCommandListBinding
 
     enum class CommandDisplayMode(val statusCode: List<Int>) {
         IN_PROGRESS(listOf(CommandStatusType.IN_PROGRESS.code, CommandStatusType.DONE.code)),
@@ -54,7 +56,8 @@ class CommandListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_command_list, container, false)
+        binding = FragmentCommandListBinding.inflate(layoutInflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -64,7 +67,7 @@ class CommandListFragment : Fragment() {
         // TODO Save in prefs the last filter on commands list
 
         // Set the adapter
-        rv_command_list.apply {
+        binding.rvCommandList.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = commandAdapter.apply {
                 onClick = {
@@ -79,8 +82,8 @@ class CommandListFragment : Fragment() {
                 Log.d("[Command list Fragment", "Command observed : $it")
 
                 commandAdapter.setItems(it)
-                tv_error_no_commands.visibility = if (it.isEmpty()) VISIBLE else GONE
-                tv_error_no_commands.text = getString(
+                binding.tvErrorNoCommands.visibility = if (it.isEmpty()) VISIBLE else GONE
+                binding.tvErrorNoCommands.text = getString(
                     when (commandVM.displayModeMutableLiveData.value) {
                         CommandDisplayMode.IN_PROGRESS -> R.string.no_loading_command_error
                         CommandDisplayMode.TO_COME -> R.string.no_to_come_command_error
@@ -91,21 +94,21 @@ class CommandListFragment : Fragment() {
             }
         }
 
-        fab_all.apply {
+        binding.fabAll.apply {
             onClick {
                 commandVM.setDisplayMode(CommandDisplayMode.PAST)
                 changeFabColors()
             }
         }
 
-        fab_coming.apply {
+        binding.fabComing.apply {
             onClick {
                 commandVM.setDisplayMode(CommandDisplayMode.TO_COME)
                 changeFabColors()
             }
         }
 
-        fab_loading.apply {
+        binding.fabLoading.apply {
             onClick {
                 commandVM.setDisplayMode(CommandDisplayMode.IN_PROGRESS)
                 changeFabColors()
@@ -115,9 +118,9 @@ class CommandListFragment : Fragment() {
 
     private fun FloatingActionButton.changeFabColors() {
         // Make all gray before
-        fab_loading.imageTintList= ColorStateList.valueOf(getColor(context, R.color.gray_1))
-        fab_coming.imageTintList= ColorStateList.valueOf(getColor(context, R.color.gray_1))
-        fab_all.imageTintList= ColorStateList.valueOf(getColor(context, R.color.gray_1))
+        binding.fabLoading.imageTintList= ColorStateList.valueOf(getColor(context, R.color.gray_1))
+        binding.fabComing.imageTintList= ColorStateList.valueOf(getColor(context, R.color.gray_1))
+        binding.fabAll.imageTintList= ColorStateList.valueOf(getColor(context, R.color.gray_1))
 
         // Change color for the activated one
         this.imageTintList= ColorStateList.valueOf(getColor(context, R.color.ginger))

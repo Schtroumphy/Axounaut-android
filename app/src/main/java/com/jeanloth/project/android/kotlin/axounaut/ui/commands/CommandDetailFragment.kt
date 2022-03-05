@@ -17,6 +17,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.jeanloth.project.android.kotlin.axounaut.MainActivity
 import com.jeanloth.project.android.kotlin.axounaut.R
 import com.jeanloth.project.android.kotlin.axounaut.adapters.CheckboxListAdapter
+import com.jeanloth.project.android.kotlin.axounaut.databinding.FragmentCommandDetailBinding
 import com.jeanloth.project.android.kotlin.axounaut.extensions.SwipeToCancelCallback
 import com.jeanloth.project.android.kotlin.axounaut.extensions.displayDialog
 import com.jeanloth.project.android.kotlin.axounaut.extensions.notCanceled
@@ -24,7 +25,6 @@ import com.jeanloth.project.android.kotlin.axounaut.viewModels.CommandVM
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.MainVM
 import com.jeanloth.project.android.kotlin.domain_models.entities.*
 import com.jeanloth.project.android.kotlin.domain_models.entities.CommandStatusType.Companion.getCommandStatusByCode
-import kotlinx.android.synthetic.main.fragment_command_detail.*
 import org.koin.android.viewmodel.ext.android.sharedViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
 import splitties.views.onClick
@@ -40,12 +40,15 @@ class CommandDetailFragment : Fragment() {
     private lateinit var checkboxTextViewAdapter: CheckboxListAdapter
     private val commandVM: CommandVM by viewModel()
 
+    private lateinit var binding : FragmentCommandDetailBinding
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_command_detail, container, false)
+        binding = FragmentCommandDetailBinding.inflate(layoutInflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -69,7 +72,7 @@ class CommandDetailFragment : Fragment() {
         }
 
         // Set the recyclerView
-        rv_command_articles.apply {
+        binding.rvCommandArticles.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = checkboxTextViewAdapter
         }
@@ -87,7 +90,7 @@ class CommandDetailFragment : Fragment() {
             }
         }
         val itemTouchHelper = ItemTouchHelper(swipeHandler)
-        itemTouchHelper.attachToRecyclerView(rv_command_articles)
+        itemTouchHelper.attachToRecyclerView(binding.rvCommandArticles)
 
         // Observe current command to detail
         commandVM.currentCommandLiveData().observe(viewLifecycleOwner) {
@@ -100,10 +103,10 @@ class CommandDetailFragment : Fragment() {
                 checkboxTextViewAdapter.setItems(it.articleWrappers, it.statusCode == CommandStatusType.TO_DO.code || it.statusCode == CommandStatusType.IN_PROGRESS.code || it.statusCode == CommandStatusType.DONE.code)
 
                 // Update status
-                tv_command_status.text = getCommandStatusByCode(it.statusCode).label.uppercase()
+                binding.tvCommandStatus.text = getCommandStatusByCode(it.statusCode).label.uppercase()
 
                 // Update total price
-                tv_total_price.text = getString(R.string.total_price, it.totalPrice.toString())
+                binding.tvTotalPrice.text = getString(R.string.total_price, it.totalPrice.toString())
 
                 commandVM.updateStatusByStatus(it.statusCode)
 
@@ -111,18 +114,18 @@ class CommandDetailFragment : Fragment() {
                 when (it.statusCode) {
                     CommandStatusType.TO_DO.code -> { }
                     CommandStatusType.IN_PROGRESS.code, CommandStatusType.DONE.code -> {
-                        bt_delivered.visibility = VISIBLE
-                        bt_delivered.isEnabled = true
+                        binding.btDelivered.visibility = VISIBLE
+                        binding.btDelivered.isEnabled = true
                     }
                     CommandStatusType.DELIVERED.code -> {
-                        bt_delivered.visibility = GONE
-                        bt_pay.visibility = VISIBLE
-                        bt_edit_command.visibility = GONE
+                        binding.btDelivered.visibility = GONE
+                        binding.btPay.visibility = VISIBLE
+                        binding.btEditCommand.visibility = GONE
                     }
                     CommandStatusType.PAYED.code, CommandStatusType.INCOMPLETE_PAYMENT.code, CommandStatusType.CANCELED.code -> {
-                        bt_delivered.visibility = GONE
-                        bt_pay.visibility = GONE
-                        bt_edit_command.visibility = GONE
+                        binding.btDelivered.visibility = GONE
+                        binding.btPay.visibility = GONE
+                        binding.btEditCommand.visibility = GONE
                     }
                 }
 
@@ -131,15 +134,15 @@ class CommandDetailFragment : Fragment() {
             }
         }
 
-        bt_delete_command.onClick {
+        binding.btDeleteCommand.onClick {
             displayDeleteDialog()
         }
 
-        bt_edit_command.onClick {
+        binding.btEditCommand.onClick {
             displayAddCommandFragment(commandVM.currentCommand)
         }
 
-        bt_delivered.onClick {
+        binding.btDelivered.onClick {
             val articlesNotCanceled = commandVM.currentCommand!!.articleWrappers.notCanceled()
             if(!articlesNotCanceled.map { it.statusCode }.any { it == ArticleWrapperStatusType.DONE.code}) {
                 displayErrorDialog("")
@@ -150,16 +153,16 @@ class CommandDetailFragment : Fragment() {
             }
         }
 
-        bt_pay.onClick { displayPayCommandFragment() }
+        binding.btPay.onClick { displayPayCommandFragment() }
     }
 
     private fun fillPaymentInfo(it: Command) {
-        tv_payment_received.visibility = VISIBLE
-        tv_payment_received.text = getString(R.string.received_payment_amount, it.paymentAmount?.toInt())
+        binding.tvPaymentReceived.visibility = VISIBLE
+        binding.tvPaymentReceived.text = getString(R.string.received_payment_amount, it.paymentAmount?.toInt())
 
         if(it.reduction != 0.0) {
-            tv_reduction.visibility = VISIBLE
-            tv_reduction.text = getString(R.string.applied_reduction, it.reduction?.toInt())
+            binding.tvReduction.visibility = VISIBLE
+            binding.tvReduction.text = getString(R.string.applied_reduction, it.reduction?.toInt())
         }
     }
 
@@ -172,7 +175,7 @@ class CommandDetailFragment : Fragment() {
         )
         val mainActivity = requireActivity() as MainActivity
         mainActivity.replaceHeaderLogoByBackButton(true)
-        tv_command_client.text = args.commandToDetail.client?.toNameString()
+        binding.tvCommandClient.text = args.commandToDetail.client?.toNameString()
     }
 
     private fun displayErrorDialog(message : String){

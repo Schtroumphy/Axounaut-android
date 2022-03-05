@@ -7,12 +7,11 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
-import com.jeanloth.project.android.kotlin.axounaut.R
 import com.jeanloth.project.android.kotlin.axounaut.adapters.PrevisionalIngredientAdapter
+import com.jeanloth.project.android.kotlin.axounaut.databinding.FragmentPrevisionalBinding
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.CommandVM
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.StockVM
 import com.jeanloth.project.android.kotlin.domain_models.entities.*
-import kotlinx.android.synthetic.main.fragment_previsional.*
 import com.jeanloth.project.android.kotlin.domain_models.entities.PrevisionalWrapper
 import org.koin.android.viewmodel.ext.android.sharedViewModel
 
@@ -25,16 +24,15 @@ class PrevisionalFragment : Fragment() {
     private lateinit var allActualProductWrappers: List<IngredientWrapper>  // Stock
     private lateinit var allNeededRecipeWrappers: List<RecipeWrapper>
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
+    private lateinit var binding: FragmentPrevisionalBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_previsional, container, false)
+        binding = FragmentPrevisionalBinding.inflate(layoutInflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -62,7 +60,7 @@ class PrevisionalFragment : Fragment() {
 
         previsionalIngredientAdapter = PrevisionalIngredientAdapter(mock, requireContext())
 
-        rv_ingredients.adapter = previsionalIngredientAdapter
+        binding.rvIngredients.adapter = previsionalIngredientAdapter
 
         // Observe all pws
         //stockVM.observePWLiveData().observe(viewLifecycleOwner){
@@ -79,7 +77,7 @@ class PrevisionalFragment : Fragment() {
                 liste.add(PrevisionalWrapper(ingredient = actual.ingredient, actual = actual.quantity, needed = rw.quantity))
             }
         }
-        tv_no_recipe_saved.visibility = if(liste.isEmpty()) VISIBLE else GONE
+        binding.tvNoRecipeSaved.visibility = if(liste.isEmpty()) VISIBLE else GONE
         previsionalIngredientAdapter.setItems(liste)
     }
 

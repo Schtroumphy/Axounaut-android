@@ -20,7 +20,6 @@ import com.jeanloth.project.android.kotlin.domain_models.entities.Ingredient
 import com.jeanloth.project.android.kotlin.domain_models.entities.IngredientQuantityType
 import com.jeanloth.project.android.kotlin.domain_models.entities.IngredientQuantityType.Companion.fromVal
 import com.jeanloth.project.android.kotlin.domain_models.entities.IngredientWrapper
-import kotlinx.android.synthetic.main.fragment_stocks.*
 import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.sharedViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -73,7 +72,7 @@ class StockFragment : Fragment() {
                 //tv_error_no_articles.visibility = if(it) VISIBLE else GONE
             }
         }
-        rv_ingredients.adapter = ingredientAdapter
+        binding.rvIngredients.adapter = ingredientAdapter
 
         // Observe all pws
         stockVM.observePWLiveData().observe(viewLifecycleOwner){
@@ -81,19 +80,19 @@ class StockFragment : Fragment() {
         }
 
         // Click listeners
-        tv_add_ingredient.onClick {
-            ll_add_ingredient.visibility = VISIBLE
-            tv_add_ingredient.visibility = GONE
+        binding.tvAddIngredient.onClick {
+            binding.llAddIngredient.visibility = VISIBLE
+            binding.tvAddIngredient.visibility = GONE
         }
 
-        tv_validate_ingredient.onClick {
-            stockVM.saveIngredientWrapper(IngredientWrapper(ingredient = Ingredient(label = et_ingredient.text.toString()), quantityType = spinner_quantity_type.selectedItem.toString().fromVal()))
+        binding.tvValidateIngredient.onClick {
+            stockVM.saveIngredientWrapper(IngredientWrapper(ingredient = Ingredient(label = binding.etIngredient.text.toString()), quantityType = binding.spinnerQuantityType.selectedItem.toString().fromVal()))
             ingredientAdapter.setItems(mock)
-            tv_add_ingredient.visibility = VISIBLE
-            ll_add_ingredient.visibility = GONE
+            binding.tvAddIngredient.visibility = VISIBLE
+            binding.llAddIngredient.visibility = GONE
         }
 
-        bt_see_previsional.onClick {
+        binding.btSeePrevisional.onClick {
             findNavController().navigate(StockFragmentDirections.actionNavStockToNavPrevisional())
         }
     }
@@ -106,7 +105,7 @@ class StockFragment : Fragment() {
         )
 
         adapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item)
-        spinner_quantity_type.adapter = adapter
+        binding.spinnerQuantityType.adapter = adapter
 
         //val selected: String = spinner_quantity_type.selectedItem.toString()
     }

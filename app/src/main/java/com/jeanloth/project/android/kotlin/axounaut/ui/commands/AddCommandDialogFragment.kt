@@ -24,6 +24,8 @@ import com.jeanloth.project.android.kotlin.axounaut.Constants.SHORT_DATE_FORMAT_
 import com.jeanloth.project.android.kotlin.axounaut.Constants.SHORT_DATE_FORMAT_YEAR_FIRST
 import com.jeanloth.project.android.kotlin.axounaut.R
 import com.jeanloth.project.android.kotlin.axounaut.adapters.ArticleAdapter
+import com.jeanloth.project.android.kotlin.axounaut.databinding.AddClientDialogBinding
+import com.jeanloth.project.android.kotlin.axounaut.databinding.FragmentAddCommandDialogBinding
 import com.jeanloth.project.android.kotlin.axounaut.extensions.*
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.AddCommandVM
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.ArticleVM
@@ -31,8 +33,6 @@ import com.jeanloth.project.android.kotlin.axounaut.viewModels.ClientVM
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.CommandVM
 import com.jeanloth.project.android.kotlin.domain_models.entities.*
 import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleWrapper.Companion.createWrapperList
-import kotlinx.android.synthetic.main.add_client_dialog.view.*
-import kotlinx.android.synthetic.main.fragment_add_command_dialog.*
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.android.viewmodel.ext.android.sharedViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -71,6 +71,8 @@ class AddCommandDialogFragment (
     // Adapters
     private lateinit var articleAdapter: ArticleAdapter
 
+    private lateinit var binding: FragmentAddCommandDialogBinding
+
     // View models
     private val clientVM : ClientVM by sharedViewModel()
     private val articleVM : ArticleVM by viewModel()
@@ -90,7 +92,8 @@ class AddCommandDialogFragment (
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_add_command_dialog, container, false)
+        binding = FragmentAddCommandDialogBinding.inflate(layoutInflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -109,7 +112,7 @@ class AddCommandDialogFragment (
             setupElements()
         }
 
-        tv_error_no_articles.visibility = if(addCommandVM.allArticlesLiveData.value?.isEmpty() == true) VISIBLE else GONE
+        binding.tvErrorNoArticles.visibility = if(addCommandVM.allArticlesLiveData.value?.isEmpty() == true) VISIBLE else GONE
         articleAdapter = ArticleAdapter(addCommandVM.allArticlesLiveData.value?.filter { it.article.category == ArticleCategory.SWEET.code } ?: emptyList(), true, requireContext()).apply {
             onAddMinusClick = {
                 javaClass.logD("Articles list : $it")
@@ -119,7 +122,7 @@ class AddCommandDialogFragment (
                 //tv_error_no_articles.visibility = if(it) VISIBLE else GONE
             }
         }
-        rv_articles.adapter = articleAdapter
+        binding.rvArticles.adapter = articleAdapter
 
         // Get all clients
         clientVM.allClientsLiveData().observe(viewLifecycleOwner){
@@ -129,14 +132,14 @@ class AddCommandDialogFragment (
                 android.R.layout.simple_list_item_1, it
             )
             clientAdapter.setNotifyOnChange(true)
-            et_client.threshold = 1
-            et_client.setAdapter(clientAdapter)
+            binding.etClient.threshold = 1
+            binding.etClient.setAdapter(clientAdapter)
         }
 
         lifecycleScope.launchWhenStarted {
             addCommandVM.canResumeStateFlow.collectLatest {
                 javaClass.logD("Can resume ? $it")
-                bt_next.isEnabled = it
+                binding.btNext.isEnabled = it
             }
         }
 
@@ -144,21 +147,21 @@ class AddCommandDialogFragment (
         setupDateEditText()
 
         // Filter articles
-        bt_sweet.onClick {
+        binding.btSweet.onClick {
             updateDisplayByCategory(ArticleCategory.SWEET.code)
             articleAdapter.setItems(addCommandVM.allArticlesLiveData.value?.filter { it.article.category == ArticleCategory.SWEET.code } ?: emptyList(), true)
         }
 
-        bt_salt.onClick {
+        binding.btSalt.onClick {
             updateDisplayByCategory(ArticleCategory.SALTED.code)
             articleAdapter.setItems(addCommandVM.allArticlesLiveData.value?.filter { it.article.category == ArticleCategory.SALTED.code } ?: emptyList(), true)
         }
 
         // Add data (client, article)
-        ib_add_client.onClick {
+        binding.ibAddClient.onClick {
             showAddClientDialog()
         }
-        bt_add_article.onClick {
+        binding.btAddArticle.onClick {
             dismiss()
 
             // Redirect to add article fragment
@@ -168,7 +171,7 @@ class AddCommandDialogFragment (
         if(currentCommand != null) fillElements()
 
         // Next step
-        bt_next.onClick {
+        binding.btNext.onClick {
             // Display previous button
             if(isEditMode)
                 changeEditModeDisplay()
@@ -180,25 +183,25 @@ class AddCommandDialogFragment (
     }
 
     private fun fillElements() {
-        et_client.setText(currentCommand?.client?.firstname)
-        et_delivery_date.setText(currentCommand?.deliveryDate)
+        binding.etClient.setText(currentCommand?.client?.firstname)
+        binding.etDeliveryDate.setText(currentCommand?.deliveryDate)
     }
 
     private fun updateDisplayByCategory(code: Int) {
         when(code){
             ArticleCategory.SWEET.code -> {
-                bt_sweet.setTextColor(getColor(requireContext(), R.color.orange_001))
-                sweet_divider.visibility = VISIBLE
+                binding.btSweet.setTextColor(getColor(requireContext(), R.color.orange_001))
+                binding.sweetDivider.visibility = VISIBLE
 
-                bt_salt.setTextColor(getColor(requireContext(), R.color.marron_light_1))
-                salt_divider.visibility = GONE
+                binding.btSalt.setTextColor(getColor(requireContext(), R.color.marron_light_1))
+                binding.saltDivider.visibility = GONE
             }
             ArticleCategory.SALTED.code -> {
-                bt_sweet.setTextColor(getColor(requireContext(), R.color.marron_light_1))
-                sweet_divider.visibility = GONE
+                binding.btSweet.setTextColor(getColor(requireContext(), R.color.marron_light_1))
+                binding.sweetDivider.visibility = GONE
 
-                bt_salt.setTextColor(getColor(requireContext(), R.color.orange_001))
-                salt_divider.visibility = VISIBLE
+                binding.btSalt.setTextColor(getColor(requireContext(), R.color.orange_001))
+                binding.saltDivider.visibility = VISIBLE
             }
         }
     }
@@ -209,15 +212,15 @@ class AddCommandDialogFragment (
         val month = calendar.get(Calendar.MONTH)
         val day = calendar.get(Calendar.DAY_OF_MONTH)
 
-        et_delivery_date.setOnClickListener {
+        binding.etDeliveryDate.setOnClickListener {
                 datePickerDialog = DatePickerDialog( requireContext(),{ _, year, monthOfYear, dayOfMonth ->
                     val dateSelected = LocalDate.of(year, monthOfYear+1, dayOfMonth)
                     javaClass.logD("[DATE SELECTED] $dateSelected")
                     javaClass.logD("[DATE SELECTED] ${dateSelected.formatDateToOtherFormat(SHORT_DATE_FORMAT_YEAR_FIRST, SHORT_DATE_FORMAT_DATE_FIRST)}")
 
-                    et_delivery_date.setText("${dateSelected.formatDateToOtherFormat(SHORT_DATE_FORMAT_YEAR_FIRST, SHORT_DATE_FORMAT_DATE_FIRST)}")
+                    binding.etDeliveryDate.setText("${dateSelected.formatDateToOtherFormat(SHORT_DATE_FORMAT_YEAR_FIRST, SHORT_DATE_FORMAT_DATE_FIRST)}")
                     addCommandVM.setDeliveryDate(dateSelected.formatDateToOtherFormat(SHORT_DATE_FORMAT_YEAR_FIRST, SHORT_DATE_FORMAT_DATE_FIRST))
-                    et_delivery_date.clearFocus()
+                    binding.etDeliveryDate.clearFocus()
                 }, year, month, day)
             datePickerDialog.show()
             }
@@ -225,7 +228,7 @@ class AddCommandDialogFragment (
 
     private fun setupListenerForAutoCompleteTvClient() {
         // IMPORTANT : If not implemented, the autocompletion won't work
-        et_client.addTextChangedListener(object : TextWatcher {
+        binding.etClient.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
@@ -233,7 +236,7 @@ class AddCommandDialogFragment (
             override fun afterTextChanged(s: Editable?) {}
         })
 
-        et_client.setOnItemClickListener { parent, _, position, _ ->
+        binding.etClient.setOnItemClickListener { parent, _, position, _ ->
             val item: Any = parent.getItemAtPosition(position)
             if (item is AppClient) {
                 Log.d("[Client Fragment]", "Client selected : $item")
@@ -241,15 +244,15 @@ class AddCommandDialogFragment (
                 addCommandVM.setClientLiveData(item)
             }
             this.hideKeyboard()
-            et_client.clearFocus()
+            binding.etClient.clearFocus()
         }
     }
 
     private fun changeEditModeDisplay() {
         isEditMode = !isEditMode
-        bt_add_article.visibility = if(isEditMode) VISIBLE else GONE
-        ll_bt_category.visibility = if(isEditMode) VISIBLE else GONE
-        ib_add_client.visibility = if(isEditMode) VISIBLE else GONE
+        binding.btAddArticle.visibility = if(isEditMode) VISIBLE else GONE
+        binding.llBtCategory.visibility = if(isEditMode) VISIBLE else GONE
+        binding.ibAddClient.visibility = if(isEditMode) VISIBLE else GONE
         setupPreviousCloseButton()
         articleAdapter.setItems(addCommandVM.allArticlesLiveData.value ?: emptyList(), isEditMode)
         setupElements()
@@ -257,17 +260,17 @@ class AddCommandDialogFragment (
     }
 
     private fun setupElements() {
-        tv_add_command_title.text = getString(if (isEditMode) R.string.add_command_title else R.string.recap)
+        binding.tvAddCommandTitle.text = getString(if (isEditMode) R.string.add_command_title else R.string.recap)
         if(isEditCommandMode){
-            tv_add_command_title.text = "Modifier la commande"
-            bt_next.text = "Mettre à jour "
+            binding.tvAddCommandTitle.text = "Modifier la commande"
+            binding.btNext.text = "Mettre à jour "
         }
-        et_client.isEnabled = isEditMode
-        et_delivery_date.isEnabled = isEditMode
-        ib_add_client.isEnabled = isEditMode
+        binding.etClient.isEnabled = isEditMode
+        binding.etDeliveryDate.isEnabled = isEditMode
+        binding.ibAddClient.isEnabled = isEditMode
 
-        tv_total_price.visibility = if(isEditMode) GONE else VISIBLE
-        if(!isEditMode)  tv_total_price.text = getString(R.string.total_price,
+        binding.tvTotalPrice.visibility = if(isEditMode) GONE else VISIBLE
+        if(!isEditMode)  binding.tvTotalPrice.text = getString(R.string.total_price,
             addCommandVM.allArticlesLiveData.value?.filter { it.count > 0 }?.map { it.count * it.article.price }?.sum()?.formatDouble()
         )
 
@@ -275,25 +278,25 @@ class AddCommandDialogFragment (
     }
 
     private fun setupPreviousCloseButton() {
-        bt_previous_or_close.imageDrawable = getDrawable(
+        binding.btPreviousOrClose.imageDrawable = getDrawable(
             requireContext(),
             if (isEditMode) R.drawable.ic_close else R.drawable.ic_left_arrow
         )
     }
 
     private fun setupHeaders() {
-        bt_previous_or_close.setOnClickListener {
+        binding.btPreviousOrClose.setOnClickListener {
             if (isEditMode) dismiss() else changeEditModeDisplay()
         }
     }
 
     private fun saveCommand(command: Command? = null){
         val commandToSave = command?.apply {
-            deliveryDate = et_delivery_date.text.toString()
+            deliveryDate = binding.etDeliveryDate.text.toString()
             if(selectedClient != null) client = selectedClient
             articleWrappers = addCommandVM.allArticlesLiveData.value?.filter { it.count > 0 } ?: emptyList()
         } ?: Command(
-            deliveryDate = et_delivery_date.text.toString(),
+            deliveryDate = binding.etDeliveryDate.text.toString(),
             client = selectedClient,
             articleWrappers = addCommandVM.allArticlesLiveData.value?.filter { it.count > 0 } ?: emptyList()
         )
@@ -305,12 +308,12 @@ class AddCommandDialogFragment (
     }
 
     private fun showAddClientDialog(){
-        val dialogView = layoutInflater.inflate(R.layout.add_client_dialog, null)
+        val dialogAlertCommonBinding = AddClientDialogBinding.inflate(LayoutInflater.from(context))
         requireContext().materialAlertDialog {
-            setView(dialogView)
+            setView(dialogAlertCommonBinding.root)
             positiveButton(R.string.validate) {
                 javaClass.logD("Clic sur ok")
-                addClient(dialogView)
+                addClient(dialogAlertCommonBinding)
             }
             negativeButton(R.string.cancel){
                 dismiss()
@@ -318,9 +321,9 @@ class AddCommandDialogFragment (
         }.show()
     }
 
-    private fun addClient(view : View) {
-        val clientName = view.et_client_firstname.text.toString()
-        val clientPhoneNumber = view.et_client_phone.text.toString()
+    private fun addClient(binding : AddClientDialogBinding) {
+        val clientName = binding.etClientFirstname.text.toString()
+        val clientPhoneNumber = binding.etClientPhone.text.toString()
 
         if( clientName.isEmpty() && !clientPhoneNumber.isPhoneValid()) {
             Snackbar.make(requireView(), "Veuillez saisir des valeurs valides.",

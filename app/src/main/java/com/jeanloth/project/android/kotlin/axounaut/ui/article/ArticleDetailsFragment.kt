@@ -10,15 +10,14 @@ import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
-import com.jeanloth.project.android.kotlin.axounaut.R
 import com.jeanloth.project.android.kotlin.axounaut.adapters.CheckboxTextViewAdapter
+import com.jeanloth.project.android.kotlin.axounaut.databinding.FragmentArticleDetailsBinding
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.ArticleVM
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.MainVM
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.StockVM
 import com.jeanloth.project.android.kotlin.domain_models.entities.Article
 import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleCategory
 import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleCategory.Companion.getArticleCategoryFromLabel
-import kotlinx.android.synthetic.main.fragment_article_details.*
 import org.koin.android.viewmodel.ext.android.sharedViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -33,13 +32,14 @@ class ArticleDetailsFragment : Fragment() {
     private val stockVM : StockVM by viewModel()
 
     private lateinit var checkboxTextViewAdapter: CheckboxTextViewAdapter
+    private lateinit var binding: FragmentArticleDetailsBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_article_details, container, false)
+        binding = FragmentArticleDetailsBinding.inflate(layoutInflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -50,14 +50,14 @@ class ArticleDetailsFragment : Fragment() {
         checkboxTextViewAdapter = CheckboxTextViewAdapter(mutableListOf())
 
         // Clear focus on typing done
-        et_article_price.setOnEditorActionListener { _, actionId, _ ->
+        binding.etArticlePrice.setOnEditorActionListener { _, actionId, _ ->
             if(actionId == EditorInfo.IME_ACTION_DONE){
-                et_article_price.clearFocus()
+                binding.etArticlePrice.clearFocus()
             }
             true
         }
 
-        rv_recipe_articles.adapter = checkboxTextViewAdapter
+        binding.rvRecipeArticles.adapter = checkboxTextViewAdapter
 
         stockVM.observePWLiveData().observe(viewLifecycleOwner){
             checkboxTextViewAdapter.setItems(it)
@@ -65,7 +65,7 @@ class ArticleDetailsFragment : Fragment() {
 
         setupSpinner()
 
-        bt_add_article.setOnClickListener {
+        binding.btAddArticle.setOnClickListener {
             addArticle()
         }
     }
@@ -75,9 +75,9 @@ class ArticleDetailsFragment : Fragment() {
     }
 
     private fun addArticle() {
-        val articleName = et_article_name.text.toString()
-        val articlePrice = et_article_price.text.toString()
-        val articleCategory = getArticleCategoryFromLabel(spinner_categories.selectedItem.toString())
+        val articleName = binding.etArticleName.text.toString()
+        val articlePrice = binding.etArticlePrice.text.toString()
+        val articleCategory = getArticleCategoryFromLabel(binding.spinnerCategories.selectedItem.toString())
 
         if( articleName.isEmpty() || articlePrice.isEmpty()) {
             Snackbar.make(requireView(), "Veuillez saisir des valeurs valides.",
@@ -105,7 +105,7 @@ class ArticleDetailsFragment : Fragment() {
         )
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinner_categories.adapter = adapter
+        binding.spinnerCategories.adapter = adapter
     }
 
 }

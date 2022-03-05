@@ -1,23 +1,12 @@
 package com.jeanloth.project.android.kotlin.axounaut.ui.home
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.navigation.Navigation.findNavController
-import androidx.navigation.fragment.findNavController
-import com.jeanloth.project.android.kotlin.axounaut.Constants.ANALYSIS
+import androidx.appcompat.app.AppCompatActivity
 import com.jeanloth.project.android.kotlin.axounaut.Constants.COMMANDS
 import com.jeanloth.project.android.kotlin.axounaut.Constants.FRAGMENT_TO_SHOW
-import com.jeanloth.project.android.kotlin.axounaut.Constants.STOCK
 import com.jeanloth.project.android.kotlin.axounaut.MainActivity
-import com.jeanloth.project.android.kotlin.axounaut.R
 import com.jeanloth.project.android.kotlin.axounaut.databinding.ActivityHomeBinding
-import com.jeanloth.project.android.kotlin.axounaut.ui.commands.AddCommandDialogFragment
-import com.jeanloth.project.android.kotlin.axounaut.ui.commands.CommandListFragmentDirections
-import kotlinx.android.synthetic.main.activity_home.*
-import kotlinx.android.synthetic.main.activity_home.fab_add_command
-import kotlinx.android.synthetic.main.activity_main.*
-import splitties.views.onClick
 
 class  HomeActivity : AppCompatActivity() {
 

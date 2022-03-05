@@ -54,7 +54,7 @@
             app:layout_constraintEnd_toEndOf="parent"/>
 
         <ImageButton
-            android:id="@+id/bt_btn_delete_client"
+            android:id="@+id/btn_delete_client"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/ic_dustbin"

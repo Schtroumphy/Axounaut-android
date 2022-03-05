@@ -1,7 +1,6 @@
 package com.jeanloth.project.android.kotlin.axounaut
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
@@ -19,7 +18,6 @@ import com.jeanloth.project.android.kotlin.axounaut.databinding.ActivityMainBind
 import com.jeanloth.project.android.kotlin.axounaut.ui.commands.AddCommandDialogFragment
 import com.jeanloth.project.android.kotlin.axounaut.ui.commands.PayCommandDialogFragment
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.MainVM
-import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.viewmodel.ext.android.viewModel
 import splitties.views.imageDrawable
 import splitties.views.onClick

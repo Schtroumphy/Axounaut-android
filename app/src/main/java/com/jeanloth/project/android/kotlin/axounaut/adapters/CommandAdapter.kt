@@ -8,9 +8,9 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getColor
 import androidx.recyclerview.widget.RecyclerView
 import com.jeanloth.project.android.kotlin.axounaut.R
+import com.jeanloth.project.android.kotlin.axounaut.databinding.ItemCommandBinding
 import com.jeanloth.project.android.kotlin.domain_models.entities.*
 import com.jeanloth.project.android.kotlin.domain_models.entities.CommandStatusType.Companion.getCommandStatusByCode
-import kotlinx.android.synthetic.main.item_command.view.*
 import com.jeanloth.project.android.kotlin.domain_models.entities.ItemList
 import splitties.views.onClick
 
@@ -42,24 +42,24 @@ class CommandAdapter(
     }
 
     inner class ArticleHolder(view: View) : RecyclerView.ViewHolder(view) {
-
+        private val binding = ItemCommandBinding.bind(view)
         fun bind(command: Command) {
 
-            itemView.cv_command.onClick {
+            binding.cvCommand.onClick {
                 onClick?.invoke(command)
             }
 
-            itemView.tv_delivery_date.text = command.deliveryDate.toString()
-            itemView.tv_client_name.text = command.client?.toNameString()
+            binding.tvDeliveryDate.text = command.deliveryDate.toString()
+            binding.tvClientName.text = command.client?.toNameString()
 
-            itemView.rv_articles_list.adapter = SimpleListAdapter(
+            binding.rvArticlesList.adapter = SimpleListAdapter(
                 convertArticleWrapperToItemList(command.articleWrappers), context
             ).apply {
                 onClickItem = { onClick?.invoke(command) }
             }
 
-            itemView.tv_status.text = getCommandStatusByCode(command.statusCode).label
-            itemView.tv_status.setTextColor(
+            binding.tvStatus.text = getCommandStatusByCode(command.statusCode).label
+            binding.tvStatus.setTextColor(
                 getColor(
                     context,
                     when (command.statusCode) {
@@ -75,7 +75,7 @@ class CommandAdapter(
             )
 
 
-            itemView.cv_command.view_status.backgroundTintList =
+            binding.viewStatus.backgroundTintList =
                 ContextCompat.getColorStateList(
                     context, when (command.statusCode) {
                         CommandStatusType.TO_DO.code -> R.color.flax

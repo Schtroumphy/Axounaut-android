@@ -2,16 +2,14 @@ package com.jeanloth.project.android.kotlin.axounaut.adapters
 
 import android.content.Context
 import android.content.res.ColorStateList
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getColor
 import androidx.recyclerview.widget.RecyclerView
 import com.jeanloth.project.android.kotlin.axounaut.R
+import com.jeanloth.project.android.kotlin.axounaut.databinding.ItemClientBinding
 import com.jeanloth.project.android.kotlin.domain_models.entities.AppClient
-import kotlinx.android.synthetic.main.item_client.view.*
 
 class ClientAdapter(
     private var clientList : List<AppClient>,
@@ -46,30 +44,31 @@ class ClientAdapter(
 
     inner class ClientHolder(view: View) : RecyclerView.ViewHolder(view) {
 
+        private val binding = ItemClientBinding.bind(view)
         fun bind(client : AppClient){
-            itemView.tv_client_name.text= context.getString(R.string.client_name_label, client.lastname?.uppercase(), client.firstname.lowercase())
-            itemView.tv_fidelity.text= context.getString(R.string.client_fidelity_label, client.fidelityPoint.toString())
+            binding.tvClientName.text= context.getString(R.string.client_name_label, client.lastname?.uppercase(), client.firstname.lowercase())
+            binding.tvFidelity.text= context.getString(R.string.client_fidelity_label, client.fidelityPoint.toString())
 
             if(client.isFavorite){
-                itemView.ib_favorite.backgroundTintList = ColorStateList.valueOf(getColor(context, R.color.salamander))
+                binding.ibFavorite.backgroundTintList = ColorStateList.valueOf(getColor(context, R.color.salamander))
             } else {
-                itemView.ib_favorite.backgroundTintList = ColorStateList.valueOf(getColor(context, R.color.gray_1))
+                binding.ibFavorite.backgroundTintList = ColorStateList.valueOf(getColor(context, R.color.gray_1))
             }
 
-            itemView.cb_client.isChecked = false
-            itemView.cb_client.setOnCheckedChangeListener { _, isChecked ->
+            binding.cbClient.isChecked = false
+            binding.cbClient.setOnCheckedChangeListener { _, isChecked ->
                 onCheckboxClick?.invoke(client, isChecked )
             }
 
-            itemView.ib_call.setOnClickListener {
+            binding.ibCall.setOnClickListener {
                 onPhoneClick?.invoke(client.phoneNumber)
             }
 
-            itemView.ib_favorite.setOnClickListener {
+            binding.ibFavorite.setOnClickListener {
                 onFavoriteClick?.invoke(client)
             }
 
-            itemView.tv_client_name.setOnClickListener {
+            binding.tvClientName.setOnClickListener {
                 onClick?.invoke(client)
             }
         }

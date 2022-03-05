@@ -7,9 +7,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.jeanloth.project.android.kotlin.axounaut.databinding.FragmentHomeBinding
-import kotlinx.android.synthetic.main.activity_home.*
-import kotlinx.android.synthetic.main.fragment_home.*
-import splitties.views.onClick
 
 class HomeFragment : Fragment() {
 

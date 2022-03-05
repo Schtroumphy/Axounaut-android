@@ -1,7 +1,6 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
-    id 'kotlin-android-extensions'
     id 'androidx.navigation.safeargs.kotlin'
     id 'kotlin-kapt'
     id 'io.objectbox'
@@ -43,6 +42,7 @@ android {
         compose true
     }
     composeOptions {
+        kotlinCompilerVersion "1.6.10"
         kotlinCompilerExtensionVersion compose_version
     }
     packagingOptions {
@@ -133,6 +133,11 @@ dependencies {
     // Material design icons
     implementation("androidx.compose.material:material-icons-core:1.0.5")
     implementation("androidx.compose.material:material-icons-extended:1.0.5")
+    implementation "androidx.navigation:navigation-compose:2.4.0-alpha06"
+    // Navigation animations
+    implementation "com.google.accompanist:accompanist-navigation-animation:0.16.0"
+    // Constraint Layout
+    implementation "androidx.constraintlayout:constraintlayout-compose:1.0.0-beta02"
 
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

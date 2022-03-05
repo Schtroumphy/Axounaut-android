@@ -7,13 +7,12 @@ import android.text.Spanned
 import android.text.style.ForegroundColorSpan
 import android.text.style.StrikethroughSpan
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat.getColor
 import androidx.recyclerview.widget.RecyclerView
 import com.jeanloth.project.android.kotlin.axounaut.R
+import com.jeanloth.project.android.kotlin.axounaut.databinding.ItemDotListBinding
 import com.jeanloth.project.android.kotlin.domain_models.entities.ItemList
-import kotlinx.android.synthetic.main.item_dot_list.view.*
 import splitties.views.onClick
 
 class SimpleListAdapter(
@@ -23,10 +22,14 @@ class SimpleListAdapter(
 
     var onClickItem : (() -> Unit)? = null
 
+    lateinit var binding: ItemDotListBinding
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemHolder {
         val itemView = LayoutInflater.from(parent.context)
                 .inflate(R.layout.item_dot_list, parent, false)
-        return ItemHolder(itemView)
+
+        binding = ItemDotListBinding.inflate(LayoutInflater.from(context), parent, false)
+        return ItemHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ItemHolder, position: Int) {
@@ -43,21 +46,21 @@ class SimpleListAdapter(
         notifyDataSetChanged()
     }
 
-    inner class ItemHolder(view: View) : RecyclerView.ViewHolder(view) {
+    inner class ItemHolder(binding: ItemDotListBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item : ItemList){
 
-            itemView.onClick {
+            binding.root.onClick {
                 onClickItem?.invoke()
             }
 
-            itemView.tv_quantity.text = if(!item.isDone && !item.isCanceled){
+            binding.tvQuantity.text = if(!item.isDone && !item.isCanceled){
                 item.quantity
             } else {
                 stringBuilderLabel(item.quantity, item.isCanceled)
             }
 
-            itemView.tv_label.text = if(!item.isDone && !item.isCanceled){
+            binding.tvLabel.text = if(!item.isDone && !item.isCanceled){
                 item.label
             } else {
                 stringBuilderLabel(item.label, item.isCanceled)

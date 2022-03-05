@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.jeanloth.project.android.kotlin.axounaut.R
 import com.jeanloth.project.android.kotlin.axounaut.databinding.ItemIngredientPrevisionalBinding
 import com.jeanloth.project.android.kotlin.domain_models.entities.PrevisionalWrapper
-import kotlinx.android.synthetic.main.item_stock_ingredient.view.*
 
 class PrevisionalIngredientAdapter(
     private var previsionalWrappers: List<PrevisionalWrapper>,
@@ -20,8 +19,7 @@ class PrevisionalIngredientAdapter(
     lateinit var binding: ItemIngredientPrevisionalBinding
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PrevisionalIngredientHolder {
-        binding =
-            ItemIngredientPrevisionalBinding.inflate(LayoutInflater.from(context), parent, false)
+        binding = ItemIngredientPrevisionalBinding.inflate(LayoutInflater.from(context), parent, false)
         return PrevisionalIngredientHolder(binding)
     }
 
@@ -61,11 +59,7 @@ class PrevisionalIngredientAdapter(
 
     inner class PrevisionalIngredientHolder(binding: ItemIngredientPrevisionalBinding) :
         RecyclerView.ViewHolder(binding.root) {
-
-        fun bind(
-            previsionalWrapper: PrevisionalWrapper,
-            positionInList: PositionInList
-        ) {
+        fun bind(previsionalWrapper: PrevisionalWrapper, positionInList: PositionInList) {
 
             binding.apply {
                 tvName.text = previsionalWrapper.ingredient.label
@@ -111,7 +105,7 @@ class PrevisionalIngredientAdapter(
             }
 
             // Add margin bottom if last item of count status type list
-            val params = itemView.iv_line.layoutParams as ViewGroup.MarginLayoutParams
+            val params = binding.ivLine.layoutParams as ViewGroup.MarginLayoutParams
             params.bottomMargin =
                 if (positionInList == PositionInList.LAST || positionInList == PositionInList.ALONE) 20 else 0
         }

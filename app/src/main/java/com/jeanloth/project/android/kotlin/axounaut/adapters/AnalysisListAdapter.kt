@@ -12,8 +12,8 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat.getColor
 import androidx.recyclerview.widget.RecyclerView
 import com.jeanloth.project.android.kotlin.axounaut.R
+import com.jeanloth.project.android.kotlin.axounaut.databinding.ItemAnalysisListBinding
 import com.jeanloth.project.android.kotlin.domain_models.entities.AnalysisList
-import kotlinx.android.synthetic.main.item_analysis_list.view.*
 
 class AnalysisListAdapter(
     private var items : List<AnalysisList>,
@@ -42,12 +42,13 @@ class AnalysisListAdapter(
     }
 
     inner class ItemHolder(view: View) : RecyclerView.ViewHolder(view) {
+        private val binding = ItemAnalysisListBinding.bind(view)
 
         fun bind(item : AnalysisList){
 
-            itemView.tv_analysis_label.text = item.label
-            itemView.tv_analysis_quantity.text = context.getString(R.string.cross_quantity,item.number.toString())
-            itemView.tv_analysis_price.text = context.getString(R.string.price_euro,item.totalAmount.toString())
+            binding.tvAnalysisLabel.text = item.label
+            binding.tvAnalysisQuantity.text = context.getString(R.string.cross_quantity,item.number.toString())
+            binding.tvAnalysisPrice.text = context.getString(R.string.price_euro,item.totalAmount.toString())
         }
 
     }

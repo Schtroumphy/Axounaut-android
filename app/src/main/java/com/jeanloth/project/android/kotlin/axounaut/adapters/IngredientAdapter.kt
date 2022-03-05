@@ -11,12 +11,8 @@ import androidx.core.content.ContextCompat.getColor
 import androidx.core.content.ContextCompat.getDrawable
 import androidx.recyclerview.widget.RecyclerView
 import com.jeanloth.project.android.kotlin.axounaut.R
+import com.jeanloth.project.android.kotlin.axounaut.databinding.ItemStockIngredientBinding
 import com.jeanloth.project.android.kotlin.domain_models.entities.IngredientWrapper
-import kotlinx.android.synthetic.main.item_article.view.ib_add
-import kotlinx.android.synthetic.main.item_article.view.ib_minus
-import kotlinx.android.synthetic.main.item_article.view.tv_count
-import kotlinx.android.synthetic.main.item_article.view.tv_name
-import kotlinx.android.synthetic.main.item_stock_ingredient.view.*
 
 class IngredientAdapter(
     private var ingredients : List<IngredientWrapper>,
@@ -69,17 +65,17 @@ class IngredientAdapter(
     }
 
     inner class ArticleHolder(view: View) : RecyclerView.ViewHolder(view){
-
+        private val binding = ItemStockIngredientBinding.bind(view)
         fun bind(ingredientWrapper: IngredientWrapper, positionInList: PositionInList){
 
-            itemView.tv_name.text= ingredientWrapper.ingredient.label
+            binding.tvName.text= ingredientWrapper.ingredient.label
 
             val count = ingredientWrapper.quantity
 
             setupElementVisibility(count.toString())
 
             // Line background drawable
-            itemView.iv_line.background = getDrawable(itemView.context, when(positionInList){
+            binding.ivLine.background = getDrawable(itemView.context, when(positionInList){
                 PositionInList.FIRST -> R.drawable.rounded_top_line
                 PositionInList.BETWEEN -> R.drawable.stock_line
                 PositionInList.LAST -> R.drawable.rounded_bottom_line
@@ -87,26 +83,26 @@ class IngredientAdapter(
             })
 
             // Line color by count status type
-            itemView.iv_line.backgroundTintList = ColorStateList.valueOf(getColor(context, when(ingredientWrapper.countStatusType){
+            binding.ivLine.backgroundTintList = ColorStateList.valueOf(getColor(context, when(ingredientWrapper.countStatusType){
                 IngredientWrapper.CountStatus.LOW -> R.color.red_002
                 IngredientWrapper.CountStatus.MEDIUM -> R.color.orange_002
                 IngredientWrapper.CountStatus.LARGE -> R.color.green_light_2
             }))
 
             // Add margin bottom if last item of count status type list
-            val params = itemView.iv_line.layoutParams as ViewGroup.MarginLayoutParams
+            val params = binding.ivLine.layoutParams as ViewGroup.MarginLayoutParams
             params.bottomMargin = if(positionInList == PositionInList.LAST || positionInList == PositionInList.ALONE )  20 else 0
 
             if(isEditMode){
-                itemView.ib_minus.visibility = if(count > 0) VISIBLE else GONE
+                binding.ibMinus.visibility = if(count > 0) VISIBLE else GONE
 
-                itemView.ib_add.setOnClickListener {
+                binding.ibAdd.setOnClickListener {
                     ingredientWrapper.quantity = count + 0.5f
                     onAddMinusClick?.invoke(ingredientWrapper)
                     sortIngredients()
                 }
 
-                itemView.ib_minus.setOnClickListener {
+                binding.ibMinus.setOnClickListener {
                     if(count > 0) {
                         ingredientWrapper.quantity = count - 0.5f
                     }
@@ -118,9 +114,9 @@ class IngredientAdapter(
         }
 
         private fun setupElementVisibility(count : String) {
-            itemView.tv_count.text = if(isEditMode) count else context.resources.getString(R.string.x_count, count)
-            itemView.ib_add.visibility = if(isEditMode) VISIBLE else GONE
-            if(!isEditMode) itemView.ib_minus.visibility = GONE
+            binding.tvCount.text = if(isEditMode) count else context.resources.getString(R.string.x_count, count)
+            binding.ibAdd.visibility = if(isEditMode) VISIBLE else GONE
+            if(!isEditMode) binding.ibMinus.visibility = GONE
         }
 
     }

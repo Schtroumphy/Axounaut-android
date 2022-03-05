@@ -12,12 +12,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.jeanloth.project.android.kotlin.axounaut.R
 import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleWrapper
 import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleWrapperStatusType
-import kotlinx.android.synthetic.main.item_checkbox_list.view.*
-import kotlinx.android.synthetic.main.item_checkbox_list.view.tv_label
 import android.text.method.ScrollingMovementMethod
-
-
-
+import com.jeanloth.project.android.kotlin.axounaut.databinding.ItemCheckboxListBinding
 
 class CheckboxListAdapter(
     private var items : MutableList<ArticleWrapper>,
@@ -59,32 +55,34 @@ class CheckboxListAdapter(
 
     inner class ItemHolder(view: View) : RecyclerView.ViewHolder(view) {
 
+        private val binding= ItemCheckboxListBinding.bind(view)
+
         fun bind(item : ArticleWrapper){
 
             val articleLabel = itemView.context.getString(R.string.article_name, item.article.label)
             val quantity = itemView.context.getString(R.string.article_quantity, item.count)
 
-            itemView.tv_label.text= if(item.statusCode != ArticleWrapperStatusType.DONE.code && item.statusCode != ArticleWrapperStatusType.CANCELED.code) articleLabel else stringBuilderLabel(articleLabel)
-            itemView.tv_cb_quantity.text= if(item.statusCode != ArticleWrapperStatusType.DONE.code && item.statusCode != ArticleWrapperStatusType.CANCELED.code) quantity else stringBuilderLabel(quantity)
-            itemView.cb_item.isChecked = item.statusCode == ArticleWrapperStatusType.DONE.code
-            itemView.cb_item.isEnabled = enableCheckBox
-            itemView.tv_label.movementMethod = ScrollingMovementMethod()
+            binding.tvLabel.text= if(item.statusCode != ArticleWrapperStatusType.DONE.code && item.statusCode != ArticleWrapperStatusType.CANCELED.code) articleLabel else stringBuilderLabel(articleLabel)
+            binding.tvCbQuantity.text= if(item.statusCode != ArticleWrapperStatusType.DONE.code && item.statusCode != ArticleWrapperStatusType.CANCELED.code) quantity else stringBuilderLabel(quantity)
+            binding.cbItem.isChecked = item.statusCode == ArticleWrapperStatusType.DONE.code
+            binding.cbItem.isEnabled = enableCheckBox
+            binding.tvLabel.movementMethod = ScrollingMovementMethod()
 
-            itemView.cb_item.visibility = if(item.statusCode == ArticleWrapperStatusType.CANCELED.code) INVISIBLE else VISIBLE
+            binding.cbItem.visibility = if(item.statusCode == ArticleWrapperStatusType.CANCELED.code) INVISIBLE else VISIBLE
             if(item.statusCode == ArticleWrapperStatusType.CANCELED.code) {
-                itemView.tv_label.setTextColor(getColor(itemView.context, R.color.red_002))
-                itemView.tv_cb_quantity.setTextColor(getColor(itemView.context, R.color.red_002))
-                itemView.tv_label_canceled.visibility = VISIBLE
+                binding.tvLabel.setTextColor(getColor(itemView.context, R.color.red_002))
+                binding.tvCbQuantity.setTextColor(getColor(itemView.context, R.color.red_002))
+                binding.tvLabelCanceled.visibility = VISIBLE
             } else {
-                itemView.tv_label.setTextColor(getColor(itemView.context, R.color.gray_2))
-                itemView.tv_label_canceled.visibility = INVISIBLE
+                binding.tvLabel.setTextColor(getColor(itemView.context, R.color.gray_2))
+                binding.tvLabelCanceled.visibility = INVISIBLE
             }
-            itemView.tv_label.setOnClickListener {
-                if(itemView.cb_item.isEnabled)
-                    itemView.cb_item.isChecked = !itemView.cb_item.isChecked
+            binding.tvLabelCanceled.setOnClickListener {
+                if(binding.cbItem.isEnabled)
+                    binding.cbItem.isChecked = !binding.cbItem.isChecked
             }
 
-            itemView.cb_item.setOnCheckedChangeListener{ _, isChecked ->
+            binding.cbItem.setOnCheckedChangeListener{ _, isChecked ->
                 item.statusCode = if(isChecked) ArticleWrapperStatusType.DONE.code else ArticleWrapperStatusType.IN_PROGRESS.code
                 onCheckedItem?.invoke(item, isChecked)
             }
