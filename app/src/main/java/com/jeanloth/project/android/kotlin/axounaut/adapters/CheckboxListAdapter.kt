@@ -20,6 +20,11 @@ class CheckboxListAdapter(
     private var enableCheckBox : Boolean = true,
 ) : RecyclerView.Adapter<CheckboxListAdapter.ItemHolder>()  {
 
+    init {
+        // Avoid error due to animateLayout change for direct parent of recyclerView causing this error : RecyclerView does not support scrolling to an absolute position. Use scrollToPosition instead
+        this.setHasStableIds(true)
+    }
+
     var onCheckedItem : ((ArticleWrapper, Boolean) -> Unit)? = null
     var onSwipeItem : ((ArticleWrapper, Int) -> Unit)? = null
 
@@ -42,6 +47,10 @@ class CheckboxListAdapter(
         this.items = items.toMutableList()
         this.enableCheckBox = enableCheckBox
         notifyDataSetChanged()
+    }
+
+    fun refreshRecyclerView(position : Int){
+        notifyItemChanged(position)
     }
 
     fun updateArticleStatus(adapterPosition : Int) {
