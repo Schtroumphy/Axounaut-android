@@ -94,11 +94,10 @@ class AnalysisFragment: Fragment() {
         mainActivity.replaceHeaderLogoByBackButton(false)
     }
 
-    private fun goToCommandDetails(command: Command) {
-        Log.d("TAG", "Command to details : $command")
+    private fun goToCommandDetails(commandId: Long) {
         findNavController().navigate(
             CommandListFragmentDirections.actionNavCommandListToNavCommandDetails(
-                commandToDetail = command
+                commandToDetailId = commandId
             )
         )
     }

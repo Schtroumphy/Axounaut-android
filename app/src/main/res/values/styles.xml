@@ -27,6 +27,11 @@
         <item name="android:layout_marginBottom">20dp</item>
     </style>
 
+    <style name="Rounded" parent="ShapeAppearance.MaterialComponents.SmallComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">16dp</item>
+    </style>
+
     <style name="CustomButton" parent="Widget.AppCompat.Button">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">36dp</item>
@@ -47,7 +52,7 @@
     </style>
 
     <style name="TitleStyle" parent="@android:style/TextAppearance">
-        <item name="android:color">@color/salamander_attenue</item>
+        <item name="android:color">@color/red_001</item>
         <item name="android:fontFamily">@font/rosario_wght</item>
         <item name="android:textSize">30sp</item>
     </style>
@@ -70,5 +75,10 @@
     <style name="Widget.Theme.Axounaut.ButtonBar.Fullscreen" parent="">
         <item name="android:background">@color/black_overlay</item>
         <item name="android:buttonBarStyle">?android:attr/buttonBarStyle</item>
+    </style>
+
+    <style name="DialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/from_bottom_anim</item>
+        <item name="android:windowExitAnimation">@anim/to_bottom_anim</item>
     </style>
 </resources>

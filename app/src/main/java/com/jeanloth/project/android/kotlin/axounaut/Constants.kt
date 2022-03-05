@@ -10,5 +10,5 @@ object Constants {
 
     // Date formats
     val SHORT_DATE_FORMAT_YEAR_FIRST = "yyyy-MM-dd"
-    val SHORT_DATE_FORMAT_DATE_FIRST = "dd-MM-yyyy"
+    val SHORT_DATE_FORMAT_DATE_FIRST = "dd/MM/yyyy"
 }

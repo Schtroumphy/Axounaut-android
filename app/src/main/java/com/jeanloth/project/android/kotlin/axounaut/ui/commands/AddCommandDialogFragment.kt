@@ -56,7 +56,7 @@ import java.util.*
  * </pre>
  */
 class AddCommandDialogFragment (
-    val currentCommand: Command?= null
+    private val currentCommand: Command?= null
 ): BottomSheetDialogFragment() {
 
     // Varaiables
@@ -83,6 +83,11 @@ class AddCommandDialogFragment (
         )
     }
 
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        bottomSheetDialog.window?.attributes?.windowAnimations = R.style.DialogAnimation
+    }
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         bottomSheetDialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
         return bottomSheetDialog.fullScreen()
@@ -104,6 +109,7 @@ class AddCommandDialogFragment (
         val articles : List<Article> = articleVM.getAllArticles()
         addCommandVM.setAllArticlesLiveData(createWrapperList(articles))
 
+        /** In case of edit mode **/
         if(currentCommand != null) {
             addCommandVM.setDeliveryDate(currentCommand.deliveryDate)
             addCommandVM.setClientLiveData(currentCommand.client)
@@ -112,16 +118,20 @@ class AddCommandDialogFragment (
             setupElements()
         }
 
-        binding.tvErrorNoArticles.visibility = if(addCommandVM.allArticlesLiveData.value?.isEmpty() == true) VISIBLE else GONE
-        articleAdapter = ArticleAdapter(addCommandVM.allArticlesLiveData.value?.filter { it.article.category == ArticleCategory.SWEET.code } ?: emptyList(), true, requireContext()).apply {
+        articleAdapter = ArticleAdapter(emptyList(), true, requireContext()).apply {
             onAddMinusClick = {
                 javaClass.logD("Articles list : $it")
                 addCommandVM.setArticlesLiveData(it)
             }
             displayNoArticlesError = {
-                //tv_error_no_articles.visibility = if(it) VISIBLE else GONE
+                binding.tvErrorNoArticles.visibility = if(it) VISIBLE else GONE
             }
         }
+
+        // Update article list
+        addCommandVM.allArticlesLiveData.value?.filter { it.article.category == ArticleCategory.SWEET.code }
+            ?.let { articleAdapter.setItems(it, true) }
+
         binding.rvArticles.adapter = articleAdapter
 
         // Get all clients
@@ -165,7 +175,9 @@ class AddCommandDialogFragment (
             dismiss()
 
             // Redirect to add article fragment
-            Navigation.findNavController(requireActivity(), R.id.nav_host_fragment).navigate(CommandListFragmentDirections.actionNavCommandListToNavArticle())
+            // If opened from Command Details --> CommandDetailFragmentDirections
+            // If opened from Command list fragment --> CommandListFragmentDirections
+            Navigation.findNavController(requireActivity(), R.id.nav_host_fragment).navigate(if(currentCommand == null) CommandListFragmentDirections.actionNavCommandListToNavArticle() else CommandDetailFragmentDirections.actionNavCommandDetailToNavArticle())
         }
 
         if(currentCommand != null) fillElements()
