@@ -41,8 +41,7 @@ class CommandListFragment : Fragment() {
     enum class CommandDisplayMode(val statusCode: List<Int>) {
         IN_PROGRESS(listOf(CommandStatusType.IN_PROGRESS.code, CommandStatusType.DONE.code)),
         TO_COME(listOf(CommandStatusType.TO_DO.code)),
-        PAST(
-            listOf(
+        PAST(listOf(
                 CommandStatusType.DONE.code,
                 CommandStatusType.PAYED.code,
                 CommandStatusType.CANCELED.code,
@@ -79,11 +78,10 @@ class CommandListFragment : Fragment() {
 
         lifecycleScope.launchWhenStarted {
             commandVM.commandToDisplayMediatorLiveData.observe(viewLifecycleOwner) {
-                Log.d("[Command list Fragment", "Command observed : $it")
-
+                Log.d("[Command list Fragment", "Command observed : ${it.size}")
                 commandAdapter.setItems(it)
                 binding.tvErrorNoCommands.visibility = if (it.isEmpty()) VISIBLE else GONE
-                binding.tvErrorNoCommands.text = getString(
+                if (it.isEmpty()) binding.tvErrorNoCommands.text = getString(
                     when (commandVM.displayModeMutableLiveData.value) {
                         CommandDisplayMode.IN_PROGRESS -> R.string.no_loading_command_error
                         CommandDisplayMode.TO_COME -> R.string.no_to_come_command_error
@@ -133,11 +131,10 @@ class CommandListFragment : Fragment() {
         commandAdapter = CommandAdapter(emptyList(), requireContext())
     }
 
-    private fun goToCommandDetails(command: Command) {
-        Log.d("TAG", "Command to details : $command")
+    private fun goToCommandDetails(commandId: Long) {
         findNavController().navigate(
             CommandListFragmentDirections.actionNavCommandListToNavCommandDetails(
-                commandToDetail = command
+                commandToDetailId = commandId
             )
         )
     }

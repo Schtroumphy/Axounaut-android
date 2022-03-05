@@ -32,6 +32,7 @@
     <color name="apple_green">#8DB500</color>
     <color name="green_light_1">#6D906A</color>
     <color name="green_light_2">#5A7758</color>
+    <color name="green_light_3">#537A66</color>
     <color name="green_dark_1">#0E5E20</color>
     <color name="green_dark_2">#1C5C2A</color>
 
@@ -39,6 +40,8 @@
     <color name="gray_0">#EDEFE9</color>
     <color name="gray_1">#B3B5AE</color>
     <color name="gray_2">#747571</color>
+    <color name="dark_gray_1">#4F504E</color>
+    <color name="dark_gray_2">#3A3A39</color>
     <color name="brown_57">#91625337</color>
 
     <!-- Other colors -->

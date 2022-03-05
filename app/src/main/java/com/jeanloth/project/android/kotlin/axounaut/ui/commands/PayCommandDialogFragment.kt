@@ -62,7 +62,7 @@ class PayCommandDialogFragment(
         commandVM.currentCommandId = commandId
         Log.d("[Pay command fragment]", "Current command id : ${commandVM.currentCommandId}")
 
-        commandVM.observeCurrentCommand()
+        //commandVM.observeCurrentCommand()
 
         commandVM.currentCommandMutableLiveData.observe(viewLifecycleOwner){
             // Setup header

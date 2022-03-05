@@ -22,6 +22,10 @@ class ArticleAdapter(
     var onAddMinusClick : ((List<ArticleWrapper>) -> Unit)? = null
     var displayNoArticlesError : ((Boolean) -> Unit)? = null
 
+    init {
+        displayNoArticlesError?.invoke(articleList.isEmpty())
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArticleHolder {
         val itemView = LayoutInflater.from(parent.context)
                 .inflate(R.layout.item_article, parent, false)
@@ -40,6 +44,7 @@ class ArticleAdapter(
     fun setItems(articles : List<ArticleWrapper>, isEditMode : Boolean = false){
         this.articleList = articles
         this.isEditMode = isEditMode
+        displayNoArticlesError?.invoke(articleList.isEmpty())
         notifyDataSetChanged()
     }
 
@@ -48,8 +53,6 @@ class ArticleAdapter(
         private val binding = ItemArticleBinding.bind(view)
 
         fun bind(articleWrapper : ArticleWrapper, position : Int){
-
-            //itemView.cl_article.visibility = VISIBLE
 
             binding.tvName.text= articleWrapper.article.label
 
@@ -79,6 +82,7 @@ class ArticleAdapter(
                     onAddMinusClick?.invoke(articleList)
                     notifyItemChanged(position)
                 }
+
             }
 
         }

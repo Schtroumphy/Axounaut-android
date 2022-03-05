@@ -2,8 +2,7 @@ package com.jeanloth.project.android.kotlin.axounaut
 
 import android.os.Bundle
 import android.view.View
-import android.view.View.GONE
-import android.view.View.VISIBLE
+import android.view.View.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.ContextCompat
@@ -40,15 +39,20 @@ class MainActivity : AppCompatActivity() {
             COMMANDS -> navigateToCommands()
             ANALYSIS -> navigateToAnalysis()
             STOCK -> navigateToStock()
-            else -> throw IllegalArgumentException("Fragment to show not recognized.")
+            else -> navigateToCommands()
         }
 
-        mainVM.headerTitleLiveData().observe(this, {
+        mainVM.headerTitleLiveData().observe(this) {
             javaClass.logD("Title observed : ${it.first}")
 
             binding.tvHeaderTitle.text = it.first
-            binding.tvHeaderSubtitle.text = it.second
-        })
+            binding.tvHeaderSubtitle.visibility = INVISIBLE
+            if(it.second != "") {
+                binding.tvHeaderSubtitle.visibility = VISIBLE
+                binding.tvHeaderSubtitle.text = it.second
+            }
+
+        }
 
         binding.btTbMenuMore.setOnClickListener {
             openPopUpMenu(it)
@@ -56,10 +60,13 @@ class MainActivity : AppCompatActivity() {
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             hideOrShowAddCommandButton(destination.id == R.id.nav_command_list)
-            binding.llMainHeader.visibility = if (destination.id == R.id.nav_home) GONE else VISIBLE
         }
 
         binding.ivHeaderLogo.onClick {
+            // Go to home
+        }
+
+        binding.ivHeaderBack.onClick {
             onBackPressed()
         }
 
@@ -115,8 +122,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun replaceHeaderLogoByBackButton(replaceByBackButton : Boolean){
-        binding.ivHeaderLogo.imageDrawable = ContextCompat.getDrawable(this, if(replaceByBackButton) R.drawable.ic_back_button else R.drawable.logo_kb_002)
-        binding.ivHeaderLogo.layoutParams.width = if(replaceByBackButton) 46 else 130
-        binding.ivHeaderLogo.layoutParams.height = if(replaceByBackButton) 46 else 130
+        binding.ivHeaderLogo.visibility = if(replaceByBackButton) INVISIBLE else VISIBLE
+        binding.ivHeaderBack.visibility = if(replaceByBackButton) VISIBLE else INVISIBLE
+
     }
 }

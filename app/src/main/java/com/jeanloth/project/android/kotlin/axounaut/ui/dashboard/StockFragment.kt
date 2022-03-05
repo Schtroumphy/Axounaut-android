@@ -40,14 +40,16 @@ class StockFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        setupHeader()
-        setupSpinner()
         binding = FragmentStocksBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        setupHeader()
+
+        setupSpinner()
 
         val mock = mutableListOf(
             IngredientWrapper(ingredient = Ingredient(label = "Farine"), quantity = 4.0f),

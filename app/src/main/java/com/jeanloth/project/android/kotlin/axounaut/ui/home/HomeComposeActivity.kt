@@ -1,5 +1,6 @@
 package com.jeanloth.project.android.kotlin.axounaut.ui.home
 
+import android.content.Intent
 import androidx.compose.ui.tooling.preview.Devices
 import com.jeanloth.project.android.kotlin.axounaut.theme.*
 import android.os.Bundle
@@ -41,6 +42,7 @@ import androidx.navigation.NavController
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import com.jeanloth.project.android.kotlin.axounaut.Constants
 import com.jeanloth.project.android.kotlin.axounaut.MainActivity
 import com.jeanloth.project.android.kotlin.axounaut.R
 import com.jeanloth.project.android.kotlin.domain_models.entities.Article
@@ -103,12 +105,12 @@ fun HomePage(navController: NavController?) {
                         .padding(horizontal = 10.dp, vertical = 0.dp)
                 ) {
                     HomeCard("Mes commandes") {
-                        Toast.makeText(context, "Command click", Toast.LENGTH_LONG).show()
-                        navController?.navigate("main")
+                        context.startActivity(Intent(context, MainActivity::class.java))
                     }
                     HomeCard("Mon stock") {
-                        Toast.makeText(context, "Stock click", Toast.LENGTH_LONG).show()
-                        navController?.navigate("main")
+                        context.startActivity(Intent(context, MainActivity::class.java).apply {
+                            putExtra(Constants.FRAGMENT_TO_SHOW, Constants.STOCK)
+                        })
                     }
                 }
                 HomeItem()

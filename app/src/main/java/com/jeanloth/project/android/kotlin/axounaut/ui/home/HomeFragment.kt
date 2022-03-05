@@ -47,27 +47,4 @@ class HomeFragment : Fragment() {
         }*/
     }
 
-    private fun goToCommands() {
-        findNavController().navigate(HomeFragmentDirections.actionNavHomeToNavCommandList())
-    }
-
-    private fun goToAnalysis() {
-        findNavController().navigate(HomeFragmentDirections.actionNavHomeToNavAnalysis())
-
-    }
-
-    private fun goToStock() {
-        findNavController().navigate(HomeFragmentDirections.actionNavHomeToNavStock())
-    }
-
-    private fun goToClientFragment() {
-        findNavController().navigate(HomeFragmentDirections.actionNavHomeToNavClient())
-    }
-
-    private fun goToArticle() {
-        findNavController().navigate(HomeFragmentDirections.actionNavHomeToNavArticle())
-    }
-
-
-
 }

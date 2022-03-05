@@ -19,7 +19,7 @@ class CommandAdapter(
     private var context: Context
 ) : RecyclerView.Adapter<CommandAdapter.ArticleHolder>() {
 
-    var onClick: ((Command) -> Unit)? = null
+    var onClick: ((Long) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArticleHolder {
         val itemView = LayoutInflater.from(parent.context)
@@ -46,16 +46,16 @@ class CommandAdapter(
         fun bind(command: Command) {
 
             binding.cvCommand.onClick {
-                onClick?.invoke(command)
+                onClick?.invoke(command.idCommand)
             }
 
-            binding.tvDeliveryDate.text = command.deliveryDate.toString()
+            binding.tvDeliveryDate.text = command.deliveryDate.toString().replace("-", "/")
             binding.tvClientName.text = command.client?.toNameString()
 
             binding.rvArticlesList.adapter = SimpleListAdapter(
                 convertArticleWrapperToItemList(command.articleWrappers), context
             ).apply {
-                onClickItem = { onClick?.invoke(command) }
+                onClickItem = { onClick?.invoke(command.idCommand) }
             }
 
             binding.tvStatus.text = getCommandStatusByCode(command.statusCode).label
@@ -66,7 +66,7 @@ class CommandAdapter(
                         CommandStatusType.TO_DO.code -> R.color.flax
                         CommandStatusType.IN_PROGRESS.code -> R.color.salamander_attenue
                         CommandStatusType.DONE.code -> R.color.green_light_2
-                        CommandStatusType.DELIVERED.code -> R.color.blue_001
+                        CommandStatusType.DELIVERED.code -> R.color.teal_700
                         CommandStatusType.PAYED.code -> R.color.marron_golden_1
                         CommandStatusType.INCOMPLETE_PAYMENT.code -> R.color.red_002
                         else -> android.R.color.black
@@ -74,14 +74,13 @@ class CommandAdapter(
                 )
             )
 
-
             binding.viewStatus.backgroundTintList =
                 ContextCompat.getColorStateList(
                     context, when (command.statusCode) {
                         CommandStatusType.TO_DO.code -> R.color.flax
                         CommandStatusType.IN_PROGRESS.code -> R.color.salamander_attenue
                         CommandStatusType.DONE.code -> R.color.green_light_2
-                        CommandStatusType.DELIVERED.code -> R.color.blue_001
+                        CommandStatusType.DELIVERED.code -> R.color.teal_700
                         CommandStatusType.PAYED.code -> R.color.marron_golden_1
                         CommandStatusType.INCOMPLETE_PAYMENT.code -> R.color.red_002
                         else -> android.R.color.black

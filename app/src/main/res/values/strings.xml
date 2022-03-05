@@ -45,13 +45,14 @@
     <string name="pay_command_label">Payer une commande</string>
 
     <string name="delivery_dialog_title">Livraison de commande</string>
-    <string name="delivery_dialog_content">Etes-vous sûr de vouloir livrer cette commande incomplète ? Tous les articles
+    <string name="delivery_incomplete_command_title">Commande incomplète</string>
+    <string name="delivery_dialog_content">Etes-vous sûr de vouloir livrer en l\'état ? Tous les articles
         non réalisés seront annulés.
     </string>
 
-    <string name="cancel_dialog_title">Annuler un produit</string>
-    <string name="cancel_dialog_content">Voulez-vous annuler ce produit ?</string>
-    <string name="cancel_article">Annuler le produit</string>
+    <string name="cancel_dialog_title">Supprimer un article</string>
+    <string name="cancel_dialog_content">Voulez-vous supprimer cet article ?</string>
+    <string name="cancel_article">Annuler</string>
     <string name="delete_article">Supprimer</string>
 
     <!-- Pay command dialog Fragment -->
