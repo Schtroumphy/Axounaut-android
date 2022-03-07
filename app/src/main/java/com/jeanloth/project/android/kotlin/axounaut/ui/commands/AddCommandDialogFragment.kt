@@ -148,7 +148,7 @@ class AddCommandDialogFragment (
 
         lifecycleScope.launchWhenStarted {
             addCommandVM.canResumeStateFlow.collectLatest {
-                javaClass.logD("Can resume ? $it")
+                javaClass.logD("[AddCommandDialogFrament] Can resume ? $it")
                 binding.btNext.isEnabled = it
             }
         }

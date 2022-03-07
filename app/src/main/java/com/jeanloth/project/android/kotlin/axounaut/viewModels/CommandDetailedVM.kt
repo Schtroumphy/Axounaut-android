@@ -33,6 +33,8 @@ class CommandDetailedVM (
     var currentCommandMutableLiveData : MutableLiveData<Command?> = MutableLiveData()
     fun currentCommandLiveData() : LiveData<Command?> = currentCommandMutableLiveData
 
+    var currentCommand : Command? = null
+
     var paymentReceivedMutableLiveData : MutableLiveData<Double> = MutableLiveData()
     fun paymentReceivedLiveData() : LiveData<Double> = paymentReceivedMutableLiveData
 
@@ -40,20 +42,29 @@ class CommandDetailedVM (
         Log.d(TAG, "TEST UI observeCurrentCommand launched ")
         viewModelScope.launch {
             if(currentCommandId != 0L) {
-                observeCommandByIdUseCase.invoke(currentCommandId).collect {
-                    Log.d(TAG, " Current AWs from command Id $currentCommandId observed : $it")
-                    currentCommandMutableLiveData.postValue(it)
+                observeCommandByIdUseCase.invoke(currentCommandId).collect { command ->
+                    Log.d(TAG, " Current AWs from command Id $currentCommandId observed : $command")
+                    Log.d(TAG, " Current command $currentCommandId AWS codes : ${command?.articleWrappers?.map { it.statusCode }}")
+                    currentCommand = command
+                    if(currentCommand?.statusCode != CommandStatusType.DONE.code && currentCommand?.articleWrappers?.map { it.statusCode }?.all { it in listOf(CommandStatusType.DONE.code, CommandStatusType.CANCELED.code) } == true){
+                        updateStatusCommand(CommandStatusType.DONE)
+                        return@collect
+                    } else if( currentCommand?.statusCode != CommandStatusType.TO_DO.code && currentCommand?.articleWrappers?.map { it.statusCode }?.any { it in listOf(CommandStatusType.TO_DO.code) } == true){
+                        updateStatusCommand(CommandStatusType.TO_DO)
+                        return@collect
+                    } else if( currentCommand?.statusCode != CommandStatusType.IN_PROGRESS.code && currentCommand?.articleWrappers?.map { it.statusCode }?.any { it in listOf(CommandStatusType.IN_PROGRESS.code) } == true){
+                        updateStatusCommand(CommandStatusType.IN_PROGRESS)
+                        return@collect
+                    }
+                    currentCommandMutableLiveData.postValue(command)
                 }
             }
         }
     }
-
-    fun saveCommand(command: Command){
-        saveCommandUseCase.invoke(command)
-    }
-
     fun removeCommand(){
-        deleteCommandUseCase.invoke(currentCommandMutableLiveData.value!!)
+        currentCommand?.let {
+            deleteCommandUseCase.invoke(it)
+        }
     }
 
     fun saveArticleWrapper(articleWrapper : ArticleWrapper) {
@@ -66,47 +77,11 @@ class CommandDetailedVM (
 
     fun updateStatusCommand(status: CommandStatusType) {
         Log.d(TAG, "Make command $status")
-        saveCommandUseCase.updateCommandStatus(currentCommandMutableLiveData.value!!, status)
+        currentCommand?.let { saveCommandUseCase.updateCommandStatus(it, status) }
     }
 
     fun deleteArticleWrapperFromCurrentCommand(articleWrapper: ArticleWrapper) {
         deleteArticleWrapperUseCase.invoke(currentCommandMutableLiveData.value!!.articleWrappers.find { it == articleWrapper }!!)
-    }
-
-    fun updateCommandStatus(statusCode: Int) {
-        val command = currentCommandMutableLiveData.value!!
-        when (statusCode) {
-            CommandStatusType.TO_DO.code -> {
-                Log.d(TAG, "TODO")
-                if (command.articleWrappers.any { it.statusCode == ArticleWrapperStatusType.DONE.code || it.statusCode == ArticleWrapperStatusType.CANCELED.code }) {
-                    updateStatusCommand(CommandStatusType.IN_PROGRESS)
-                }
-            }
-            CommandStatusType.IN_PROGRESS.code -> {
-                Log.d(TAG, "In progress")
-                if (command.articleWrappers.notCanceled().all { it.statusCode == ArticleWrapperStatusType.DONE.code}) {
-                    updateStatusCommand(CommandStatusType.DONE)
-                } else if (command.articleWrappers.all { it.statusCode == ArticleWrapperStatusType.CANCELED.code }) {
-                    // TODO display dialog to canceled or delete command
-                }
-            }
-            CommandStatusType.DONE.code -> {
-                Log.d(TAG, "Terminé")
-                if (!command.articleWrappers.notCanceled().all { it.statusCode == ArticleWrapperStatusType.DONE.code}) {
-                    updateStatusCommand(CommandStatusType.IN_PROGRESS)
-                }
-            }
-            CommandStatusType.DELIVERED.code -> {
-                Log.d(TAG, "Livré")
-            }
-            CommandStatusType.PAYED.code -> {
-                Log.d(TAG, "Payé")
-            }
-            CommandStatusType.CANCELED.code -> {
-                Log.d(TAG, "Cancel")
-            }
-        }
-
     }
 
 }

@@ -76,7 +76,7 @@ class CommandListFragment : Fragment() {
             }
         }
 
-        lifecycleScope.launchWhenStarted {
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             commandVM.commandToDisplayMediatorLiveData.observe(viewLifecycleOwner) {
                 Log.d("[Command list Fragment", "Command observed : ${it.size}")
                 commandAdapter.setItems(it)

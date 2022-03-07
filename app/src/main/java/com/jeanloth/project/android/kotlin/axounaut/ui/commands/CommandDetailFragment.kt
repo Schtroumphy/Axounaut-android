@@ -37,6 +37,8 @@ class CommandDetailFragment : Fragment() {
 
     private val mainVM: MainVM by sharedViewModel()
 
+    private val COMMAND_STATUS_ENABLE_CHECKBOX = listOf(CommandStatusType.TO_DO.code, CommandStatusType.IN_PROGRESS.code, CommandStatusType.DONE.code)
+
     val args: CommandDetailFragmentArgs by navArgs()
     private lateinit var checkboxTextViewAdapter: CheckboxListAdapter
     private val commandDetailedVM: CommandDetailedVM by viewModel{
@@ -46,12 +48,6 @@ class CommandDetailFragment : Fragment() {
     }
 
     private lateinit var binding : FragmentCommandDetailBinding
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -101,7 +97,7 @@ class CommandDetailFragment : Fragment() {
             currentCommand = it
 
             Log.d("[Command details]", "current command AWs observed for command id $currentCommandId : ${it.articleWrappers}")
-            checkboxTextViewAdapter.setItems(it.articleWrappers, it.statusCode == CommandStatusType.TO_DO.code || it.statusCode == CommandStatusType.IN_PROGRESS.code || it.statusCode == CommandStatusType.DONE.code)
+            checkboxTextViewAdapter.setItems(it.articleWrappers, it.statusCode in COMMAND_STATUS_ENABLE_CHECKBOX)
 
             // Update status
             binding.tvCommandStatus.text = getCommandStatusByCode(it.statusCode).label.uppercase()
@@ -263,7 +259,7 @@ class CommandDetailFragment : Fragment() {
             positiveButtonLabelRef = R.string.delete_article,
             positiveAction = {
                 commandDetailedVM.deleteArticleWrapperFromCurrentCommand(articleWrapper)
-                checkboxTextViewAdapter.onItemDelete(position)
+                //checkboxTextViewAdapter.onItemDelete(position)
             })
     }
 

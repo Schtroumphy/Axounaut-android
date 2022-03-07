@@ -39,7 +39,7 @@
     <string name="delete_dialog_title">Suppression de commande</string>
     <string name="delete_dialog_content">Etes-vous sûr de vouloir supprimer cette commande ?</string>
     <string name="number_label">N°%1$d</string>
-    <string name="command_number_label">Commande n°%1$d</string>
+    <string name="command_number_label">Commande %1$d</string>
     <string name="command_delivery_date_label">Livraison le %1$s</string>
     <string name="add_command_label">Ajouter une commande</string>
     <string name="pay_command_label">Payer une commande</string>

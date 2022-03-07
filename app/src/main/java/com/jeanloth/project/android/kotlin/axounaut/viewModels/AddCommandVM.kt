@@ -15,24 +15,18 @@ import kotlinx.coroutines.launch
 
 class AddCommandVM : ViewModel() {
 
-    var deliveryDateLiveData : MutableLiveData<String> = MutableLiveData("")
+    private var deliveryDateLiveData : MutableLiveData<String> = MutableLiveData("")
     var clientLiveData : MutableLiveData<AppClient?> = MutableLiveData(null)
     var allArticlesLiveData : MutableLiveData<List<ArticleWrapper>?> = MutableLiveData()
 
-    var canResumeMutableLiveData : MutableLiveData<Boolean> = MutableLiveData(false)
-    var canResumeLiveData : LiveData<Boolean> = canResumeMutableLiveData
-
     private var _canResumeStateFlow = MutableStateFlow(false)
     var canResumeStateFlow = _canResumeStateFlow.asStateFlow()
-
-
 
     fun canResume(){
         val isOk = !deliveryDateLiveData.value.isNullOrEmpty() /* && deliveryDate.isDateIsValid()*/
                 && clientLiveData.value != null && !allArticlesLiveData.value.isNullOrEmpty()
                 && allArticlesLiveData.value!!.any { it.count > 0 }
         Log.d("[AddCommandVM]", "Can resume ? $isOk")
-        canResumeMutableLiveData.postValue(isOk)
         viewModelScope.launch {
             _canResumeStateFlow.emit(isOk)
         }
