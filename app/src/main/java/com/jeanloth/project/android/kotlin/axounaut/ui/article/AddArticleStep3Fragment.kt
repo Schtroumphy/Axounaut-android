@@ -13,6 +13,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.jeanloth.project.android.kotlin.axounaut.adapters.CheckboxTextViewAdapter
 import com.jeanloth.project.android.kotlin.axounaut.databinding.FragmentAddArticleStep1Binding
 import com.jeanloth.project.android.kotlin.axounaut.databinding.FragmentAddArticleStep2Binding
+import com.jeanloth.project.android.kotlin.axounaut.databinding.FragmentAddArticleStep3Binding
 import com.jeanloth.project.android.kotlin.axounaut.databinding.FragmentArticleDetailsBinding
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.ArticleVM
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.MainVM
@@ -27,18 +28,19 @@ import org.koin.android.viewmodel.ext.android.viewModel
  * A simple [Fragment] subclass.
  * create an instance of this fragment.
  */
-class AddArticleStep2Fragment : Fragment() {
+class AddArticleStep3Fragment : Fragment() {
 
-    private val articleVM : ArticleVM by viewModel()
+    // TODO instanciate Add article VM shared between all fragment steps
+
 
     private lateinit var checkboxTextViewAdapter: CheckboxTextViewAdapter
-    private lateinit var binding: FragmentAddArticleStep2Binding
+    private lateinit var binding: FragmentAddArticleStep3Binding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentAddArticleStep2Binding.inflate(layoutInflater, container, false)
+        binding = FragmentAddArticleStep3Binding.inflate(layoutInflater, container, false)
         return binding.root
     }
 

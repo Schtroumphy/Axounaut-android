@@ -15,6 +15,7 @@
     <string name="validate">Valider</string>
     <string name="confirm">Confirmer</string>
     <string name="adding">Ajouter</string>
+    <string name="adding_product">Ajouter un ingrédient</string>
     <string name="cancel">Annuler</string>
     <string name="delete">Supprimer</string>
     <string name="delivery">Livrer</string>
@@ -26,11 +27,19 @@
     <string name="article_command_number">Commandé %1$ fois</string>
     <string name="pay">Payer</string>
     <string name="deliver">Livrer</string>
+    <string name="category">Catégorie</string>
 
     <!-- Article List Fragment -->
     <string name="no_articles_error">Aucun article n\'est enregistré.</string>
     <string name="article_name">%1$s</string>
     <string name="article_quantity">Q : %1$d</string>
+    <string name="article_step">Etape %1$d / 4</string>
+    <string name="article_name_title">Nom de l\'article</string>
+    <string name="article_step1_title">Caractéristiques principales</string>
+    <string name="article_step2_title">Choix des ingrédients</string>
+    <string name="article_step3_title">Quantité et temps de préparation</string>
+    <string name="article_step4_title">Récapitulatif et validation</string>
+
 
     <!-- Command Fragment -->
     <string name="no_loading_command_error">Aucune commande en cours.</string>

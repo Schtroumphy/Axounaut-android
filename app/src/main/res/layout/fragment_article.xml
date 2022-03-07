@@ -24,19 +24,24 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cl_add_article_btn"
+        app:layout_constraintTop_toBottomOf="@id/add_button"
         tools:listitem="@layout/item_article_list"
         tools:itemCount="10"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         />
 
-
-    <include
-        layout="@layout/add_button"
-        android:id="@+id/cl_add_article_btn"
+    <TextView
+        android:id="@+id/add_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:background="?android:attr/selectableItemBackground"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:text="@string/adding"
+        android:textColor="@color/orange_002"
+        android:fontFamily="@font/roboto_medium"
+        android:textSize="14sp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="45dp"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

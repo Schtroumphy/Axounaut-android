@@ -30,6 +30,7 @@ val appModule = module {
 
     viewModel { MainVM() }
     viewModel { ArticleVM( get(), get(), get(), get()) }
+    viewModel { AddArticleVM( get(), get(), get(), get()) }
     viewModel { ClientVM( get(), get(), get()) }
     viewModel { AddCommandVM() }
     viewModel { CommandVM(get(), get(), get(), get(), get(), get(), get()) }

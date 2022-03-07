@@ -10,10 +10,11 @@ import com.jeanloth.project.android.kotlin.domain_models.entities.Article
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.article.GetAllArticlesUseCase
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.article.ObserveArticlesUseCase
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.article.SaveArticleUseCase
+import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleCategory
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
-class ArticleVM (
+class AddArticleVM (
     private val getAllArticlesUseCase : GetAllArticlesUseCase,
     private val observeAllArticlesUseCase : ObserveArticlesUseCase,
     private val saveArticleUseCase: SaveArticleUseCase,
@@ -21,6 +22,12 @@ class ArticleVM (
 ): ViewModel() {
 
     var articles : List<Article> = emptyList()
+
+    var nameMutableLiveData : MutableLiveData<String> = MutableLiveData("")
+    var categoryMutableLiveData : MutableLiveData<ArticleCategory> = MutableLiveData(ArticleCategory.SALTED)
+
+    var priceMutableLiveData : MutableLiveData<Int> = MutableLiveData(0)
+    fun priceLiveData() : LiveData<Int> = priceMutableLiveData
 
     var allArticleMutableLiveData : MutableLiveData<List<Article>> = MutableLiveData(emptyList())
     fun allArticlesLiveData() : LiveData<List<Article>> = allArticleMutableLiveData
@@ -33,6 +40,26 @@ class ArticleVM (
                 allArticleMutableLiveData.postValue(it)
             }
         }
+    }
+
+    fun setArticleName(name : String){
+        nameMutableLiveData.value = name
+        Log.d("[Add Article VM]", " Set name to : ${nameMutableLiveData.value}")
+    }
+
+    fun setArticleCategory(category : ArticleCategory){
+        categoryMutableLiveData.value = category
+        Log.d("[Add Article VM]", " Set category to : ${categoryMutableLiveData.value}")
+    }
+
+    fun setPrice(adding : Boolean = false){
+        priceMutableLiveData.value =
+            if(adding) {
+                priceMutableLiveData.value?.plus(5)
+            }  else if(priceMutableLiveData.value!! > 0) {
+                priceMutableLiveData.value?.minus(5)
+            } else priceMutableLiveData.value
+        Log.d("[Add Article VM]", " Set price to : ${priceMutableLiveData.value}")
     }
 
     fun getAllArticles(): List<Article> {

@@ -3,128 +3,62 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/nav_command_list">
+    app:startDestination="@+id/nav_step1">
 
     <fragment
-        android:id="@+id/nav_command_list"
-        android:name="com.jeanloth.project.android.kotlin.axounaut.ui.commands.CommandListFragment"
-        android:label="Liste des commandes"
-        tools:layout="@layout/fragment_command_list" >
-
-        <action
-            android:id="@+id/action_nav_command_list_to_nav_command_details"
-            app:destination="@id/nav_command_details" />
-
-        <action
-            android:id="@+id/action_nav_command_list_to_nav_article"
-            app:destination="@id/nav_article" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/nav_stock"
-        android:name="com.jeanloth.project.android.kotlin.axounaut.ui.dashboard.StockFragment"
-        android:label="@string/title_stock"
-        tools:layout="@layout/fragment_stocks">
-
-        <action
-            android:id="@+id/action_nav_stock_to_nav_previsional"
-            app:destination="@id/nav_previsional" />
-
-    </fragment>
-
-    <fragment
-        android:id="@+id/nav_previsional"
-        android:name="com.jeanloth.project.android.kotlin.axounaut.ui.dashboard.PrevisionalFragment"
-        android:label="Previsionnel"
-        tools:layout="@layout/fragment_previsional" />
-
-    <fragment
-        android:id="@+id/nav_analysis"
-        android:name="com.jeanloth.project.android.kotlin.axounaut.ui.commands.AnalysisFragment"
-        android:label="Analyses"
-        tools:layout="@layout/fragment_analysis" />
-
-    <fragment
-        android:id="@+id/navigation_settings"
-        android:name="com.jeanloth.project.android.kotlin.axounaut.ui.SettingsFragment"
-        android:label="Paramètres" />
-
-    <fragment
-        android:id="@+id/nav_command_details"
-        android:name="com.jeanloth.project.android.kotlin.axounaut.ui.commands.CommandDetailFragment"
-        android:label="Détails commande"
-        tools:layout="@layout/fragment_command_detail" >
-
-        <argument
-            android:name="commandToDetailId"
-            app:argType="long"
-            app:nullable="false" />
-
-        <action
-            android:id="@+id/action_nav_command_detail_to_nav_article"
-            app:destination="@id/nav_article" />
-
-    </fragment>
-
-    <fragment
-        android:id="@+id/nav_article"
-        android:name="com.jeanloth.project.android.kotlin.axounaut.ui.article.ArticleFragment"
-        android:label="Articles"
-        tools:layout="@layout/fragment_article" >
-
-        <action
-            android:id="@+id/action_nav_article_to_nav_article_details"
-            app:destination="@id/nav_article_details" />
-
-    </fragment>
-
-    <fragment
-        android:id="@+id/nav_article_details"
+        android:id="@+id/nav_step0"
         android:name="com.jeanloth.project.android.kotlin.axounaut.ui.article.ArticleDetailsFragment"
-        android:label="Détails articles"
-        tools:layout="@layout/fragment_article_details" >
-
-    </fragment>
-
-    <fragment
-        android:id="@+id/nav_clients"
-        android:name="com.jeanloth.project.android.kotlin.axounaut.ui.client.ClientFragment"
-        android:label="Clients"
-        tools:layout="@layout/fragment_client" >
+        android:label="Etape 1"
+        tools:layout="@layout/fragment_add_article_step_1" >
 
         <action
-            android:id="@+id/action_nav_clients_to_nav_clients_details"
-            app:destination="@id/nav_clients_details" />
-
-    </fragment>
-
-    <fragment
-        android:id="@+id/nav_clients_details"
-        android:name="com.jeanloth.project.android.kotlin.axounaut.ui.client.ClientDetailsFragment"
-        android:label="Clients details"
-        tools:layout="@layout/fragment_client_details" >
-
-    </fragment>
-
-    <fragment
-        android:id="@+id/nav_add_command"
-        android:name="com.jeanloth.project.android.kotlin.axounaut.ui.commands.AddCommandDialogFragment"
-        android:label="Ajouter une commande"
-        tools:layout="@layout/fragment_add_command_dialog" >
+            android:id="@+id/action_nav_step_0_to_nav_step_1"
+            app:destination="@id/nav_step1" />
 
         <action
-            android:id="@+id/action_nav_add_command_to_nav_article"
-            app:destination="@id/nav_article" />
+            android:id="@+id/action_nav_step_0_to_nav_step_2"
+            app:destination="@id/nav_step2" />
     </fragment>
 
     <fragment
-        android:id="@+id/nav_pay_command"
-        android:name="com.jeanloth.project.android.kotlin.axounaut.ui.commands.PayCommandDialogFragment"
-        android:label="Pay command"
-        tools:layout="@layout/fragment_pay_command_dialog" >
+        android:id="@+id/nav_step1"
+        android:name="com.jeanloth.project.android.kotlin.axounaut.ui.article.AddArticleStep1Fragment"
+        android:label="Etape 1"
+        tools:layout="@layout/fragment_add_article_step_1" >
+
+        <action
+            android:id="@+id/action_nav_step_1_to_nav_step_2"
+            app:destination="@id/nav_step2" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_step2"
+        android:name="com.jeanloth.project.android.kotlin.axounaut.ui.article.AddArticleStep2Fragment"
+        android:label="Etape 2"
+        tools:layout="@layout/fragment_add_article_step_2">
+
+        <action
+            android:id="@+id/action_nav_step_2_to_nav_step_3"
+            app:destination="@id/nav_step3" />
 
     </fragment>
 
+    <fragment
+        android:id="@+id/nav_step3"
+        android:name="com.jeanloth.project.android.kotlin.axounaut.ui.article.AddArticleStep3Fragment"
+        android:label="Etape 3"
+        tools:layout="@layout/fragment_add_article_step_3">
 
+        <action
+            android:id="@+id/action_nav_step_3_to_nav_step_4"
+            app:destination="@id/nav_step4" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_step4"
+        android:name="com.jeanloth.project.android.kotlin.axounaut.ui.article.AddArticleStep4Fragment"
+        android:label="Etape 4"
+        tools:layout="@layout/fragment_add_article_step_4" />
 
 </navigation>

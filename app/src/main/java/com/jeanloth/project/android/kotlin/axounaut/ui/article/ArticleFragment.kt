@@ -16,6 +16,7 @@ import com.jeanloth.project.android.kotlin.axounaut.viewModels.ArticleVM
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.MainVM
 import org.koin.android.viewmodel.ext.android.sharedViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
+import splitties.views.onClick
 
 
 /**
@@ -53,7 +54,7 @@ class ArticleFragment : Fragment() {
         }
         binding.rvArticlesFragment.adapter = adapter
 
-        binding.clAddArticleBtn.root.setOnClickListener{
+        binding.addButton.onClick{
             goToArticleDetails()
         }
 

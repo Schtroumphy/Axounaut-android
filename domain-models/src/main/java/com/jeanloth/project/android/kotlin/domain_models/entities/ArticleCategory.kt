@@ -11,7 +11,7 @@ enum class ArticleCategory( val code : Int, val label : String) {
             else -> SALTED
         }
 
-        fun getArticleCategoryFromLabel(label : String) : ArticleCategory = when(label) {
+        fun getArticleCategoryFromLabel(label : String?) : ArticleCategory = when(label) {
             SALTED.label -> SALTED
             SWEET.label -> SWEET
             else -> SALTED

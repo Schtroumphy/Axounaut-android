@@ -1,17 +1,32 @@
 package com.jeanloth.project.android.kotlin.axounaut.ui.article
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.core.widget.addTextChangedListener
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
+import com.jeanloth.project.android.kotlin.axounaut.R
 import com.jeanloth.project.android.kotlin.axounaut.adapters.CheckboxTextViewAdapter
+import com.jeanloth.project.android.kotlin.axounaut.databinding.FragmentAddArticleStep1Binding
 import com.jeanloth.project.android.kotlin.axounaut.databinding.FragmentArticleDetailsBinding
+import com.jeanloth.project.android.kotlin.axounaut.extensions.hideKeyboard
+import com.jeanloth.project.android.kotlin.axounaut.viewModels.AddArticleVM
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.ArticleVM
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.MainVM
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.StockVM
@@ -25,89 +40,90 @@ import org.koin.android.viewmodel.ext.android.viewModel
  * A simple [Fragment] subclass.
  * create an instance of this fragment.
  */
-class ArticleDetailsFragment : Fragment() {
+class AddArticleStep1Fragment : Fragment() {
 
-    private val articleVM : ArticleVM by viewModel()
-    private val mainVM : MainVM by sharedViewModel()
-    private val stockVM : StockVM by viewModel()
 
     private lateinit var checkboxTextViewAdapter: CheckboxTextViewAdapter
-    private lateinit var binding: FragmentArticleDetailsBinding
+    private lateinit var binding: FragmentAddArticleStep1Binding
 
-    private var stepCount = 1
+    private val addArticleVM : AddArticleVM by viewModel()
+    private lateinit var navController: NavController
+
+    private var count = 0
+    val TAG = "[Add Article Step 1 Fragment]"
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentArticleDetailsBinding.inflate(layoutInflater, container, false)
+        binding = FragmentAddArticleStep1Binding.inflate(layoutInflater, container, false)
+        setupSpinner()
+        setupPriceListeners()
+        setupArticleNameListener()
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Other setup
-        setupHeader()
-        setupSpinner()
+        addArticleVM.priceLiveData().observe(viewLifecycleOwner){
+            Log.d(TAG, "Price observed : $it")
+            binding.tvCount.text = it.toString()
 
-        // Setup adapters
-        checkboxTextViewAdapter = CheckboxTextViewAdapter(mutableListOf())
-
-        // Setup recycler views
-        //binding.rvRecipeArticles.adapter = checkboxTextViewAdapter
-
-
-        // Listeners
-        stockVM.observePWLiveData().observe(viewLifecycleOwner){
-            checkboxTextViewAdapter.setItems(it)
+            binding.ibMinus.visibility = if(it == 0) GONE else VISIBLE
         }
+    }
 
-        // Click listeners
-        binding.btAddArticle.setOnClickListener {
-            if(stepCount < 4){
-                stepCount++
-            } else {
-                addArticle()
+    private fun setupArticleNameListener() {
+        binding.etArticleName.apply {
+
+            addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+                override fun afterTextChanged(p0: Editable?) {
+                    addArticleVM.setArticleName(p0.toString())
+                }
+            })
+
+            setOnEditorActionListener { _, actionId, _ ->
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    hideKeyboard()
+                    this.clearFocus()
+                }
+                true
             }
         }
     }
 
-    private fun setupHeader() {
-        mainVM.setHeaderTitle("Ajouter un article")
-    }
+    private fun setupPriceListeners(){
+        binding.ibAdd.setOnClickListener {
+            addArticleVM.setPrice(true)
+        }
 
-    private fun addArticle() {
-        /*val articleName = binding.etArticleName.text.toString()
-        //val articlePrice = binding.etArticlePrice.text.toString()
-        val articleCategory = getArticleCategoryFromLabel(binding.spinnerCategories.selectedItem.toString())
-
-        if( articleName.isEmpty() /*|| articlePrice.isEmpty()*/) {
-            Snackbar.make(requireView(), "Veuillez saisir des valeurs valides.",
-                Snackbar.LENGTH_LONG).show()
-        } else {
-            val articleToAdd = Article(
-                label = articleName,
-               // price = /*articlePrice.toDouble()*/,
-                category = articleCategory.code
-            )
-            Log.d("[Article Details Fragment", "Article to add : $articleToAdd")
-            articleVM.saveArticle(articleToAdd)
-            Snackbar.make(requireView(), "Article ajouté avec succès.",
-                Snackbar.LENGTH_SHORT).show()
-            findNavController().popBackStack()
-        }*/
+        binding.ibMinus.setOnClickListener {
+            addArticleVM.setPrice()
+        }
     }
 
     private fun setupSpinner() {
-
         val adapter: ArrayAdapter<String> = ArrayAdapter<String>(
             requireContext(),
             android.R.layout.simple_spinner_item,
             ArticleCategory.values().map { it.label }
         )
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        //binding.spinnerCategories.adapter = adapter
+        binding.spinnerCategories.adapter = adapter
+        binding.spinnerCategories.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                val category : ArticleCategory = getArticleCategoryFromLabel(adapter.getItem(position))
+                addArticleVM.setArticleCategory(category)
+            }
+
+        }
+
+
     }
 
 }

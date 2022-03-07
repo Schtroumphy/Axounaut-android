@@ -10,6 +10,7 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.jeanloth.project.android.kotlin.axounaut.R
 import com.jeanloth.project.android.kotlin.axounaut.databinding.ItemArticleListBinding
+import com.jeanloth.project.android.kotlin.axounaut.extensions.toCamelCase
 import com.jeanloth.project.android.kotlin.domain_models.entities.Article
 import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleWrapper
 import splitties.views.onClick
@@ -48,7 +49,7 @@ class ArticleListAdapter(
         private val binding = ItemArticleListBinding.bind(view)
 
         fun bind(article : Article){
-            binding.tvName.text= article.label
+            binding.tvName.text= article.label.toCamelCase()
             binding.tvPrice.text= context.getString(R.string.price_euro, article.price.toString())
             //itemView.tv_article_stat.text= context.getString(R.string.article_command_number, article.price.toString())
 

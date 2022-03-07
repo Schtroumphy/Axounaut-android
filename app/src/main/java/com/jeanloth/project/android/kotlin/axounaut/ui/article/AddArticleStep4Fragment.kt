@@ -11,10 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.jeanloth.project.android.kotlin.axounaut.adapters.CheckboxTextViewAdapter
-import com.jeanloth.project.android.kotlin.axounaut.databinding.FragmentAddArticleStep1Binding
-import com.jeanloth.project.android.kotlin.axounaut.databinding.FragmentAddArticleStep2Binding
-import com.jeanloth.project.android.kotlin.axounaut.databinding.FragmentAddArticleStep3Binding
-import com.jeanloth.project.android.kotlin.axounaut.databinding.FragmentArticleDetailsBinding
+import com.jeanloth.project.android.kotlin.axounaut.databinding.*
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.ArticleVM
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.MainVM
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.StockVM
@@ -28,18 +25,18 @@ import org.koin.android.viewmodel.ext.android.viewModel
  * A simple [Fragment] subclass.
  * create an instance of this fragment.
  */
-class AddArticleStep3Fragment : Fragment() {
+class AddArticleStep4Fragment : Fragment() {
 
-    private val articleVM : ArticleVM by viewModel()
+    // TODO instanciate Add article VM shared between all fragment steps
 
     private lateinit var checkboxTextViewAdapter: CheckboxTextViewAdapter
-    private lateinit var binding: FragmentAddArticleStep3Binding
+    private lateinit var binding: FragmentAddArticleStep4Binding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentAddArticleStep3Binding.inflate(layoutInflater, container, false)
+        binding = FragmentAddArticleStep4Binding.inflate(layoutInflater, container, false)
         return binding.root
     }
 
