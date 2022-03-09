@@ -57,8 +57,8 @@ class StockFragment : Fragment() {
             IngredientWrapper(ingredient = Ingredient(label = "Lait 1L"), quantity = 0.0f, quantityType = IngredientQuantityType.L),
             IngredientWrapper(ingredient = Ingredient(label = "Epices"), quantity = 1.0f, quantityType = IngredientQuantityType.G),
             IngredientWrapper(ingredient = Ingredient(label = "Autre 1"), quantity = 1.0f, quantityType = IngredientQuantityType.L),
-            IngredientWrapper(ingredient = Ingredient(label = "Test"), quantity = 0.0f, quantityType = IngredientQuantityType.ML),
-            IngredientWrapper(ingredient = Ingredient(label = "Test 2"), quantity = 2.0f, quantityType = IngredientQuantityType.KG),
+            IngredientWrapper(ingredient = Ingredient(label = "Test"), quantity = 0.0f, quantityType = IngredientQuantityType.L),
+            IngredientWrapper(ingredient = Ingredient(label = "Test 2"), quantity = 2.0f, quantityType = IngredientQuantityType.G),
             IngredientWrapper(ingredient = Ingredient(label = "Test 3"), quantity = 2.0f, quantityType = IngredientQuantityType.G),
             IngredientWrapper(ingredient = Ingredient(label = "Test 4"), quantity = 0.0f, quantityType = IngredientQuantityType.G),
         )
@@ -76,7 +76,7 @@ class StockFragment : Fragment() {
         }
         binding.rvIngredients.adapter = ingredientAdapter
 
-        // Observe all pws
+        // Observe all ingredient wrappers
         stockVM.observePWLiveData().observe(viewLifecycleOwner){
             ingredientAdapter.setItems(it)
         }

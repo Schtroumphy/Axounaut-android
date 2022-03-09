@@ -11,7 +11,7 @@ class RecipeWrapperEntity(
     var ingredientWrapperId : Long = 0,
 
     var quantity : Float = 0f,
-    var quantityTypeLabel : String = IngredientQuantityType.KG.label
+    var quantityTypeLabel : String = IngredientQuantityType.G.label
 
 ) : Entity {
 

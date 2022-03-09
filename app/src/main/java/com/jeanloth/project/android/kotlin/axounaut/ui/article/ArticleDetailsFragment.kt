@@ -138,7 +138,7 @@ class ArticleDetailsFragment : Fragment(), StepListener {
         }*/
     }
 
-    fun getStepTitleByStepCount() : Int{
+    private fun getStepTitleByStepCount() : Int{
         return when(stepCount){
             1 -> R.string.article_step1_title
             2 -> R.string.article_step2_title
@@ -146,10 +146,6 @@ class ArticleDetailsFragment : Fragment(), StepListener {
             4 -> R.string.article_step4_title
             else -> R.string.article_step1_title
         }
-    }
-
-    override fun onStepBackPressed(currentStep: Int) {
-        if(currentStep > 1) stepCount = currentStep - 1
     }
 
 }

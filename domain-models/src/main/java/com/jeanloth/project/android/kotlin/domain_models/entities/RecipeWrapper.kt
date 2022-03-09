@@ -7,7 +7,7 @@ data class RecipeWrapper(
     var articleId : Long? = null,
     var ingredient : Ingredient,
     var quantity : Float = 0f,
-    var quantityType : IngredientQuantityType = IngredientQuantityType.KG
+    var quantityType : IngredientQuantityType = IngredientQuantityType.G
 
 ) : Serializable  {
 
