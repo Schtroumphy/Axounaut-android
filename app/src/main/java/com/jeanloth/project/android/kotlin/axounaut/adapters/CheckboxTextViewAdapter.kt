@@ -38,8 +38,7 @@ class CheckboxTextViewAdapter(
         private val binding = ItemCheckboxArticleBinding.bind(view)
         fun bind(item: IngredientWrapper) {
 
-            val articleLabel =
-                itemView.context.getString(R.string.article_name, item.ingredient.label)
+            val articleLabel = itemView.context.getString(R.string.article_name, item.ingredient.label)
 
             binding.tvLabel.apply {
                 text = articleLabel
@@ -48,6 +47,8 @@ class CheckboxTextViewAdapter(
                         binding.cbItem.isChecked = !binding.cbItem.isChecked
                 }
             }
+
+            binding.cbItem.isChecked = item.isSelected
 
             binding.cbItem.setOnCheckedChangeListener { _, isChecked ->
                 onCheckedItem?.invoke(item, isChecked)

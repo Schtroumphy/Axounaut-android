@@ -6,7 +6,8 @@ data class IngredientWrapper(
     val id : Long = 0,
     var ingredient : Ingredient,
     var quantity : Float = 0f,
-    var quantityType : IngredientQuantityType = IngredientQuantityType.KG
+    var isSelected: Boolean = false,
+    var quantityType : IngredientQuantityType = IngredientQuantityType.G
 
 ) : Serializable  {
 
