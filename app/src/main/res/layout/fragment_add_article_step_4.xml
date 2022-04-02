@@ -9,7 +9,7 @@
         android:id="@+id/tv_recap_article_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Pain au beurre"
+        android:text="@string/article_name_recap"
         android:layout_marginTop="25dp"
         android:layout_marginStart="@dimen/activity_horizontal_margin"
         app:layout_constraintTop_toTopOf="parent"
@@ -19,7 +19,7 @@
         android:id="@+id/tv_recap_article_category"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Catégorie : Salé"
+        android:text="@string/article_category_recap"
         android:layout_marginTop="@dimen/activity_vertical_margin"
         android:layout_marginStart="@dimen/activity_horizontal_margin"
         app:layout_constraintTop_toBottomOf="@id/tv_recap_article_name"
@@ -29,7 +29,7 @@
         android:id="@+id/tv_recap_article_preparing_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Temps de préparation : 1h"
+        android:text="@string/article_recap_preparing_time"
         android:layout_marginTop="@dimen/activity_vertical_margin"
         android:layout_marginStart="@dimen/activity_horizontal_margin"
         app:layout_constraintTop_toBottomOf="@id/tv_recap_article_category"
@@ -44,5 +44,16 @@
         android:layout_marginStart="@dimen/activity_horizontal_margin"
         app:layout_constraintTop_toBottomOf="@id/tv_recap_article_preparing_time"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_recap_recipe_items"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/activity_horizontal_margin"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintTop_toBottomOf="@id/tv_recap_article_recipe_title"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:itemCount="5"
+        tools:listitem="@layout/item_stock_ingredient" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

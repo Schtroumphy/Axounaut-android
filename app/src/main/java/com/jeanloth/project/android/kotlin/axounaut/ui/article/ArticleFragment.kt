@@ -32,11 +32,6 @@ class ArticleFragment : Fragment() {
 
     private lateinit var binding: FragmentArticleBinding
 
-    enum class EArticleDisplayMode{
-        EDITION,
-        DETAILLED
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -49,7 +44,7 @@ class ArticleFragment : Fragment() {
 
         mainVM.setHeaderTitle("Mes articles")
 
-        adapter = ArticleListAdapter(emptyList(), requireContext()).apply {
+        adapter = ArticleListAdapter(articleVM.getAllArticles(), requireContext()).apply {
             onEditClick = { }
         }
         binding.rvArticlesFragment.adapter = adapter

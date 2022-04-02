@@ -65,7 +65,7 @@ class CommandDetailFragment : Fragment() {
 
         checkboxTextViewAdapter = CheckboxListAdapter(mutableListOf()).apply {
             onCheckedItem = { item, isChecked ->
-                item.statusCode = if (isChecked) ArticleWrapperStatusType.DONE.code else ArticleWrapperStatusType.IN_PROGRESS.code
+                item.statusCode = if (isChecked) ArticleWrapperStatusType.DONE.code else ArticleWrapperStatusType.TO_DO.code
                 commandDetailedVM.saveArticleWrapper(item)
             }
 

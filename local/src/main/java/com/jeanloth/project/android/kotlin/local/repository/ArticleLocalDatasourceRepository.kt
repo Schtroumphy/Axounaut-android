@@ -19,8 +19,7 @@ class ArticleLocalDatasourceRepository(
 
     // put method returns id of the entity added
     override fun saveArticle(article: Article): Boolean {
-        print("[ArticleLocalDSRepository] : Save article - Article : $article")
-        print("[ArticleLocalDSRepository] : Save article - Article Entity: ${mapper.to(article)}")
+        print("[ArticleLocalDSRepository] : Save article - Article : ${article.label}")
         dao.box.put(mapper.to(article))
         return true
     }

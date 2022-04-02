@@ -10,13 +10,16 @@ import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import com.jeanloth.project.android.kotlin.axounaut.AppLogger.logD
 import com.jeanloth.project.android.kotlin.axounaut.Constants.ANALYSIS
+import com.jeanloth.project.android.kotlin.axounaut.Constants.ARTICLE
 import com.jeanloth.project.android.kotlin.axounaut.Constants.COMMANDS
 import com.jeanloth.project.android.kotlin.axounaut.Constants.FRAGMENT_TO_SHOW
 import com.jeanloth.project.android.kotlin.axounaut.Constants.STOCK
 import com.jeanloth.project.android.kotlin.axounaut.databinding.ActivityMainBinding
 import com.jeanloth.project.android.kotlin.axounaut.ui.commands.AddCommandDialogFragment
 import com.jeanloth.project.android.kotlin.axounaut.ui.commands.PayCommandDialogFragment
+import com.jeanloth.project.android.kotlin.axounaut.viewModels.AddArticleVM
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.MainVM
+import org.koin.android.viewmodel.ext.android.sharedViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
 import splitties.views.imageDrawable
 import splitties.views.onClick
@@ -25,6 +28,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var navController: NavController
     private val mainVM: MainVM by viewModel()
+    private val addArticleVM : AddArticleVM by viewModel()
 
     private lateinit var binding: ActivityMainBinding
 
@@ -39,6 +43,7 @@ class MainActivity : AppCompatActivity() {
             COMMANDS -> navigateToCommands()
             ANALYSIS -> navigateToAnalysis()
             STOCK -> navigateToStock()
+            ARTICLE -> navigateToArticle()
             else -> navigateToCommands()
         }
 
@@ -81,6 +86,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun navigateToStock(){
         navController.navigate(R.id.nav_stock)
+    }
+
+    private fun navigateToArticle(){
+        navController.navigate(R.id.nav_article)
     }
 
     private fun navigateToAnalysis(){

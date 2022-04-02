@@ -2,10 +2,19 @@ package com.jeanloth.project.android.kotlin.axounaut.extensions
 
 import android.app.Activity
 import android.content.Context
+import android.graphics.Rect
+import android.os.Build
+import android.util.Log
+import android.util.TypedValue
 import android.view.View
+import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.OnLifecycleEvent
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.jeanloth.project.android.kotlin.axounaut.R
@@ -112,5 +121,55 @@ fun displayDialog(
         negativeButton.textColorResource = negativeButtonColor
     }.show()
 }
+
+/** Interface for actions when keyboard appears and disappears **/
+fun interface OnKeyBoardVisibilityListener{
+    fun onVisibilityChanged(visible: Boolean)
+}
+
+/**
+ * Add a keyboard listener on activity screen for the fragment
+ * Remove the listener when fragment is destroyed
+ */
+fun Fragment.setKeyBoardVisibilityListener(listener: OnKeyBoardVisibilityListener) {
+    val parentView = requireActivity().findViewById<ViewGroup>(android.R.id.content).getChildAt(0)
+    if(parentView == null) {
+        Log.e("TAg", "Could not get parent view for keyboard visibility listener for ${javaClass.simpleName}")
+        return
+    }
+    val globalLayoutListener = object : ViewTreeObserver.OnGlobalLayoutListener {
+        var alreadyOpen: Boolean = false
+        val defaultKeyboardHeightDP = 100
+        val estimatedKeyboardDP =
+            defaultKeyboardHeightDP + if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) 48 else 0
+        val rect = Rect()
+        override fun onGlobalLayout() {
+            val estimatedKeyboardHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                estimatedKeyboardDP.toFloat(),
+                parentView.resources.displayMetrics).toInt()
+            parentView.getWindowVisibleDisplayFrame(rect)
+            val heightDiff = parentView.rootView.height - (rect.bottom - rect.top)
+            val isShown = heightDiff >= estimatedKeyboardHeight
+
+            if (isShown == alreadyOpen) {
+                Log.d("TAG", "Ignore global layout change")
+                return
+            }
+
+            alreadyOpen = isShown
+            listener.onVisibilityChanged(isShown)
+        }
+    }
+    parentView.viewTreeObserver.addOnGlobalLayoutListener(globalLayoutListener)
+    lifecycle.addObserver(object : LifecycleObserver {
+        @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+        fun destroy() {
+            parentView.viewTreeObserver.removeOnGlobalLayoutListener(globalLayoutListener)
+            lifecycle.removeObserver(this)
+        }
+    })
+}
+
+
 
 

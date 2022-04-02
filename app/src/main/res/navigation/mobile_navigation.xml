@@ -22,7 +22,7 @@
 
     <fragment
         android:id="@+id/nav_stock"
-        android:name="com.jeanloth.project.android.kotlin.axounaut.ui.dashboard.StockFragment"
+        android:name="com.jeanloth.project.android.kotlin.axounaut.ui.stock.StockFragment"
         android:label="@string/title_stock"
         tools:layout="@layout/fragment_stocks">
 
@@ -34,7 +34,7 @@
 
     <fragment
         android:id="@+id/nav_previsional"
-        android:name="com.jeanloth.project.android.kotlin.axounaut.ui.dashboard.PrevisionalFragment"
+        android:name="com.jeanloth.project.android.kotlin.axounaut.ui.stock.PrevisionalFragment"
         android:label="Previsionnel"
         tools:layout="@layout/fragment_previsional" />
 
@@ -80,7 +80,7 @@
 
     <fragment
         android:id="@+id/nav_article_details"
-        android:name="com.jeanloth.project.android.kotlin.axounaut.ui.article.ArticleDetailsFragment"
+        android:name="com.jeanloth.project.android.kotlin.axounaut.ui.article.AddArticleFragment"
         android:label="Détails articles"
         tools:layout="@layout/fragment_article_details" >
 

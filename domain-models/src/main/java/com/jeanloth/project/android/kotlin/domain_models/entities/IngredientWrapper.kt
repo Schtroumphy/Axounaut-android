@@ -11,9 +11,6 @@ data class IngredientWrapper(
 
 ) : Serializable  {
 
-    val totalIngredientWrapperPrice : Double
-    get() = quantity * ingredient.price
-
     val countStatusType : CountStatus
     get() = when{
         quantity == 0f -> CountStatus.LOW
@@ -22,6 +19,16 @@ data class IngredientWrapper(
     }
 
     companion object {
+
+        fun List<RecipeWrapper>.toIngredientWrapper() : List<IngredientWrapper>{
+            return this.map {
+                IngredientWrapper(
+                    id = 0L,
+                    ingredient = it.ingredient,
+                    quantity = it.quantity
+                )
+            }
+        }
 
         fun createWrapperList(ingredients : List<Ingredient>) : List<IngredientWrapper>{
             val listResult = mutableListOf<IngredientWrapper>()

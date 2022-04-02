@@ -1,4 +1,4 @@
-package com.jeanloth.project.android.kotlin.axounaut.ui.dashboard
+package com.jeanloth.project.android.kotlin.axounaut.ui.stock
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

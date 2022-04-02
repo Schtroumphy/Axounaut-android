@@ -38,7 +38,13 @@
           "type": 9
         }
       ],
-      "relations": []
+      "relations": [
+        {
+          "id": "1:8241407346330562731",
+          "name": "recipeWrappers",
+          "targetId": "10:234958991115622695"
+        }
+      ]
     },
     {
       "id": "2:599839949773774750",
@@ -247,45 +253,20 @@
           "id": "2:376890429894315831",
           "name": "label",
           "type": 9
-        },
-        {
-          "id": "3:6188143173871284346",
-          "name": "price",
-          "type": 8,
-          "flags": 4
         }
       ],
       "relations": []
     },
     {
       "id": "10:234958991115622695",
-      "lastPropertyId": "5:3790719812495970965",
+      "lastPropertyId": "6:7523395558497642133",
       "name": "RecipeWrapperEntity",
       "properties": [
-        {
-          "id": "1:8466547750200469753",
-          "name": "ingredientWrapperId",
-          "type": 6,
-          "flags": 1
-        },
         {
           "id": "2:395805698330625465",
           "name": "quantity",
           "type": 7,
           "flags": 4
-        },
-        {
-          "id": "3:1747764972029456942",
-          "name": "quantityTypeLabel",
-          "type": 9
-        },
-        {
-          "id": "4:3159849483109978116",
-          "name": "articleId",
-          "indexId": "8:2559187524249233381",
-          "type": 11,
-          "flags": 1548,
-          "relationTarget": "ArticleEntity"
         },
         {
           "id": "5:3790719812495970965",
@@ -294,6 +275,12 @@
           "type": 11,
           "flags": 1548,
           "relationTarget": "IngredientEntity"
+        },
+        {
+          "id": "6:7523395558497642133",
+          "name": "id",
+          "type": 6,
+          "flags": 1
         }
       ],
       "relations": []
@@ -301,7 +288,7 @@
   ],
   "lastEntityId": "10:234958991115622695",
   "lastIndexId": "9:4269056847031145953",
-  "lastRelationId": "0:0",
+  "lastRelationId": "1:8241407346330562731",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
   "modelVersionParserMinimum": 5,
@@ -312,7 +299,8 @@
   "retiredIndexUids": [
     1587984599627855345,
     7806001009017746263,
-    8361938139333560265
+    8361938139333560265,
+    2559187524249233381
   ],
   "retiredPropertyUids": [
     3605987420131221416,
@@ -336,7 +324,11 @@
     1847008063571552717,
     8290738965387635489,
     7926824571818768432,
-    8931958119939407683
+    8931958119939407683,
+    1747764972029456942,
+    3159849483109978116,
+    8466547750200469753,
+    6188143173871284346
   ],
   "retiredRelationUids": [],
   "version": 1

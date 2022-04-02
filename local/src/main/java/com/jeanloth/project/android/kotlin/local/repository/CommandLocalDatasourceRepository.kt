@@ -108,7 +108,11 @@ class CommandLocalDatasourceRepository(
                     articleDao.box.put(articleMapper.to(it.article))
                 }
             }
-            articleWrapperDAO.box.put(articleWrapperMapper.to(it))
+            try {
+                articleWrapperDAO.box.put(articleWrapperMapper.to(it))
+            } catch(e : Exception){
+                println("Error add AW : $e")
+            }
         }
         return commandId
     }

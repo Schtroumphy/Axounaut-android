@@ -4,16 +4,23 @@ import java.io.Serializable
 
 data class RecipeWrapper(
     val id : Long = 0,
-    var articleId : Long? = null,
     var ingredient : Ingredient,
-    var quantity : Float = 0f,
-    var quantityType : IngredientQuantityType = IngredientQuantityType.G
-
+    var quantity : Float = 0f
 ) : Serializable  {
 
     companion object {
 
-        fun createWrapperList(ingredients : List<Ingredient>) : List<RecipeWrapper>{
+        fun List<IngredientWrapper>.toRecipeWrapper() : List<RecipeWrapper>{
+            return this.map {
+                RecipeWrapper(
+                    id = 0L,
+                    ingredient = it.ingredient,
+                    quantity = it.quantity
+                )
+            }
+        }
+
+        fun createRecipeWrapperList(ingredients : List<Ingredient>) : List<RecipeWrapper>{
             val listResult = mutableListOf<RecipeWrapper>()
             ingredients.forEach { ingredient ->
                 listResult.add(

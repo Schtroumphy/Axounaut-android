@@ -8,26 +8,31 @@ import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import com.jeanloth.project.android.kotlin.axounaut.R
 import com.jeanloth.project.android.kotlin.axounaut.adapters.CheckboxTextViewAdapter
 import com.jeanloth.project.android.kotlin.axounaut.databinding.FragmentArticleDetailsBinding
+import com.jeanloth.project.android.kotlin.axounaut.viewModels.AddArticleVM
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.ArticleVM
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.MainVM
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.StockVM
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import org.koin.android.viewmodel.ext.android.sharedViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
 import splitties.views.onClick
 import java.lang.IllegalArgumentException
 
 /**
- * A simple [Fragment] subclass.
- * create an instance of this fragment.
+ * Fragment that contains steps fragment
  */
-class ArticleDetailsFragment : Fragment(), StepListener {
+class AddArticleFragment : Fragment(), StepListener {
 
-    private val articleVM : ArticleVM by viewModel()
+    private val addArticleVM : AddArticleVM by sharedViewModel()
     private val mainVM : MainVM by sharedViewModel()
     private val stockVM : StockVM by viewModel()
     private lateinit var navController: NavController
@@ -55,15 +60,10 @@ class ArticleDetailsFragment : Fragment(), StepListener {
         // Setup adapters
         checkboxTextViewAdapter = CheckboxTextViewAdapter(mutableListOf())
 
-        // Setup recycler views
-        //binding.rvRecipeArticles.adapter = checkboxTextViewAdapter
-
-
         // Listeners
         stockVM.observePWLiveData().observe(viewLifecycleOwner){
             checkboxTextViewAdapter.setItems(it)
         }
-
 
         val navHostFragment = childFragmentManager.findFragmentById(R.id.fragment_container_step)
                 as NavHostFragment
@@ -82,6 +82,14 @@ class ArticleDetailsFragment : Fragment(), StepListener {
             binding.ivBack.visibility = if(stepCount == 1) INVISIBLE else VISIBLE
             binding.tvStep.text = getString(R.string.article_step, stepCount)
             binding.tvStepTitle.text = getString(getStepTitleByStepCount())
+            addArticleVM.setStepCount(stepCount)
+
+            binding.btAddArticle.text = getString(if(stepCount == 4) R.string.save else R.string.next)
+        }
+
+        addArticleVM.canResumeLD.observe(viewLifecycleOwner){
+            Log.d(TAG, "Can resume step $stepCount ? $it")
+            binding.btAddArticle.isEnabled = it
         }
 
         // Click listeners
@@ -106,8 +114,7 @@ class ArticleDetailsFragment : Fragment(), StepListener {
                 }
                 Log.d(TAG, "Step count = $stepCount")
             } else {
-                Log.d(TAG, "Add article")
-                //addArticle()
+                addArticle()
             }
         }
     }
@@ -117,25 +124,11 @@ class ArticleDetailsFragment : Fragment(), StepListener {
     }
 
     private fun addArticle() {
-        /*val articleName = binding.etArticleName.text.toString()
-        //val articlePrice = binding.etArticlePrice.text.toString()
-        val articleCategory = getArticleCategoryFromLabel(binding.spinnerCategories.selectedItem.toString())
-
-        if( articleName.isEmpty() /*|| articlePrice.isEmpty()*/) {
-            Snackbar.make(requireView(), "Veuillez saisir des valeurs valides.",
-                Snackbar.LENGTH_LONG).show()
-        } else {
-            val articleToAdd = Article(
-                label = articleName,
-               // price = /*articlePrice.toDouble()*/,
-                category = articleCategory.code
-            )
-            Log.d("[Article Details Fragment", "Article to add : $articleToAdd")
-            articleVM.saveArticle(articleToAdd)
-            Snackbar.make(requireView(), "Article ajouté avec succès.",
-                Snackbar.LENGTH_SHORT).show()
-            findNavController().popBackStack()
-        }*/
+        Log.d("[Article Details Fragment", "Click on save Article")
+        addArticleVM.saveArticle()
+        addArticleVM.clearData()
+        Snackbar.make(requireView(), "Article ajouté avec succès.", Snackbar.LENGTH_SHORT).show()
+        findNavController().popBackStack()
     }
 
     private fun getStepTitleByStepCount() : Int{

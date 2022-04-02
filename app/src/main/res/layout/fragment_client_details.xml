@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:theme="@style/TextInputLayoutStyle"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.article.ArticleDetailsFragment">
+    tools:context=".ui.article.AddArticleFragment">
 
     <LinearLayout
         android:id="@+id/ll_article_name"

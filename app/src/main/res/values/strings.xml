@@ -28,6 +28,7 @@
     <string name="pay">Payer</string>
     <string name="deliver">Livrer</string>
     <string name="category">Catégorie</string>
+    <string name="save">Sauvegarder</string>
 
     <!-- Article List Fragment -->
     <string name="no_articles_error">Aucun article n\'est enregistré.</string>
@@ -39,6 +40,10 @@
     <string name="article_step2_title">Choix des ingrédients</string>
     <string name="article_step3_title">Quantité et temps de préparation</string>
     <string name="article_step4_title">Récapitulatif et validation</string>
+
+    <string name="article_name_recap">Article : %1$s</string>
+    <string name="article_category_recap">Catégorie : %1$s</string>
+    <string name="article_recap_preparing_time">Temps de préparation : %1$s</string>
 
 
     <!-- Command Fragment -->

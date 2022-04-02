@@ -109,7 +109,7 @@ fun HomePage(navController: NavController?) {
                     }
                     HomeCard("Mon stock") {
                         context.startActivity(Intent(context, MainActivity::class.java).apply {
-                            putExtra(Constants.FRAGMENT_TO_SHOW, Constants.STOCK)
+                            putExtra(Constants.FRAGMENT_TO_SHOW, Constants.ARTICLE)
                         })
                     }
                 }

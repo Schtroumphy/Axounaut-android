@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/nav_step0"
-        android:name="com.jeanloth.project.android.kotlin.axounaut.ui.article.ArticleDetailsFragment"
+        android:name="com.jeanloth.project.android.kotlin.axounaut.ui.article.AddArticleFragment"
         android:label="Etape 1"
         tools:layout="@layout/fragment_add_article_step_1" >
 

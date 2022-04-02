@@ -47,9 +47,11 @@ class AddArticleStep2Fragment : Fragment() {
         binding.tvAddProduct.onClick {
             binding.gpAddIngredient.visibility = View.VISIBLE
             binding.tvAddProduct.visibility = View.GONE
+            binding.etIngredient.requestFocus()
         }
 
         binding.tvValidateIngredient.onClick {
+            binding.etIngredient.clearFocus()
             saveIngredient()
         }
 
@@ -59,19 +61,7 @@ class AddArticleStep2Fragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val mock = mutableListOf(
-            IngredientWrapper(ingredient = Ingredient(label = "Farine"), quantity = 4.0f),
-            IngredientWrapper(ingredient = Ingredient(label = "Beurre 500g"), quantity = 4.0f, quantityType = IngredientQuantityType.G),
-            IngredientWrapper(ingredient = Ingredient(label = "Lait 1L"), quantity = 0.0f, quantityType = IngredientQuantityType.L),
-            IngredientWrapper(ingredient = Ingredient(label = "Epices"), quantity = 1.0f, quantityType = IngredientQuantityType.G),
-            IngredientWrapper(ingredient = Ingredient(label = "Autre 1"), quantity = 1.0f, quantityType = IngredientQuantityType.L),
-            IngredientWrapper(ingredient = Ingredient(label = "Test"), quantity = 0.0f, quantityType = IngredientQuantityType.L),
-            IngredientWrapper(ingredient = Ingredient(label = "Test 2"), quantity = 2.0f, quantityType = IngredientQuantityType.G),
-            IngredientWrapper(ingredient = Ingredient(label = "Test 3"), quantity = 2.0f, quantityType = IngredientQuantityType.G),
-            IngredientWrapper(ingredient = Ingredient(label = "Test 4"), quantity = 0.0f, quantityType = IngredientQuantityType.G),
-        )
         binding.rvIngredients.adapter = checkboxTextViewAdapter
-        //checkboxTextViewAdapter.setItems(mock)
 
         /** Observers **/
         addArticleVM.result.observe(viewLifecycleOwner){

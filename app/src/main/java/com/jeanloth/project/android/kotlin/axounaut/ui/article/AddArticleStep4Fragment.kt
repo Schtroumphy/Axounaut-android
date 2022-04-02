@@ -1,25 +1,15 @@
 package com.jeanloth.project.android.kotlin.axounaut.ui.article
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.EditorInfo
-import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
-import com.google.android.material.snackbar.Snackbar
-import com.jeanloth.project.android.kotlin.axounaut.adapters.CheckboxTextViewAdapter
+import com.jeanloth.project.android.kotlin.axounaut.R
+import com.jeanloth.project.android.kotlin.axounaut.adapters.IngredientAdapter
 import com.jeanloth.project.android.kotlin.axounaut.databinding.*
-import com.jeanloth.project.android.kotlin.axounaut.viewModels.ArticleVM
-import com.jeanloth.project.android.kotlin.axounaut.viewModels.MainVM
-import com.jeanloth.project.android.kotlin.axounaut.viewModels.StockVM
-import com.jeanloth.project.android.kotlin.domain_models.entities.Article
-import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleCategory
-import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleCategory.Companion.getArticleCategoryFromLabel
+import com.jeanloth.project.android.kotlin.axounaut.viewModels.AddArticleVM
 import org.koin.android.viewmodel.ext.android.sharedViewModel
-import org.koin.android.viewmodel.ext.android.viewModel
 
 /**
  * A simple [Fragment] subclass.
@@ -27,10 +17,11 @@ import org.koin.android.viewmodel.ext.android.viewModel
  */
 class AddArticleStep4Fragment : Fragment() {
 
-    // TODO instanciate Add article VM shared between all fragment steps
-
-    private lateinit var checkboxTextViewAdapter: CheckboxTextViewAdapter
     private lateinit var binding: FragmentAddArticleStep4Binding
+    private val addArticleVM : AddArticleVM by sharedViewModel()
+
+    // Adapters
+    private lateinit var ingredientAdapter: IngredientAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,7 +34,13 @@ class AddArticleStep4Fragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.tvRecapArticleName.text = getString(R.string.article_name_recap, addArticleVM.nameLiveData.value)
+        binding.tvRecapArticleCategory.text = getString(R.string.article_category_recap, addArticleVM.categoryLiveData.value?.label)
+        binding.tvRecapArticlePreparingTime.text = getString(R.string.article_recap_preparing_time, addArticleVM.displayHour())
 
+        // Setup recyclerview
+        ingredientAdapter = IngredientAdapter(addArticleVM.checkedItemsLD.value ?: emptyList(), false, requireContext(), true)
+        binding.rvRecapRecipeItems.adapter = ingredientAdapter
 
     }
 

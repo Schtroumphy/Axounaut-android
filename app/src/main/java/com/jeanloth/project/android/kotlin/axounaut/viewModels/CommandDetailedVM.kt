@@ -39,21 +39,13 @@ class CommandDetailedVM (
     fun paymentReceivedLiveData() : LiveData<Double> = paymentReceivedMutableLiveData
 
     init {
-        Log.d(TAG, "TEST UI observeCurrentCommand launched ")
         viewModelScope.launch {
             if(currentCommandId != 0L) {
                 observeCommandByIdUseCase.invoke(currentCommandId).collect { command ->
-                    Log.d(TAG, " Current AWs from command Id $currentCommandId observed : $command")
-                    Log.d(TAG, " Current command $currentCommandId AWS codes : ${command?.articleWrappers?.map { it.statusCode }}")
                     currentCommand = command
-                    if(currentCommand?.statusCode != CommandStatusType.DONE.code && currentCommand?.articleWrappers?.map { it.statusCode }?.all { it in listOf(CommandStatusType.DONE.code, CommandStatusType.CANCELED.code) } == true){
-                        updateStatusCommand(CommandStatusType.DONE)
-                        return@collect
-                    } else if( currentCommand?.statusCode != CommandStatusType.TO_DO.code && currentCommand?.articleWrappers?.map { it.statusCode }?.any { it in listOf(CommandStatusType.TO_DO.code) } == true){
-                        updateStatusCommand(CommandStatusType.TO_DO)
-                        return@collect
-                    } else if( currentCommand?.statusCode != CommandStatusType.IN_PROGRESS.code && currentCommand?.articleWrappers?.map { it.statusCode }?.any { it in listOf(CommandStatusType.IN_PROGRESS.code) } == true){
-                        updateStatusCommand(CommandStatusType.IN_PROGRESS)
+                    currentCommand?.let {
+                        val status = getCommandStatusToUpdate(it)
+                        if(it.statusCode != status.code) updateStatusCommand(status)
                         return@collect
                     }
                     currentCommandMutableLiveData.postValue(command)
@@ -61,6 +53,19 @@ class CommandDetailedVM (
             }
         }
     }
+
+    fun getCommandStatusToUpdate(command : Command) : CommandStatusType{
+        if(command.articleWrappers.map { it.statusCode }.all { it == ArticleWrapperStatusType.TO_DO.code }){
+            return CommandStatusType.TO_DO
+        } else if (command.articleWrappers.map { it.statusCode }.all { it  in
+                    listOf(ArticleWrapperStatusType.DONE.code, ArticleWrapperStatusType.CANCELED.code)
+            }){
+            return CommandStatusType.DONE
+        } else {
+            return CommandStatusType.IN_PROGRESS
+        }
+    }
+
     fun removeCommand(){
         currentCommand?.let {
             deleteCommandUseCase.invoke(it)

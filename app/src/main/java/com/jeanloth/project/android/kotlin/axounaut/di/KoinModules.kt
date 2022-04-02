@@ -30,7 +30,7 @@ val appModule = module {
 
     viewModel { MainVM() }
     viewModel { ArticleVM( get(), get(), get(), get()) }
-    viewModel { AddArticleVM( get(), get(), get(), get(), get()) }
+    viewModel { AddArticleVM( get(), get(), get()) }
     viewModel { ClientVM( get(), get(), get()) }
     viewModel { AddCommandVM() }
     viewModel { CommandVM(get(), get(), get(), get(), get(), get(), get()) }
@@ -71,7 +71,7 @@ val appModule = module {
     single { IngredientWrapperRepository(get()) } bind IngredientWrapperContract::class
 
     // Mappers
-    single{ ArticleEntityMapper(get()) }
+    single{ ArticleEntityMapper(get(), get()) }
     single{ IngredientEntityMapper() }
     single{ AppClientEntityMapper() }
     single{ CommandEntityMapper( get(), get()) }

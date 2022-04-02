@@ -13,11 +13,17 @@ import androidx.recyclerview.widget.RecyclerView
 import com.jeanloth.project.android.kotlin.axounaut.R
 import com.jeanloth.project.android.kotlin.axounaut.databinding.ItemStockIngredientBinding
 import com.jeanloth.project.android.kotlin.domain_models.entities.IngredientWrapper
-
+/**
+ * @param ingredients Ingredients to display
+ * @param isEditMode Mode where we can edit quantity of ingredient. If false, edit button are hidden.
+ * @param context Context needed
+ * @param addArticleMode Mode where we do not sort the list by quantty and we do not show status line
+ * **/
 class IngredientAdapter(
     private var ingredients : List<IngredientWrapper>,
     private var isEditMode : Boolean = true,
-    private val context : Context
+    private val context : Context,
+    private var addArticleMode : Boolean = false
 ) : RecyclerView.Adapter<IngredientAdapter.ArticleHolder>()  {
 
     var onAddMinusClick : ((IngredientWrapper) -> Unit)? = null
@@ -47,7 +53,7 @@ class IngredientAdapter(
             else -> PositionInList.BETWEEN
         }
 
-        holder.bind(ingredient, positionInList)
+        holder.bind(ingredient, positionInList, position)
     }
 
     override fun getItemCount(): Int {
@@ -55,18 +61,19 @@ class IngredientAdapter(
     }
 
     init {
-        sortIngredients(false)
+        if(!addArticleMode) sortIngredients(false)
     }
 
-    fun setItems(ingredients : List<IngredientWrapper>, isEditMode : Boolean = true){
+    fun setItems(ingredients : List<IngredientWrapper>, isEditMode : Boolean = true, addArticleMode : Boolean = false){
         this.ingredients = ingredients
         this.isEditMode = isEditMode
-        sortIngredients()
+        this.addArticleMode = addArticleMode
+        if(!addArticleMode) sortIngredients() else notifyDataSetChanged()
     }
 
     inner class ArticleHolder(view: View) : RecyclerView.ViewHolder(view){
         private val binding = ItemStockIngredientBinding.bind(view)
-        fun bind(ingredientWrapper: IngredientWrapper, positionInList: PositionInList){
+        fun bind(ingredientWrapper: IngredientWrapper, positionInList: PositionInList, position: Int){
 
             binding.tvName.text= ingredientWrapper.ingredient.label
 
@@ -74,21 +81,34 @@ class IngredientAdapter(
 
             setupElementVisibility(count.toString())
 
-            // Line background drawable
-            binding.ivLine.background = getDrawable(itemView.context, when(positionInList){
-                PositionInList.FIRST -> R.drawable.rounded_top_line
-                PositionInList.BETWEEN -> R.drawable.stock_line
-                PositionInList.LAST -> R.drawable.rounded_bottom_line
-                PositionInList.ALONE -> R.drawable.rounded_line
-            })
+            if(!addArticleMode) {
+                binding.ivLine.visibility = VISIBLE
+                binding.viewSpacer.visibility = GONE
+                // Line background drawable
+                binding.ivLine.background = getDrawable(
+                    itemView.context, when (positionInList) {
+                        PositionInList.FIRST -> R.drawable.rounded_top_line
+                        PositionInList.BETWEEN -> R.drawable.stock_line
+                        PositionInList.LAST -> R.drawable.rounded_bottom_line
+                        PositionInList.ALONE -> R.drawable.rounded_line
+                    }
+                )
 
-            // Line color by count status type
-            binding.ivLine.backgroundTintList = ColorStateList.valueOf(getColor(context, when(ingredientWrapper.countStatusType){
-                IngredientWrapper.CountStatus.LOW -> R.color.red_002
-                IngredientWrapper.CountStatus.MEDIUM -> R.color.orange_002
-                IngredientWrapper.CountStatus.LARGE -> R.color.green_light_2
-            }))
+                // Line color by count status type
+                binding.ivLine.backgroundTintList = ColorStateList.valueOf(
+                    getColor(
+                        context, when (ingredientWrapper.countStatusType) {
+                            IngredientWrapper.CountStatus.LOW -> R.color.red_002
+                            IngredientWrapper.CountStatus.MEDIUM -> R.color.orange_002
+                            IngredientWrapper.CountStatus.LARGE -> R.color.green_light_2
+                        }
+                    )
+                )
 
+            } else {
+                binding.ivLine.visibility = GONE
+                binding.viewSpacer.visibility = VISIBLE
+            }
             // Add margin bottom if last item of count status type list
             val params = binding.ivLine.layoutParams as ViewGroup.MarginLayoutParams
             params.bottomMargin = if(positionInList == PositionInList.LAST || positionInList == PositionInList.ALONE )  20 else 0
@@ -99,7 +119,7 @@ class IngredientAdapter(
                 binding.ibAdd.setOnClickListener {
                     ingredientWrapper.quantity = count + 0.5f
                     onAddMinusClick?.invoke(ingredientWrapper)
-                    sortIngredients()
+                    if(!addArticleMode) sortIngredients() else notifyItemChanged(position)
                 }
 
                 binding.ibMinus.setOnClickListener {
@@ -107,7 +127,7 @@ class IngredientAdapter(
                         ingredientWrapper.quantity = count - 0.5f
                     }
                     onAddMinusClick?.invoke(ingredientWrapper)
-                    sortIngredients()
+                    if(!addArticleMode) sortIngredients() else notifyItemChanged(position)
                 }
             }
 
@@ -124,6 +144,7 @@ class IngredientAdapter(
     private fun sortIngredients(reload : Boolean = true){
         ingredients = ingredients.sortedBy { it.quantityType }.sortedBy { it.countStatusType }
         if(reload) notifyDataSetChanged()
+
     }
 
 }

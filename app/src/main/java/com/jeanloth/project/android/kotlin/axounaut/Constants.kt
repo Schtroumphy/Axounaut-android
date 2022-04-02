@@ -7,6 +7,7 @@ object Constants {
     val COMMANDS = "COMMANDS"
     val ANALYSIS = "ANALYSIS"
     val STOCK = "STOCK"
+    val ARTICLE = "ARTICLE"
 
     // Date formats
     val SHORT_DATE_FORMAT_YEAR_FIRST = "yyyy-MM-dd"

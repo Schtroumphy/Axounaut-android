@@ -17,7 +17,6 @@ class ArticleEntity(
     val category: Int = ArticleCategory.SALTED.code
 ) : Entity {
 
-    @Backlink(to = "article") // article is the name of the attribute
     var recipeWrappers: ToMany<RecipeWrapperEntity> = ToMany(this, ArticleEntity_.recipeWrappers)
 
     // Add BoxStore field

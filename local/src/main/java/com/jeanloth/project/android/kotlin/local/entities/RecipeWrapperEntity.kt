@@ -1,6 +1,5 @@
 package com.jeanloth.project.android.kotlin.local.entities
 
-import com.jeanloth.project.android.kotlin.domain_models.entities.IngredientQuantityType
 import io.objectbox.BoxStore
 import io.objectbox.annotation.Id
 import io.objectbox.relation.ToOne
@@ -8,15 +7,11 @@ import io.objectbox.relation.ToOne
 @io.objectbox.annotation.Entity
 class RecipeWrapperEntity(
     @Id
-    var ingredientWrapperId : Long = 0,
-
-    var quantity : Float = 0f,
-    var quantityTypeLabel : String = IngredientQuantityType.G.label
-
+    var id : Long = 0,
+    var quantity : Float = 0f
 ) : Entity {
 
     var ingredient: ToOne<IngredientEntity> = ToOne(this, RecipeWrapperEntity_.ingredient)
-    var article: ToOne<ArticleEntity> = ToOne(this, RecipeWrapperEntity_.article)
 
     // Add BoxStore field
     @JvmField
