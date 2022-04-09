@@ -46,7 +46,6 @@ class AddArticleFragment : Fragment(), StepListener {
     private lateinit var checkboxTextViewAdapter: CheckboxTextViewAdapter
     private lateinit var binding: FragmentArticleDetailsBinding
 
-
     private var stepCount = 1
     val TAG = "[Article Details Fragment]"
 

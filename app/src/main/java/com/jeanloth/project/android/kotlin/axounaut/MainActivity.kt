@@ -69,6 +69,7 @@ class MainActivity : AppCompatActivity() {
 
         binding.ivHeaderLogo.onClick {
             // Go to home
+            finish()
         }
 
         binding.ivHeaderBack.onClick {

@@ -63,7 +63,9 @@ class CommandListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupHeader()
-        // TODO Save in prefs the last filter on commands list
+        // TODO Save in prefs the last filter on commands list and of no value,
+        // set display mode to past by default
+        commandVM.setDisplayMode(CommandDisplayMode.PAST)
 
         // Set the adapter
         binding.rvCommandList.apply {
