@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "1:474612300085983869",
-      "lastPropertyId": "8:5201928558511954579",
+      "lastPropertyId": "10:8382421841503260280",
       "name": "ArticleEntity",
       "properties": [
         {
@@ -36,6 +36,18 @@
           "id": "8:5201928558511954579",
           "name": "label",
           "type": 9
+        },
+        {
+          "id": "9:3032683844993174841",
+          "name": "preparingTime",
+          "type": 7,
+          "flags": 4
+        },
+        {
+          "id": "10:8382421841503260280",
+          "name": "isHidden",
+          "type": 1,
+          "flags": 4
         }
       ],
       "relations": [
@@ -132,7 +144,7 @@
     },
     {
       "id": "4:591053467257610499",
-      "lastPropertyId": "12:4865363898770884160",
+      "lastPropertyId": "13:2401406078671289554",
       "name": "CommandEntity",
       "properties": [
         {
@@ -182,6 +194,12 @@
           "name": "reduction",
           "type": 8,
           "flags": 2
+        },
+        {
+          "id": "13:2401406078671289554",
+          "name": "isHidden",
+          "type": 1,
+          "flags": 4
         }
       ],
       "relations": []
