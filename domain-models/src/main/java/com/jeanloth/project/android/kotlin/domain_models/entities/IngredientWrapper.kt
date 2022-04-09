@@ -30,6 +30,14 @@ data class IngredientWrapper(
             }
         }
 
+        fun RecipeWrapper.toIngredientWrapper(keepId : Boolean = false) : IngredientWrapper{
+            return IngredientWrapper(
+                    id = if(keepId) this.id else 0L,
+                    ingredient = this.ingredient,
+                    quantity = this.quantity
+                )
+        }
+
         fun createWrapperList(ingredients : List<Ingredient>) : List<IngredientWrapper>{
             val listResult = mutableListOf<IngredientWrapper>()
             ingredients.forEach { ingredient ->
@@ -46,4 +54,8 @@ data class IngredientWrapper(
     enum class CountStatus{
         LOW, MEDIUM, LARGE
     }
+
+    override fun equals(other: Any?): Boolean  = (other is IngredientWrapper)
+            && ingredient == other.ingredient
+
 }

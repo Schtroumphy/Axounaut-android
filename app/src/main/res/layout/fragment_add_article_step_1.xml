@@ -110,6 +110,19 @@
         app:layout_constraintEnd_toEndOf="@id/et_article_name"
         app:layout_constraintTop_toTopOf="@id/ib_minus" />
 
+    <TextView
+        android:id="@+id/tv_no_price_edition_allowed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textStyle="italic"
+        android:visibility="gone"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="@string/article_no_price_edition_allowed" />
+
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/vertical_guideline"

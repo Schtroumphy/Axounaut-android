@@ -16,6 +16,7 @@ import com.jeanloth.project.android.kotlin.domain.usescases.usecases.article.*
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.command.*
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.ingredientWrapper.DeleteIngredientWrapperUseCase
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.ingredientWrapper.SaveIngredientWrapperUseCase
+import com.jeanloth.project.android.kotlin.domain_models.entities.Article
 import com.jeanloth.project.android.kotlin.local.contracts.*
 import com.jeanloth.project.android.kotlin.local.database.*
 import com.jeanloth.project.android.kotlin.local.entities.MyObjectBox
@@ -29,8 +30,8 @@ import org.koin.dsl.module
 val appModule = module {
 
     viewModel { MainVM() }
-    viewModel { ArticleVM( get(), get(), get(), get()) }
-    viewModel { AddArticleVM( get(), get(), get()) }
+    viewModel { ArticleVM( get(), get(), get()) }
+    viewModel { AddArticleVM(get(), get(), get())}
     viewModel { ClientVM( get(), get(), get()) }
     viewModel { AddCommandVM() }
     viewModel { CommandVM(get(), get(), get(), get(), get(), get(), get()) }
@@ -83,7 +84,7 @@ val appModule = module {
     single { provideBoxStore(get())}
 
     // Local repository
-    single { ArticleLocalDatasourceRepository(get(), get())} bind LocalArticleDatasourceContract::class
+    single { ArticleLocalDatasourceRepository(get(), get(), get())} bind LocalArticleDatasourceContract::class
     single { AppClientLocalDatasourceRepository(get(), get()) } bind LocalAppClientDatasourceContract::class
     single { CommandLocalDatasourceRepository(get(), get(), get(), get(), get(), get(), get(), get()) } bind LocalCommandDatasourceContract::class
     single { ArticleWrapperLocalDatasourceRepository(get(), get(), get()) } bind LocalArticleWrapperDatasourceContract::class

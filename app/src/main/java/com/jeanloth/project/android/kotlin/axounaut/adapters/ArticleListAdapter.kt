@@ -9,6 +9,7 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.jeanloth.project.android.kotlin.axounaut.R
 import com.jeanloth.project.android.kotlin.axounaut.databinding.ItemArticleListBinding
+import com.jeanloth.project.android.kotlin.axounaut.extensions.displayPreparingTime
 import com.jeanloth.project.android.kotlin.axounaut.extensions.toCamelCase
 import com.jeanloth.project.android.kotlin.domain_models.entities.Article
 import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleCategory.Companion.getArticleCategoryFromCode
@@ -23,6 +24,11 @@ class ArticleListAdapter(
 
     var onClick : ((List<ArticleWrapper>) -> Unit)? = null
     var onEditClick : ((Article) -> Unit)? = null
+    var onSwipeItem : ((Article, Int) -> Unit)? = null
+
+    init {
+        articleList = articleList.filter { !it.isHidden }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArticleHolder {
         val itemView = LayoutInflater.from(parent.context)
@@ -40,8 +46,16 @@ class ArticleListAdapter(
     }
 
     fun setItems(articles : List<Article>){
-        this.articleList = articles
+        this.articleList = articles.filter { !it.isHidden }
         notifyDataSetChanged()
+    }
+
+    fun updateArticleStatus(adapterPosition : Int) {
+        onSwipeItem?.invoke(articleList[adapterPosition], adapterPosition)
+    }
+
+    fun refreshRecyclerView(position : Int){
+        notifyItemChanged(position)
     }
 
     inner class ArticleHolder(view: View) : RecyclerView.ViewHolder(view){
@@ -51,8 +65,7 @@ class ArticleListAdapter(
         fun bind(article : Article){
             binding.tvName.text= article.label.toCamelCase()
             binding.tvPrice.text= context.getString(R.string.price_euro, article.price.toString())
-            //itemView.tv_article_stat.text= context.getString(R.string.article_command_number, article.price.toString())
-            binding.tvArticleCategory.text = getArticleCategoryFromCode(article.category).label
+            binding.tvArticleCategoryOrTime.text = getArticleCategoryFromCode(article.category).label
 
             binding.rvRecipeDetails.adapter = RecipeContentAdapter(article.recipeIngredients.toIngredientWrapper(), context)
 
@@ -63,7 +76,7 @@ class ArticleListAdapter(
             binding.btExpand.onClick {
                 binding.gpArticleDetails.visibility = if(binding.gpArticleDetails.isVisible) View.GONE else View.VISIBLE
                 binding.btExpand.background = getDrawable(context, if(binding.gpArticleDetails.isVisible) R.drawable.ic_up_arrow else R.drawable.ic_down_arrow)
-                binding.tvArticleCategory.visibility = if(binding.gpArticleDetails.isVisible) View.GONE else View.VISIBLE
+                binding.tvArticleCategoryOrTime.text = if(binding.gpArticleDetails.isVisible) context.getString(R.string.article_short_recap_preparing_time, displayPreparingTime(article.preparingTime)) else getArticleCategoryFromCode(article.category).label
             }
         }
     }

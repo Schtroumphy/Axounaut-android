@@ -17,3 +17,12 @@ fun String.toCamelCase() : String{
     val test = this.split(" ").map { it.capitalize() }
     return test.joinToString().replace(",", "")
 }
+
+fun displayPreparingTime(time : Float?) : String{
+    val time = time ?: 0f
+    if(time == 0f) return ""
+    val hour = time.toInt()
+    if(hour == 0) return "30min"
+    val minutes = time % hour
+    return if(minutes != 0f) "$hour h 30" else "$hour h"
+}

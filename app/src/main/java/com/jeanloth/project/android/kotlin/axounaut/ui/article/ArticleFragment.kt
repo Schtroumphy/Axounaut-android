@@ -10,10 +10,17 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
+import com.jeanloth.project.android.kotlin.axounaut.R
 import com.jeanloth.project.android.kotlin.axounaut.adapters.ArticleListAdapter
 import com.jeanloth.project.android.kotlin.axounaut.databinding.FragmentArticleBinding
+import com.jeanloth.project.android.kotlin.axounaut.extensions.SwipeToCancelCallback
+import com.jeanloth.project.android.kotlin.axounaut.extensions.displayDialog
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.ArticleVM
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.MainVM
+import com.jeanloth.project.android.kotlin.domain_models.entities.Article
+import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleWrapper
 import org.koin.android.viewmodel.ext.android.sharedViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
 import splitties.views.onClick
@@ -45,12 +52,18 @@ class ArticleFragment : Fragment() {
         mainVM.setHeaderTitle("Mes articles")
 
         adapter = ArticleListAdapter(articleVM.getAllArticles(), requireContext()).apply {
-            onEditClick = { }
+            onEditClick = {
+                goToAddArticleFragment(it)
+            }
+
+            onSwipeItem = { article, position ->
+                displayCancelOrDeleteArticle(article, position)
+            }
         }
         binding.rvArticlesFragment.adapter = adapter
 
         binding.addButton.onClick{
-            goToArticleDetails()
+            goToAddArticleFragment()
         }
 
         lifecycleScope.launchWhenStarted {
@@ -61,10 +74,46 @@ class ArticleFragment : Fragment() {
             }
         }
 
+        // Setup swipe to delete article
+        setupSwipeToDelete()
     }
 
-    private fun goToArticleDetails() {
-        findNavController().navigate(ArticleFragmentDirections.actionNavArticleToNavArticleDetails())
+    private fun setupSwipeToDelete() {
+        val swipeHandler = object : SwipeToCancelCallback(requireContext()) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean { return true }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                adapter.updateArticleStatus(viewHolder.absoluteAdapterPosition)
+            }
+
+        }
+        val itemTouchHelper = ItemTouchHelper(swipeHandler)
+        itemTouchHelper.attachToRecyclerView(binding.rvArticlesFragment)
+    }
+
+    private fun displayCancelOrDeleteArticle(article: Article, position: Int){
+        displayDialog(
+            context = requireContext(),
+            titleRef = R.string.cancel_dialog_title,
+            contentRef = R.string.delete_article_dialog_content,
+            negativeButtonLabelRef = R.string.cancel_article,
+            negativeAction =  {
+                adapter.refreshRecyclerView(position)
+            },
+            positiveButtonLabelRef = R.string.delete_article,
+            positiveAction = {
+                articleVM.deleteArticle(article)
+            })
+    }
+
+    private fun goToAddArticleFragment(article: Article? = null) {
+        findNavController().navigate(ArticleFragmentDirections.actionNavArticleToNavAddArticleFragment(
+            articleToEdit = article
+        ))
     }
 
 }

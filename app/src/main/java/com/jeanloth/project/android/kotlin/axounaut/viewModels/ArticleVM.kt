@@ -16,17 +16,16 @@ import kotlinx.coroutines.launch
 class ArticleVM (
     private val getAllArticlesUseCase : GetAllArticlesUseCase,
     private val observeAllArticlesUseCase : ObserveArticlesUseCase,
-    private val saveArticleUseCase: SaveArticleUseCase,
     private val deleteArticleUseCase: DeleteArticleUseCase,
 ): ViewModel() {
 
     var articles : List<Article> = emptyList()
 
+
     var allArticleMutableLiveData : MutableLiveData<List<Article>> = MutableLiveData(emptyList())
     fun allArticlesLiveData() : LiveData<List<Article>> = allArticleMutableLiveData
 
     init {
-
         viewModelScope.launch {
             observeAllArticlesUseCase.invoke().collect {
                 Log.d("[ArticleVM]", " Articles observed : $it")
@@ -41,13 +40,8 @@ class ArticleVM (
         return articles
     }
 
-    fun saveArticle(articleToAdd: Article) {
-        saveArticleUseCase.invoke(articleToAdd)
+    fun deleteArticle(article: Article){
+        deleteArticleUseCase.invoke(article = article)
     }
-
-    fun deleteArticle(article : Article) {
-        deleteArticleUseCase.invoke(article)
-    }
-
 
 }

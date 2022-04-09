@@ -15,8 +15,10 @@ class ArticleEntityMapper(
             id = t.id,
             label = t.label,
             price = t.price,
+            preparingTime = t.preparingTime,
             timeOrdered = t.timeOrdered,
             category = t.category,
+            isHidden = t.isHidden,
             recipeIngredients = t.recipeWrappers.map { recipeWrapperEntityMapper.from(it)}
         )
     }
@@ -26,8 +28,10 @@ class ArticleEntityMapper(
             id = t.id,
             label = t.label,
             price = t.price,
+            preparingTime = t.preparingTime,
             timeOrdered = t.timeOrdered,
             category = t.category,
+            isHidden = t.isHidden
         )
         articleDao.box.attach(articleEntity)
         // Add recipeWrappers converted

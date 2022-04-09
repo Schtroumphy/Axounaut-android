@@ -73,16 +73,23 @@
         tools:layout="@layout/fragment_article" >
 
         <action
-            android:id="@+id/action_nav_article_to_nav_article_details"
-            app:destination="@id/nav_article_details" />
+            android:id="@+id/action_nav_article_to_nav_add_article_fragment"
+            app:destination="@id/nav_add_article_fragment" />
 
     </fragment>
 
     <fragment
-        android:id="@+id/nav_article_details"
+        android:id="@+id/nav_add_article_fragment"
         android:name="com.jeanloth.project.android.kotlin.axounaut.ui.article.AddArticleFragment"
         android:label="Détails articles"
         tools:layout="@layout/fragment_article_details" >
+
+        <argument
+            android:name="articleToEdit"
+            app:argType="com.jeanloth.project.android.kotlin.domain_models.entities.Article"
+            android:defaultValue="@null"
+            app:nullable="true" />
+
 
     </fragment>
 

@@ -12,10 +12,14 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.jeanloth.project.android.kotlin.axounaut.R
 import com.jeanloth.project.android.kotlin.axounaut.adapters.CheckboxTextViewAdapter
 import com.jeanloth.project.android.kotlin.axounaut.databinding.FragmentArticleDetailsBinding
+import com.jeanloth.project.android.kotlin.axounaut.extensions.SwipeToCancelCallback
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.AddArticleVM
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.ArticleVM
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.MainVM
@@ -24,6 +28,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.android.viewmodel.ext.android.sharedViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 import splitties.views.onClick
 import java.lang.IllegalArgumentException
 
@@ -32,6 +37,7 @@ import java.lang.IllegalArgumentException
  */
 class AddArticleFragment : Fragment(), StepListener {
 
+    private val args : AddArticleFragmentArgs by navArgs()
     private val addArticleVM : AddArticleVM by sharedViewModel()
     private val mainVM : MainVM by sharedViewModel()
     private val stockVM : StockVM by viewModel()
@@ -39,6 +45,7 @@ class AddArticleFragment : Fragment(), StepListener {
 
     private lateinit var checkboxTextViewAdapter: CheckboxTextViewAdapter
     private lateinit var binding: FragmentArticleDetailsBinding
+
 
     private var stepCount = 1
     val TAG = "[Article Details Fragment]"
@@ -53,6 +60,11 @@ class AddArticleFragment : Fragment(), StepListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // Update article to edit in viewModel if not null
+        args.articleToEdit?.let {
+            addArticleVM.setArticleToEdit(it)
+        }
 
         // Other setup
         setupHeader()
@@ -117,6 +129,7 @@ class AddArticleFragment : Fragment(), StepListener {
                 addArticle()
             }
         }
+
     }
 
     private fun setupHeader() {
@@ -140,5 +153,13 @@ class AddArticleFragment : Fragment(), StepListener {
             else -> R.string.article_step1_title
         }
     }
+
+    override fun onDetach() {
+        super.onDetach()
+        Log.d(TAG, "On fragment detach")
+        addArticleVM.clearData()
+    }
+
+
 
 }

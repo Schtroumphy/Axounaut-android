@@ -10,10 +10,10 @@ data class RecipeWrapper(
 
     companion object {
 
-        fun List<IngredientWrapper>.toRecipeWrapper() : List<RecipeWrapper>{
+        fun List<IngredientWrapper>.toRecipeWrapper(keepId : Boolean = false) : List<RecipeWrapper>{
             return this.map {
                 RecipeWrapper(
-                    id = 0L,
+                    id = if(keepId) it.id else 0L,
                     ingredient = it.ingredient,
                     quantity = it.quantity
                 )

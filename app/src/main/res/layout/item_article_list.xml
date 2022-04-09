@@ -80,7 +80,7 @@
         tools:visibility="visible" />
 
     <TextView
-        android:id="@+id/tv_article_category"
+        android:id="@+id/tv_article_category_or_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -101,7 +101,7 @@
         android:text="Recette"
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="@id/tv_article_stat"
-        app:layout_constraintTop_toBottomOf="@id/tv_article_category" />
+        app:layout_constraintTop_toBottomOf="@id/tv_article_category_or_time" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_recipe_details"

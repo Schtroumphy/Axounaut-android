@@ -166,13 +166,13 @@ fun Header() {
                 horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 val liste = listOf(
-                    Article(0L, "Pain au choco", 30.5, 15),
-                    Article(0L, "Pomme cannelle", 30.5, 1),
-                    Article(0L, "Rolls Kanèls", 30.5, 42),
-                    Article(0L, "Chocolat", 30.5, 65),
-                    Article(0L, "Flan au coco", 30.5, 20),
-                    Article(0L, "Petits pains", 30.5, 15),
-                    Article(0L, "Petits pains fourrés boeuf", 30.5, 15),
+                    Article(0L, "Pain au choco", 30.5, 15F),
+                    Article(0L, "Pomme cannelle", 30.5, 1F),
+                    Article(0L, "Rolls Kanèls", 30.5, 42F),
+                    Article(0L, "Chocolat", 30.5, 65F),
+                    Article(0L, "Flan au coco", 30.5, 20F),
+                    Article(0L, "Petits pains", 30.5, 15F),
+                    Article(0L, "Petits pains fourrés boeuf", 30.5, 15F),
                 )
 
                 items(liste.sortedByDescending { it.timeOrdered }) { item ->

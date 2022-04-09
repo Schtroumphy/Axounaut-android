@@ -20,7 +20,8 @@ class CommandEntity(
     var totalPrice : Double? = null,
     var reduction : Double? = 0.0,
     var paymentAmount : Double? = null,
-    var paymentTypeCode : String? = null
+    var paymentTypeCode : String? = null,
+    var isHidden : Boolean = false
 
     //var client : AppClient? = null,
     //var articleWrappers : List<ArticleWrapper>,

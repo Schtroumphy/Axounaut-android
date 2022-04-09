@@ -35,6 +35,7 @@ class AddArticleStep4Fragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.tvRecapArticleName.text = getString(R.string.article_name_recap, addArticleVM.nameLiveData.value)
+        binding.tvRecapArticlePrice.text = getString(R.string.price_euro, addArticleVM.priceLiveData.value.toString())
         binding.tvRecapArticleCategory.text = getString(R.string.article_category_recap, addArticleVM.categoryLiveData.value?.label)
         binding.tvRecapArticlePreparingTime.text = getString(R.string.article_recap_preparing_time, addArticleVM.displayHour())
 

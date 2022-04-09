@@ -25,6 +25,8 @@ class AddArticleStep1Fragment : Fragment() {
 
     private lateinit var binding: FragmentAddArticleStep1Binding
     private val addArticleVM : AddArticleVM by sharedViewModel()
+    private val isEditMode by lazy { addArticleVM.isEditMode() }
+
     private val TAG = "[Add Article Step 1 Fragment]"
 
     override fun onCreateView(
@@ -40,11 +42,18 @@ class AddArticleStep1Fragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        addArticleVM.priceLiveData().observe(viewLifecycleOwner){
+        disablePriceEdition()
+        binding.tvNoPriceEditionAllowed.visibility = if(isEditMode) VISIBLE else GONE
+
+        addArticleVM.nameLiveData.observe(viewLifecycleOwner){
+            binding.etArticleName.setText(it)
+        }
+
+        addArticleVM.priceLiveData.observe(viewLifecycleOwner){
             Log.d(TAG, "Price observed : $it")
             binding.tvCount.text = it.toString()
 
-            binding.ibMinus.visibility = if(it == 0) GONE else VISIBLE
+            binding.ibMinus.visibility = if(it == 0 || isEditMode) GONE else VISIBLE
         }
 
         binding.etArticleName.setOnEditorActionListener { _ , actionId, _ ->
@@ -59,6 +68,11 @@ class AddArticleStep1Fragment : Fragment() {
         binding.etArticleName.setOnFocusChangeListener { _, isFocused ->
             if(!isFocused) addArticleVM.setArticleName(binding.etArticleName.text.toString())
         }
+    }
+
+    private fun disablePriceEdition() {
+        binding.ibAdd.visibility = if(isEditMode) GONE else VISIBLE
+        binding.ibMinus.visibility = if(isEditMode) GONE else VISIBLE
     }
 
     private fun setupPriceListeners(){
@@ -84,6 +98,7 @@ class AddArticleStep1Fragment : Fragment() {
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.spinnerCategories.apply {
             adapter = spinnerAdapter
+            setSelection(ArticleCategory.values().indexOf(addArticleVM.categoryLiveData.value))
             onFocusChangeListener = View.OnFocusChangeListener { _, p1 -> if(p1) hideKeyboard() }
             onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
                 override fun onNothingSelected(parent: AdapterView<*>?) {}

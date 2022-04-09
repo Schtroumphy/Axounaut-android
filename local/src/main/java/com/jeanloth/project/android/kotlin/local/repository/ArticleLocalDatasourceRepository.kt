@@ -3,6 +3,7 @@ package com.jeanloth.project.android.kotlin.local.repository
 import com.jeanloth.project.android.kotlin.domain_models.entities.Article
 import com.jeanloth.project.android.kotlin.local.contracts.LocalArticleDatasourceContract
 import com.jeanloth.project.android.kotlin.local.database.ArticleDAO
+import com.jeanloth.project.android.kotlin.local.database.CommandDAO
 import com.jeanloth.project.android.kotlin.local.entities.ArticleEntity
 import com.jeanloth.project.android.kotlin.local.mappers.ArticleEntityMapper
 import kotlinx.coroutines.flow.Flow
@@ -10,6 +11,7 @@ import kotlinx.coroutines.flow.map
 
 class ArticleLocalDatasourceRepository(
     private val dao : ArticleDAO,
+    private val commandDao : CommandDAO,
     private val mapper : ArticleEntityMapper,
 ) : LocalArticleDatasourceContract{
 
@@ -25,9 +27,17 @@ class ArticleLocalDatasourceRepository(
     }
 
     override fun deleteArticle(article: Article): Boolean {
-        var result = dao.box.remove(mapper.to(article))
-        print("[ArticleLocalDSRepository] : Delete article result : $result")
+        // Check if article is not linked with a command
+        val canDeleteArticle = commandDao.box.all.filter { it.articleWrappers.any { it.article.targetId == article.id } }.isEmpty()
 
+        // If not linked with, delete it and if not, mark it as hidden
+        if(canDeleteArticle) {
+            val result = dao.box.remove(mapper.to(article))
+            print("[ArticleLocalDSRepository] : Delete article result : $result")
+        } else {
+            article.isHidden = true
+            saveArticle(article)
+        }
         return true
     }
 

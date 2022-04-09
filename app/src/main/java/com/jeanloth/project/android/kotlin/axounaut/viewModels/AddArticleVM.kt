@@ -6,6 +6,7 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.jeanloth.project.android.kotlin.axounaut.extensions.displayPreparingTime
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.article.DeleteArticleUseCase
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.article.GetAllArticlesUseCase
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.article.SaveArticleUseCase
@@ -13,7 +14,9 @@ import com.jeanloth.project.android.kotlin.domain.usescases.usecases.ingredientW
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.ingredientWrapper.SaveIngredientWrapperUseCase
 import com.jeanloth.project.android.kotlin.domain_models.entities.Article
 import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleCategory
+import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleCategory.Companion.getArticleCategoryFromCode
 import com.jeanloth.project.android.kotlin.domain_models.entities.IngredientWrapper
+import com.jeanloth.project.android.kotlin.domain_models.entities.IngredientWrapper.Companion.toIngredientWrapper
 import com.jeanloth.project.android.kotlin.domain_models.entities.RecipeWrapper.Companion.toRecipeWrapper
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -27,13 +30,16 @@ class AddArticleVM (
     private var TAG = "[Add Article VM]"
     private var stepCount : Int = 1
 
+    // Article to edit
+    private var articleToEdit: Article? = null
+
     // Step 1
     private var _nameMutableLiveData : MutableLiveData<String> = MutableLiveData("")
     val nameLiveData : LiveData<String> = _nameMutableLiveData
     private var _categoryMutableLiveData : MutableLiveData<ArticleCategory> = MutableLiveData(ArticleCategory.SALTED)
-    var categoryLiveData : LiveData<ArticleCategory> = _categoryMutableLiveData
+    val categoryLiveData : LiveData<ArticleCategory> = _categoryMutableLiveData
     private var _priceMutableLiveData : MutableLiveData<Int> = MutableLiveData(0)
-    fun priceLiveData() : LiveData<Int> = _priceMutableLiveData
+    val priceLiveData : LiveData<Int> = _priceMutableLiveData
 
     // Step 2
     private val observeIngredientsMutableLD = MutableLiveData<List<IngredientWrapper>>(emptyList())
@@ -59,14 +65,34 @@ class AddArticleVM (
         result.addSource(checkedItemsMLD) {
             observeIngredientsMutableLD.value?.forEach {
                 it.isSelected = checkedItemsMLD.value?.contains(it) == true
-                if(stepCount == 3) canResume()
             }
-            observeIngredientsMutableLD.postValue(observeIngredientsMutableLD.value)
+            if(stepCount == 3) canResume()
+            result.value = observeIngredientsMutableLD.value?.toMutableList()
         }
 
         result.addSource(observeIngredientsMutableLD){
+            it.forEach {
+                it.isSelected = checkedItemsMLD.value?.contains(it) == true
+            }
             result.value = it.toMutableList()
         }
+    }
+
+    fun setArticleToEdit(articleToEdit: Article?){
+        this.articleToEdit = articleToEdit
+        setArticleName(articleToEdit?.label ?: "")
+        setArticleCategory(getArticleCategoryFromCode(articleToEdit?.category))
+        setPrice(articleToEdit?.price ?: 0.0)
+        _timePreparingMutableLiveData.value = articleToEdit?.preparingTime ?: 0f
+    }
+
+    fun updateCheckedListByArticleToEdit(){
+        articleToEdit?.let {
+            it.recipeIngredients.forEach {
+                updateCheckedItemsList(it.toIngredientWrapper(true), true)
+            }
+        }
+        Log.d(TAG, "Checked list ${checkedItemsMLD.value}")
     }
 
     private fun canResume(){
@@ -93,10 +119,12 @@ class AddArticleVM (
 
     fun saveArticle() {
         val articleToAdd = Article(
+            id = articleToEdit?.id ?: 0L,
             label = _nameMutableLiveData.value ?: "Error",
             price = _priceMutableLiveData.value?.toDouble() ?: 0.0,
+            preparingTime = _timePreparingMutableLiveData.value?: 0.5f,
             category = categoryLiveData.value?.code ?: ArticleCategory.SALTED.code,
-            recipeIngredients = checkedItemsLD.value?.toRecipeWrapper() ?: mutableListOf()
+            recipeIngredients = checkedItemsLD.value?.toRecipeWrapper(true) ?: mutableListOf()
         )
         Log.d(TAG, "Article to save : $articleToAdd")
         saveArticleUseCase.invoke(articleToAdd)
@@ -112,14 +140,7 @@ class AddArticleVM (
         canResume()
     }
 
-    fun displayHour() : String{
-        val time = _timePreparingMutableLiveData.value ?: 0f
-        if(time == 0f) return ""
-        val hour = time.toInt()
-        if(hour == 0) return "30min"
-        val minutes = time % hour
-        return if(minutes != 0f) "$hour h 30" else "$hour h"
-    }
+    fun displayHour() : String = displayPreparingTime(_timePreparingMutableLiveData.value)
 
     fun checkedItemsHasChanged() {
         canResume()
@@ -145,6 +166,10 @@ class AddArticleVM (
         canResume()
     }
 
+    private fun setPrice(price : Double){
+        _priceMutableLiveData.value = price.toInt()
+    }
+
     fun setPrice(adding : Boolean = false){
         _priceMutableLiveData.value =
             if(adding) {
@@ -168,5 +193,12 @@ class AddArticleVM (
         _priceMutableLiveData.value = 0
         _categoryMutableLiveData.value = ArticleCategory.SALTED
         checkedItemsMLD.value?.clear()
+        _timePreparingMutableLiveData.value = 0f
+        observeIngredientsMutableLD.value?.forEach {
+            it.isSelected = false
+            it.quantity = 0F
+        }
     }
+
+    fun isEditMode(): Boolean = articleToEdit != null
 }

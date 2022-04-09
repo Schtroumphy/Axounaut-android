@@ -55,6 +55,8 @@ class AddArticleStep2Fragment : Fragment() {
             saveIngredient()
         }
 
+        addArticleVM.updateCheckedListByArticleToEdit()
+
         return binding.root
     }
 

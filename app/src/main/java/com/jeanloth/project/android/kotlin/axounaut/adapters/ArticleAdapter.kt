@@ -42,8 +42,9 @@ class ArticleAdapter(
     }
 
     fun setItems(articles : List<ArticleWrapper>, isEditMode : Boolean = false){
-        this.articleList = articles
+        this.articleList = if(isEditMode) articles else articles.filter { it.count > 0 }
         this.isEditMode = isEditMode
+
         displayNoArticlesError?.invoke(articleList.isEmpty())
         notifyDataSetChanged()
     }

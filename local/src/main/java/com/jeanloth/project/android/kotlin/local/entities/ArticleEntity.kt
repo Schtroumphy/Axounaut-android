@@ -13,7 +13,9 @@ class ArticleEntity(
     var id: Long = 0,
     var label: String = "",
     var price: Double = 0.0,
+    val preparingTime : Float = 0F,
     val timeOrdered: Int = 0,
+    var isHidden : Boolean = false,
     val category: Int = ArticleCategory.SALTED.code
 ) : Entity {
 

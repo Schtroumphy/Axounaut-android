@@ -5,7 +5,7 @@ enum class ArticleCategory( val code : Int, val label : String) {
     SWEET(2, "Sucré");
 
     companion object{
-        fun getArticleCategoryFromCode(code : Int) : ArticleCategory = when(code) {
+        fun getArticleCategoryFromCode(code : Int?) : ArticleCategory = when(code) {
             SALTED.code -> SALTED
             SWEET.code -> SWEET
             else -> SALTED

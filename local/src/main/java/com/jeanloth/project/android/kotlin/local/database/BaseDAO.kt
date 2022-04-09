@@ -29,6 +29,10 @@ abstract class BaseDAO<TEntity : Entity>() {
 
     fun get(id : Long) = box.get(id)
 
+    fun getFirst(filters: (QueryBuilder<TEntity>) -> QueryBuilder<TEntity>): TEntity?{
+        return apply(filters).findFirst()
+    }
+
     fun getAll(filters : (QueryBuilder<TEntity>) -> (QueryBuilder<TEntity>)) : List<TEntity> = apply(filters).find()
 
     /**

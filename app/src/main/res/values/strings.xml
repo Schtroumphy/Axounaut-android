@@ -44,6 +44,9 @@
     <string name="article_name_recap">Article : %1$s</string>
     <string name="article_category_recap">Catégorie : %1$s</string>
     <string name="article_recap_preparing_time">Temps de préparation : %1$s</string>
+    <string name="article_short_recap_preparing_time">Préparation : %1$s</string>
+
+    <string name="article_no_price_edition_allowed">La modification du prix n\'est pas possible. Veuillez créer un nouvel article pour changer le prix.</string>
 
 
     <!-- Command Fragment -->
@@ -66,6 +69,7 @@
 
     <string name="cancel_dialog_title">Supprimer un article</string>
     <string name="cancel_dialog_content">Voulez-vous supprimer cet article ?</string>
+    <string name="delete_article_dialog_content">Voulez-vous supprimer cet article ? Si oui, et qu\'il est associé à une commande, il sera juste caché.</string>
     <string name="cancel_article">Annuler</string>
     <string name="delete_article">Supprimer</string>
 
