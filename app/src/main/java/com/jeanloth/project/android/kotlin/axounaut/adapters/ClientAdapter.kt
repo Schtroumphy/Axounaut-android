@@ -5,11 +5,13 @@ import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.jeanloth.project.android.kotlin.axounaut.extensions.capitalize
 import androidx.core.content.ContextCompat.getColor
 import androidx.recyclerview.widget.RecyclerView
 import com.jeanloth.project.android.kotlin.axounaut.R
 import com.jeanloth.project.android.kotlin.axounaut.databinding.ItemClientBinding
 import com.jeanloth.project.android.kotlin.domain_models.entities.AppClient
+import java.util.*
 
 class ClientAdapter(
     private var clientList : List<AppClient>,
@@ -46,11 +48,12 @@ class ClientAdapter(
 
         private val binding = ItemClientBinding.bind(view)
         fun bind(client : AppClient){
-            binding.tvClientName.text= context.getString(R.string.client_name_label, client.lastname?.uppercase(), client.firstname.lowercase())
+            binding.tvClientName.text= context.getString(R.string.client_name_label, client.lastname?.uppercase(),
+                client.firstname.lowercase().capitalize())
             binding.tvFidelity.text= context.getString(R.string.client_fidelity_label, client.fidelityPoint.toString())
 
             if(client.isFavorite){
-                binding.ibFavorite.backgroundTintList = ColorStateList.valueOf(getColor(context, R.color.salamander))
+                binding.ibFavorite.backgroundTintList = ColorStateList.valueOf(getColor(context, R.color.ginger_2))
             } else {
                 binding.ibFavorite.backgroundTintList = ColorStateList.valueOf(getColor(context, R.color.gray_1))
             }

@@ -2,6 +2,7 @@ package com.jeanloth.project.android.kotlin.axounaut.extensions
 
 import android.util.Log
 import androidx.compose.ui.text.capitalize
+import java.util.*
 
 fun String.isPhoneValid() : Boolean{
     try{
@@ -16,6 +17,10 @@ fun String.isPhoneValid() : Boolean{
 fun String.toCamelCase() : String{
     val test = this.split(" ").map { it.capitalize() }
     return test.joinToString().replace(",", "")
+}
+
+fun String.capitalize(): String{
+    return this.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
 }
 
 fun displayPreparingTime(time : Float?) : String{

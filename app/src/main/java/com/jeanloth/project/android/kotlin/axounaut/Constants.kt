@@ -5,7 +5,7 @@ object Constants {
     val FRAGMENT_TO_SHOW = "FRAGMENT_TO_SHOW"
 
     val COMMANDS = "COMMANDS"
-    val ANALYSIS = "ANALYSIS"
+    val CLIENTS = "CLIENTS"
     val STOCK = "STOCK"
     val ARTICLE = "ARTICLE"
 

@@ -1,5 +1,6 @@
 package com.jeanloth.project.android.kotlin.axounaut.ui.home
 
+import android.content.Context
 import android.content.Intent
 import androidx.compose.ui.tooling.preview.Devices
 import com.jeanloth.project.android.kotlin.axounaut.theme.*
@@ -25,10 +26,16 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.BakeryDining
+import androidx.compose.material.icons.rounded.BakeryDining
+import androidx.compose.material.icons.rounded.Equalizer
+import androidx.compose.material.icons.rounded.List
+import androidx.compose.material.icons.rounded.People
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -99,19 +106,20 @@ fun HomePage(navController: NavController?) {
             ) {
                 Header()
                 Spacer(modifier = Modifier.height(15.dp))
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 10.dp, vertical = 0.dp)
                 ) {
-                    HomeCard("Mes commandes") {
+                    /*HomeCard("Mes commandes") {
                         context.startActivity(Intent(context, MainActivity::class.java))
                     }
                     HomeCard("Mon stock") {
                         context.startActivity(Intent(context, MainActivity::class.java).apply {
                             putExtra(Constants.FRAGMENT_TO_SHOW, Constants.ARTICLE)
                         })
-                    }
+                    }*/
+                    HomeBarItem(context)
                 }
                 HomeItem()
             }
@@ -240,6 +248,61 @@ fun ArticleBar(article: Article, totalCount: Int = 100) {
 }
 
 @Composable
+fun HomeBarItem(context : Context){
+    Card(
+        shape = RoundedCornerShape(26.dp),
+        elevation = 15.dp,
+        backgroundColor = white,
+        modifier = Modifier
+            .padding(horizontal = 20.dp, vertical = 10.dp)
+            .fillMaxWidth()
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            modifier = Modifier.fillMaxWidth().padding(all = 10.dp)
+        ) {
+            // Go to commands
+            HomeRoundedCard(Icons.Rounded.List) {
+                context.startActivity(Intent(context, MainActivity::class.java))
+            }
+
+            // Go to articles
+            HomeRoundedCard(Icons.Rounded.BakeryDining) {
+                context.startActivity(Intent(context, MainActivity::class.java).apply {
+                    putExtra(Constants.FRAGMENT_TO_SHOW, Constants.ARTICLE)
+                })
+            }
+
+            // Go to clients
+            HomeRoundedCard(Icons.Rounded.People) {
+                context.startActivity(Intent(context, MainActivity::class.java).apply {
+                    putExtra(Constants.FRAGMENT_TO_SHOW, Constants.CLIENTS)
+                })
+            }
+
+            // Go to stock
+            HomeRoundedCard(Icons.Rounded.Equalizer) {
+                context.startActivity(Intent(context, MainActivity::class.java).apply {
+                    putExtra(Constants.FRAGMENT_TO_SHOW, Constants.STOCK)
+                })
+            }
+        }
+    }
+}
+
+@Composable
+fun HomeRoundedCard(icon: ImageVector, onClickAction: (() -> Unit)){
+    Card(
+        shape = RoundedCornerShape(15.dp),
+        elevation = 5.dp,
+        backgroundColor = gray_light,
+        modifier = Modifier
+    ){
+        Icon(icon, modifier = Modifier.clickable { onClickAction.invoke() }.padding(10.dp), contentDescription = "Localized description")
+    }
+}
+
+@Composable
 fun HomeCard(title: String, onClickAction: (() -> Unit)) {
     Card(
         shape = RoundedCornerShape(18.dp),
@@ -287,4 +350,10 @@ fun HomeItem() {
 @Composable
 fun DefaultPreview() {
     HomePage(navController = null)
+}
+
+@Preview(showBackground = true, device = Devices.PIXEL_2)
+@Composable
+fun DefaultPreview2() {
+    //HomeBarItem(context)
 }

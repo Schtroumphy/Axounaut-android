@@ -5,11 +5,10 @@ import android.view.View
 import android.view.View.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
-import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import com.jeanloth.project.android.kotlin.axounaut.AppLogger.logD
-import com.jeanloth.project.android.kotlin.axounaut.Constants.ANALYSIS
+import com.jeanloth.project.android.kotlin.axounaut.Constants.CLIENTS
 import com.jeanloth.project.android.kotlin.axounaut.Constants.ARTICLE
 import com.jeanloth.project.android.kotlin.axounaut.Constants.COMMANDS
 import com.jeanloth.project.android.kotlin.axounaut.Constants.FRAGMENT_TO_SHOW
@@ -19,9 +18,7 @@ import com.jeanloth.project.android.kotlin.axounaut.ui.commands.AddCommandDialog
 import com.jeanloth.project.android.kotlin.axounaut.ui.commands.PayCommandDialogFragment
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.AddArticleVM
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.MainVM
-import org.koin.android.viewmodel.ext.android.sharedViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
-import splitties.views.imageDrawable
 import splitties.views.onClick
 
 class MainActivity : AppCompatActivity() {
@@ -41,7 +38,7 @@ class MainActivity : AppCompatActivity() {
 
         when (intent.getStringExtra(FRAGMENT_TO_SHOW)) {
             COMMANDS -> navigateToCommands()
-            ANALYSIS -> navigateToAnalysis()
+            CLIENTS -> navigateToClients()
             STOCK -> navigateToStock()
             ARTICLE -> navigateToArticle()
             else -> navigateToCommands()
@@ -93,8 +90,8 @@ class MainActivity : AppCompatActivity() {
         navController.navigate(R.id.nav_article)
     }
 
-    private fun navigateToAnalysis(){
-        navController.navigate(R.id.nav_analysis)
+    private fun navigateToClients(){
+        navController.navigate(R.id.nav_clients)
     }
 
     private fun openPopUpMenu(view : View) {
