@@ -7,9 +7,11 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
-import androidx.navigation.fragment.findNavController
+import com.jeanloth.project.android.kotlin.axounaut.adapters.CheckboxListAdapter
+import com.jeanloth.project.android.kotlin.axounaut.adapters.CheckboxShoppingAdapter
 import com.jeanloth.project.android.kotlin.axounaut.adapters.PrevisionalIngredientAdapter
 import com.jeanloth.project.android.kotlin.axounaut.databinding.FragmentPrevisionalBinding
+import com.jeanloth.project.android.kotlin.axounaut.databinding.FragmentShoppingListBinding
 import com.jeanloth.project.android.kotlin.axounaut.extensions.formatToShortDate
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.CommandVM
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.MainVM
@@ -20,44 +22,39 @@ import org.koin.android.viewmodel.ext.android.sharedViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
 import splitties.views.onClick
 
-class PrevisionalFragment : Fragment() {
+class ShoppingListFragment : Fragment() {
 
-    private val stockVM : StockVM by viewModel()
+    private lateinit var binding: FragmentShoppingListBinding
+
     private val mainVM : MainVM by sharedViewModel()
-    private lateinit var previsionalIngredientAdapter: PrevisionalIngredientAdapter
+    private val stockVM : StockVM by viewModel()
 
-    private lateinit var binding: FragmentPrevisionalBinding
+    private lateinit var checkboxShoppingAdapter: CheckboxShoppingAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        previsionalIngredientAdapter = PrevisionalIngredientAdapter(emptyList(), requireContext())
-
-        binding = FragmentPrevisionalBinding.inflate(layoutInflater, container, false)
+        binding = FragmentShoppingListBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        mainVM.setHeaderTitle("Prévisionnel", "Du ${stockVM.currentWeekFirstDate} au ${stockVM.currentWeekLastDate}")
+        mainVM.setHeaderTitle("Liste de courses")
 
-        binding.rvIngredients.adapter = previsionalIngredientAdapter
+        checkboxShoppingAdapter = CheckboxShoppingAdapter(mutableListOf()).apply {
+            onCheckedItem = { item, isChecked ->
+
+            }
+        }
+        binding.rvIngredients.adapter = checkboxShoppingAdapter
 
         stockVM.previsionalWrappersMediatorLiveData.observe(viewLifecycleOwner){
-            binding.tvNoRecipeSaved.visibility = if(it.isEmpty()) VISIBLE else GONE
-            previsionalIngredientAdapter.setItems(it)
+            binding.tvNoShoppingList.visibility = if(it.isEmpty()) VISIBLE else GONE
+            checkboxShoppingAdapter.setItems(it.filter { it.delta < 0f })
         }
-
-        binding.btShoppingList.onClick {
-            goToShoppingList()
-        }
-
     }
 
-    private fun goToShoppingList(){
-        findNavController().navigate(PrevisionalFragmentDirections.actionNavPrevisionalToNavShoppingFragment())
-
-    }
 }

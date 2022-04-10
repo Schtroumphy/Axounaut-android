@@ -51,18 +51,6 @@ class StockFragment : Fragment() {
 
         setupSpinner()
 
-        val mock = mutableListOf(
-            IngredientWrapper(ingredient = Ingredient(label = "Farine"), quantity = 4.0f),
-            IngredientWrapper(ingredient = Ingredient(label = "Beurre 500g"), quantity = 4.0f, quantityType = IngredientQuantityType.G),
-            IngredientWrapper(ingredient = Ingredient(label = "Lait 1L"), quantity = 0.0f, quantityType = IngredientQuantityType.L),
-            IngredientWrapper(ingredient = Ingredient(label = "Epices"), quantity = 1.0f, quantityType = IngredientQuantityType.G),
-            IngredientWrapper(ingredient = Ingredient(label = "Autre 1"), quantity = 1.0f, quantityType = IngredientQuantityType.L),
-            IngredientWrapper(ingredient = Ingredient(label = "Test"), quantity = 0.0f, quantityType = IngredientQuantityType.L),
-            IngredientWrapper(ingredient = Ingredient(label = "Test 2"), quantity = 2.0f, quantityType = IngredientQuantityType.G),
-            IngredientWrapper(ingredient = Ingredient(label = "Test 3"), quantity = 2.0f, quantityType = IngredientQuantityType.G),
-            IngredientWrapper(ingredient = Ingredient(label = "Test 4"), quantity = 0.0f, quantityType = IngredientQuantityType.G),
-        )
-
         // Setup adapter
         ingredientAdapter = IngredientAdapter(emptyList(), true, requireContext()).apply {
             onAddMinusClick = {
@@ -77,7 +65,7 @@ class StockFragment : Fragment() {
         binding.rvIngredients.adapter = ingredientAdapter
 
         // Observe all ingredient wrappers
-        stockVM.observePWLiveData().observe(viewLifecycleOwner){
+        stockVM.observeIngredientWrappersLiveData().observe(viewLifecycleOwner){
             ingredientAdapter.setItems(it)
         }
 
@@ -89,7 +77,6 @@ class StockFragment : Fragment() {
 
         binding.tvValidateIngredient.onClick {
             stockVM.saveIngredientWrapper(IngredientWrapper(ingredient = Ingredient(label = binding.etIngredient.text.toString()), quantityType = binding.spinnerQuantityType.selectedItem.toString().fromVal()))
-            ingredientAdapter.setItems(mock)
             binding.tvAddIngredient.visibility = VISIBLE
             binding.llAddIngredient.visibility = GONE
         }

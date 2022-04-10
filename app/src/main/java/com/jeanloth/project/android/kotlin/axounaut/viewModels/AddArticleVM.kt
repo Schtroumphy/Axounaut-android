@@ -43,6 +43,7 @@ class AddArticleVM (
 
     // Step 2
     private val observeIngredientsMutableLD = MutableLiveData<List<IngredientWrapper>>(emptyList())
+    val observeIngredientsLD : LiveData<List<IngredientWrapper>> = observeIngredientsMutableLD
     private var checkedItemsMLD = MutableLiveData<MutableList<IngredientWrapper>>(mutableListOf())
     val checkedItemsLD : LiveData<MutableList<IngredientWrapper>> = checkedItemsMLD
     val result: MediatorLiveData<MutableList<IngredientWrapper>> = MediatorLiveData()

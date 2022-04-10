@@ -37,7 +37,7 @@
         <item name="android:layout_height">36dp</item>
         <item name="android:background">@drawable/bg_rounded</item>
         <item name="android:backgroundTint">@color/green_light_1</item>
-        <item name="android:paddingHorizontal">100dp</item>
+        <item name="android:paddingHorizontal">80dp</item>
         <item name="android:textSize">14sp</item>
         <item name="android:layout_marginBottom">20dp</item>
     </style>

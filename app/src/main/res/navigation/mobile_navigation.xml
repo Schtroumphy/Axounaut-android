@@ -36,7 +36,13 @@
         android:id="@+id/nav_previsional"
         android:name="com.jeanloth.project.android.kotlin.axounaut.ui.stock.PrevisionalFragment"
         android:label="Previsionnel"
-        tools:layout="@layout/fragment_previsional" />
+        tools:layout="@layout/fragment_previsional" >
+
+        <action
+            android:id="@+id/action_nav_previsional_to_nav_shopping_fragment"
+            app:destination="@+id/nav_shopping_fragment" />
+
+    </fragment>
 
     <fragment
         android:id="@+id/nav_analysis"
@@ -90,7 +96,6 @@
             android:defaultValue="@null"
             app:nullable="true" />
 
-
     </fragment>
 
     <fragment
@@ -129,6 +134,14 @@
         android:name="com.jeanloth.project.android.kotlin.axounaut.ui.commands.PayCommandDialogFragment"
         android:label="Pay command"
         tools:layout="@layout/fragment_pay_command_dialog" >
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_shopping_fragment"
+        android:name="com.jeanloth.project.android.kotlin.axounaut.ui.stock.ShoppingListFragment"
+        android:label="Shopping list"
+        tools:layout="@layout/fragment_shopping_list" >
 
     </fragment>
 

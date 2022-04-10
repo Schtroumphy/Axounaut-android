@@ -128,7 +128,6 @@
     <Button
         android:id="@+id/bt_see_previsional"
         style="@style/CustomButton"
-        android:visibility="visible"
         android:text="Voir le prévisionnel"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

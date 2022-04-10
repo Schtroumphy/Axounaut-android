@@ -36,7 +36,7 @@ val appModule = module {
     viewModel { AddCommandVM() }
     viewModel { CommandVM(get(), get(), get(), get(), get(), get(), get()) }
     viewModel { (currentCommandId: Long) -> CommandDetailedVM(currentCommandId = currentCommandId, get(), get(), get(), get(), get()) }
-    viewModel { StockVM(get(), get(), get()) }
+    viewModel { StockVM(get(), get(), get(), get()) }
 
     // Uses cases
     factory{ GetAllArticlesUseCase(get()) }

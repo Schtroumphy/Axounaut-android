@@ -8,27 +8,19 @@ import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.jeanloth.project.android.kotlin.axounaut.R
 import com.jeanloth.project.android.kotlin.axounaut.adapters.CheckboxTextViewAdapter
 import com.jeanloth.project.android.kotlin.axounaut.databinding.FragmentArticleDetailsBinding
-import com.jeanloth.project.android.kotlin.axounaut.extensions.SwipeToCancelCallback
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.AddArticleVM
-import com.jeanloth.project.android.kotlin.axounaut.viewModels.ArticleVM
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.MainVM
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.StockVM
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
 import org.koin.android.viewmodel.ext.android.sharedViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
-import org.koin.core.parameter.parametersOf
 import splitties.views.onClick
 import java.lang.IllegalArgumentException
 
@@ -40,7 +32,6 @@ class AddArticleFragment : Fragment(), StepListener {
     private val args : AddArticleFragmentArgs by navArgs()
     private val addArticleVM : AddArticleVM by sharedViewModel()
     private val mainVM : MainVM by sharedViewModel()
-    private val stockVM : StockVM by viewModel()
     private lateinit var navController: NavController
 
     private lateinit var checkboxTextViewAdapter: CheckboxTextViewAdapter
@@ -72,7 +63,7 @@ class AddArticleFragment : Fragment(), StepListener {
         checkboxTextViewAdapter = CheckboxTextViewAdapter(mutableListOf())
 
         // Listeners
-        stockVM.observePWLiveData().observe(viewLifecycleOwner){
+        addArticleVM.observeIngredientsLD.observe(viewLifecycleOwner){
             checkboxTextViewAdapter.setItems(it)
         }
 
