@@ -17,7 +17,7 @@
         {
           "id": "5:5876382283187354600",
           "name": "price",
-          "type": 8,
+          "type": 5,
           "flags": 4
         },
         {
@@ -150,13 +150,13 @@
         {
           "id": "3:3849604154912776078",
           "name": "totalPrice",
-          "type": 8,
+          "type": 5,
           "flags": 2
         },
         {
           "id": "4:7219265204955035074",
           "name": "paymentAmount",
-          "type": 8,
+          "type": 5,
           "flags": 2
         },
         {
@@ -192,7 +192,7 @@
         {
           "id": "12:4865363898770884160",
           "name": "reduction",
-          "type": 8,
+          "type": 5,
           "flags": 2
         },
         {

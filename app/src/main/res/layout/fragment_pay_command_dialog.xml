@@ -54,6 +54,133 @@
         app:layout_constraintTop_toBottomOf="@id/tv_client_command_number"
         tools:text="Prix total de la commande : 40€" />
 
+    <LinearLayout
+        android:id="@+id/ll_reduction"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="4"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/tv_total_command_price"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_reduction_question"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:paddingStart="@dimen/activity_horizontal_margin"
+            android:layout_weight="2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_add_command_title"
+            android:text="Appliquer une réduction ?" />
+
+        <RadioGroup
+            android:id="@+id/rg_reduction"
+            android:layout_weight="2"
+            android:gravity="end"
+            android:orientation="horizontal"
+            android:checkedButton="@+id/rb_reduction_no"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content">
+        <RadioButton
+            android:id="@+id/rb_reduction_yes"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingHorizontal="@dimen/activity_horizontal_margin"
+            android:text="Oui"/>
+        <RadioButton
+            android:id="@+id/rb_reduction_no"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingHorizontal="@dimen/activity_horizontal_margin"
+            android:text="Non"/>
+        </RadioGroup>
+    </LinearLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til_reduction"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginHorizontal="20dp"
+        android:focusableInTouchMode="false"
+        android:hint="@string/reduction"
+        android:visibility="gone"
+        tools:visibility="visible"
+        app:boxCornerRadiusBottomEnd="20dp"
+        app:boxCornerRadiusBottomStart="20dp"
+        app:boxCornerRadiusTopEnd="20dp"
+        app:boxCornerRadiusTopStart="20dp"
+        app:boxStrokeColor="@color/marron_light_1"
+        app:boxStrokeErrorColor="@color/salamander"
+        app:boxStrokeWidth="1dp"
+        app:boxStrokeWidthFocused="1.5dp"
+        app:hintAnimationEnabled="true"
+        app:hintTextColor="@color/orange_003"
+        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ll_reduction">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_reduction"
+            android:layout_width="150dp"
+            android:layout_height="45dp"
+            android:ems="10"
+            android:imeOptions="actionDone"
+            android:inputType="numberDecimal"
+            android:maxLength="3"
+            android:textAlignment="textStart"
+            android:textCursorDrawable="@null"
+            android:textSize="14sp"
+            tools:ignore="MissingConstraints" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_payment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="4"
+        android:gravity="center"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        app:layout_constraintTop_toBottomOf="@id/til_reduction"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_payment_question"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:paddingStart="@dimen/activity_horizontal_margin"
+            android:layout_weight="2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_add_command_title"
+            android:text="Paiement complet ?" />
+
+        <RadioGroup
+            android:id="@+id/rg_payment"
+            android:layout_weight="2"
+            android:gravity="end"
+            android:orientation="horizontal"
+            android:checkedButton="@+id/rb_payment_yes"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content">
+        <RadioButton
+            android:id="@+id/rb_payment_yes"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingHorizontal="@dimen/activity_horizontal_margin"
+            android:text="Oui"/>
+        <RadioButton
+            android:id="@+id/rb_payment_no"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingHorizontal="@dimen/activity_horizontal_margin"
+            android:text="Non"/>
+        </RadioGroup>
+    </LinearLayout>
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_payment_received"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
@@ -61,7 +188,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginHorizontal="20dp"
-        android:layout_marginTop="25dp"
+        android:visibility="gone"
+        tools:visibility="visible"
         android:hint="Paiement reçu"
         app:boxCornerRadiusBottomEnd="20dp"
         app:boxCornerRadiusBottomStart="20dp"
@@ -74,7 +202,7 @@
         app:hintAnimationEnabled="true"
         app:hintTextColor="@color/orange_003"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_total_command_price">
+        app:layout_constraintTop_toBottomOf="@id/ll_payment">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/et_payment_received"
@@ -90,95 +218,41 @@
             tools:text="30€" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <CheckBox
-        android:id="@+id/cb_complete_payment"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/activity_horizontal_margin"
-        android:button="@color/selector_cb"
-        android:buttonTint="@color/selector_cb"
-        android:scaleX="0.3"
-        android:scaleY="0.3"
-        app:layout_constraintBottom_toBottomOf="@id/til_payment_received"
-        app:layout_constraintStart_toEndOf="@id/til_payment_received"
-        app:layout_constraintTop_toTopOf="@id/til_payment_received" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/complete_payment"
-        app:layout_constraintBottom_toBottomOf="@id/cb_complete_payment"
-        app:layout_constraintStart_toEndOf="@id/cb_complete_payment"
-        app:layout_constraintTop_toTopOf="@id/cb_complete_payment" />
-
-    <RelativeLayout
-        android:id="@+id/rl_payment_type"
-        android:layout_width="0dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_payment_type"
+        android:layout_width="200dp"
         android:layout_height="55dp"
-        android:layout_marginHorizontal="@dimen/activity_vertical_margin"
         android:layout_marginVertical="@dimen/activity_vertical_margin"
         android:background="@drawable/bg_edit_text"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/til_payment_received">
 
         <Spinner
             android:id="@+id/spinner_payment_type"
             style="@style/Widget.AppCompat.DropDownItem.Spinner"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginHorizontal="26dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/iv_arrow_spinner"
+            android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
             android:layout_marginVertical="@dimen/activity_vertical_margin"
             android:background="@null" />
 
         <ImageView
+            android:id="@+id/iv_arrow_spinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
+            app:layout_constraintTop_toTopOf="@id/spinner_payment_type"
+            app:layout_constraintBottom_toBottomOf="@id/spinner_payment_type"
+            app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
             android:src="@android:drawable/arrow_down_float" />
-    </RelativeLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_reduction"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginHorizontal="20dp"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:focusableInTouchMode="false"
-        android:hint="@string/reduction"
-        app:boxCornerRadiusBottomEnd="20dp"
-        app:boxCornerRadiusBottomStart="20dp"
-        app:boxCornerRadiusTopEnd="20dp"
-        app:boxCornerRadiusTopStart="20dp"
-        app:boxStrokeColor="@color/marron_light_1"
-        app:boxStrokeErrorColor="@color/salamander"
-        app:boxStrokeWidth="1dp"
-        app:boxStrokeWidthFocused="1.5dp"
-        app:hintAnimationEnabled="true"
-        app:hintTextColor="@color/orange_003"
-        app:layout_constraintVertical_bias="0.0"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rl_payment_type">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_reduction"
-            android:layout_width="150dp"
-            android:layout_height="45dp"
-            android:ems="10"
-            android:imeOptions="actionDone"
-            android:inputType="numberDecimal"
-            android:maxLength="3"
-            android:textAlignment="textStart"
-            android:textCursorDrawable="@null"
-            android:textSize="14sp"
-            tools:ignore="MissingConstraints" />
-    </com.google.android.material.textfield.TextInputLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
         android:id="@+id/tv_incomplete_payment"

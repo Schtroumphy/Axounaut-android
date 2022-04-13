@@ -11,18 +11,18 @@ import android.view.inputmethod.EditorInfo
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
-import androidx.core.widget.doOnTextChanged
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.snackbar.Snackbar
 import com.jeanloth.project.android.kotlin.axounaut.R
 import com.jeanloth.project.android.kotlin.axounaut.databinding.FragmentPayCommandDialogBinding
 import com.jeanloth.project.android.kotlin.axounaut.extensions.fullScreen
-import com.jeanloth.project.android.kotlin.axounaut.viewModels.CommandVM
-import com.jeanloth.project.android.kotlin.domain_models.entities.CommandStatusType
+import com.jeanloth.project.android.kotlin.axounaut.extensions.hideKeyboard
+import com.jeanloth.project.android.kotlin.axounaut.viewModels.PayCommandVM
 import com.jeanloth.project.android.kotlin.domain_models.entities.PaymentType
 import com.jeanloth.project.android.kotlin.domain_models.entities.toNameString
-import org.koin.android.viewmodel.ext.android.sharedViewModel
+import org.koin.android.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 import splitties.views.onClick
 
 /**
@@ -35,106 +35,119 @@ import splitties.views.onClick
  * </pre>
  */
 class PayCommandDialogFragment(
-    val commandId: Long
+    private val commandId: Long
 ) : BottomSheetDialogFragment() {
 
-    private val commandVM : CommandVM by sharedViewModel()
+    private val payCommandVM : PayCommandVM by viewModel{
+        parametersOf(
+            commandId
+        )
+    }
 
-    lateinit var bottomSheetDialog: BottomSheetDialog
+    private lateinit var bottomSheetDialog: BottomSheetDialog
+
+    private lateinit var binding: FragmentPayCommandDialogBinding
+    private var paymentIsComplete : Boolean = true
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         bottomSheetDialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
         return bottomSheetDialog.fullScreen()
     }
-    var totalPrice : Double = 0.0
-    private lateinit var binding: FragmentPayCommandDialogBinding
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentPayCommandDialogBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        commandVM.currentCommandId = commandId
-        Log.d("[Pay command fragment]", "Current command id : ${commandVM.currentCommandId}")
+        Log.d("[Pay command fragment]", "Current command id : ${payCommandVM.commandId}")
 
-        //commandVM.observeCurrentCommand()
-
-        commandVM.currentCommandMutableLiveData.observe(viewLifecycleOwner){
-            // Setup header
+        payCommandVM.currentCommandLiveData().observe(viewLifecycleOwner){
             binding.tvClientCommandNumber.text = getString(
                 R.string.command_details_client_number,
-                it!!.client!!.toNameString(),
-                it.idCommand.toString()
+                it?.client?.toNameString(),
+                it?.idCommand.toString()
             )
             binding.tvTotalCommandPrice.text = getString(
                 R.string.total_price_command_number_label,
-                it.totalPrice.toString()
+                it?.totalPrice.toString()
             )
-            //totalPrice = it.totalPrice ?: 0.0
+            payCommandVM.setCurrentTotalPrice(it?.totalPrice ?: 0)
         }
 
-        commandVM.paymentReceivedLiveData().observe(viewLifecycleOwner){
-
-            if(binding.etReduction.text!!.isNotEmpty())
-                binding.tvTotalPriceWithReduction.visibility = if (binding.etReduction.text.toString().toInt() > 0) VISIBLE else INVISIBLE
-            else binding.tvTotalPriceWithReduction.visibility = INVISIBLE
-
-            binding.tvTotalPriceWithReduction.text = getString(R.string.total_price_command_after_reduction_label, it.toString())
-
-            binding.etPaymentReceived.setText(it.toString())
-        }
-
-        binding.etPaymentReceived.doOnTextChanged { text, _, _, _ ->
-            binding.btProceedPayment.isEnabled = text!!.isNotEmpty() && text.toString().toDouble() > 0
-
-            if(text.isNotEmpty()) {
-                when(text.toString().toDouble()){
-                    in 0.1 ..commandVM.paymentReceivedMutableLiveData.value!! - 0.1 -> {
-                        binding.cbCompletePayment.isChecked = false
-                        binding.etReduction.isEnabled = true
-                        binding.tvIncompletePayment.visibility = VISIBLE
-                    }
-                    commandVM.paymentReceivedMutableLiveData.value!! -> {
-                        binding.cbCompletePayment.isChecked = true
-                        binding.etReduction.isEnabled = true
-                        binding.tvIncompletePayment.visibility = INVISIBLE
-                    }
-                    else -> {
-                        //cb_complete_payment.isChecked = false
-                        binding.tvIncompletePayment.visibility = VISIBLE
-                        // TODO Display other error
-                    }
-                }
-               } else {
-                binding.etReduction.isEnabled = false
-                binding.tvIncompletePayment.visibility = VISIBLE
-            }
-        }
-
-        // Payment received
-        binding.cbCompletePayment.setOnCheckedChangeListener { _, isChecked ->
-            binding.etPaymentReceived.setText(if (isChecked) commandVM.paymentReceivedMutableLiveData.value!!.toString() else "0.0")
-            if (!isChecked) {
-                binding.tvTotalPriceWithReduction.visibility = INVISIBLE
+        binding.rgReduction.setOnCheckedChangeListener { _, i ->
+            binding.tilReduction.visibility = if(i == binding.rbReductionNo.id) GONE else VISIBLE
+            if(i == binding.rbReductionNo.id){
+                payCommandVM.setReduction(0)
                 binding.etReduction.setText("")
             }
-            binding.etPaymentReceived.setSelection(binding.etPaymentReceived.text.toString().length)
         }
 
-        // Setup spinner
-        setupSpinner()
+        binding.rgPayment.setOnCheckedChangeListener { _, i ->
+            binding.tilPaymentReceived.visibility = if(i == binding.rbPaymentYes.id) GONE else VISIBLE
+            if(i == binding.rbPaymentYes.id){
+                payCommandVM.setPaymentComplete()
+                paymentIsComplete = true
+                binding.etPaymentReceived.setText("")
+                binding.tvIncompletePayment.visibility = GONE
+            }
+        }
 
+        // Listen to reduction enter
         binding.etReduction.setOnEditorActionListener { _, actionId, _ ->
             if(actionId == EditorInfo.IME_ACTION_DONE){
+                hideKeyboard()
+                binding.etReduction.clearFocus()
                 updateTotalPriceWithReduction()
             }
             true
         }
+
+        // Listen to total price with reduction
+        payCommandVM.totalPriceWithReductionLiveData().observe(viewLifecycleOwner){
+            if(it != 0 && it != payCommandVM.totalPrice){
+                binding.rbPaymentYes.isChecked = true // Check complete payment to force update of payment received to total price
+                binding.tvTotalPriceWithReduction.visibility = VISIBLE
+                binding.tvTotalPriceWithReduction.text = getString(R.string.total_price_command_after_reduction_label, it.toString())
+            } else {
+                binding.tvTotalPriceWithReduction.visibility = GONE
+            }
+        }
+
+        payCommandVM.statusAndPaymentReceivedLiveData().observe(viewLifecycleOwner){
+            if(it.first != PayCommandVM.PaymentStatus.UNKONWN) binding.tvIncompletePayment.visibility =  VISIBLE
+            when(it.first){
+                PayCommandVM.PaymentStatus.COMPLETE -> {
+                    binding.tvIncompletePayment.text = "Le paiement est complet, le choix a été modifié en conséquence."
+                    binding.btProceedPayment.isEnabled = true
+                    binding.rbPaymentYes.isChecked = true
+                }
+                PayCommandVM.PaymentStatus.UNCOMPLETE -> {
+                    binding.tvIncompletePayment.text = getString(R.string.incomplete_payment_error)
+                    binding.btProceedPayment.isEnabled = true
+                }
+                PayCommandVM.PaymentStatus.SUPERIOR -> {
+                    binding.tvIncompletePayment.text = "Le paiement est supérieur à celui attendu après réduction."
+                    binding.btProceedPayment.isEnabled = false
+                }
+            }
+        }
+
+        // Payment received listener
+        binding.etPaymentReceived.setOnEditorActionListener { _, actionId, _ ->
+            if(actionId == EditorInfo.IME_ACTION_DONE){
+                hideKeyboard()
+                binding.etPaymentReceived.clearFocus()
+                updatePaymentReceived()
+            }
+            true
+        }
+
+        // Setup spinner
+        setupSpinner()
 
         // Close button
         binding.btPayClose.onClick{
@@ -143,19 +156,10 @@ class PayCommandDialogFragment(
 
         //Confirm payment
         binding.btProceedPayment.onClick {
-            commandVM.currentCommand?.apply {
-                paymentAmount = commandVM.paymentReceivedLiveData().value
-                reduction = if(binding.etReduction.text.toString().isNotEmpty()) binding.etReduction.text.toString().toDouble() else 0.0
-                statusCode = if(
-                    commandVM.paymentReceivedLiveData().value == commandVM.currentCommand!!.totalPrice ||
-                    commandVM.paymentReceivedLiveData().value == commandVM.currentCommand!!.totalPrice.minus(binding.etReduction.text.toString().toDouble()))
-                            CommandStatusType.PAYED.code else CommandStatusType.INCOMPLETE_PAYMENT.code
-            }
-
-            commandVM.saveCommand(commandVM.currentCommand!!)
+            payCommandVM.saveCommand()
             bottomSheetDialog.dismiss()
 
-            // TODO Send parameter to previous fragment to display this snackbar
+            // TODO Send parameter to previous fragment to display this snack bar
             Snackbar.make(requireView(), "Paiement pris en compte.", Snackbar.LENGTH_SHORT).show()
         }
     }
@@ -171,7 +175,7 @@ class PayCommandDialogFragment(
                 adapterView: AdapterView<*>?, view: View,
                 position: Int, id: Long
             ) {
-                commandVM.currentCommand?.paymentTypeCode = adapter.getItem(position)?.code
+                payCommandVM.currentCommand?.paymentTypeCode = adapter.getItem(position)?.code
                 binding.etPaymentReceived.clearFocus()
                 binding.etReduction.clearFocus()
             }
@@ -183,13 +187,19 @@ class PayCommandDialogFragment(
         }
     }
 
-    private fun updateTotalPriceWithReduction() {
-        if(binding.etReduction.text.toString().toInt() != 0){
-            commandVM.setPaymentReceived(computeWithReduction(totalPrice))
+    private fun updatePaymentReceived() {
+        if(binding.etPaymentReceived.text.toString().toInt() <= 0 ) {
+            // TODO Display an error
         }
+        payCommandVM.setPaymentReceived(binding.etPaymentReceived.text.toString().toInt())
     }
 
-    private fun computeWithReduction(price : Double): Double = price - binding.etReduction.text.toString().toInt()
+    private fun updateTotalPriceWithReduction() {
+        if(binding.etReduction.text.toString().toInt() <= 0 ) {
+            // TODO Display an error
+        }
+        payCommandVM.setReduction(binding.etReduction.text.toString().toInt())
+    }
 
     companion object {
         fun newInstance(commandId: Long) = PayCommandDialogFragment(commandId)

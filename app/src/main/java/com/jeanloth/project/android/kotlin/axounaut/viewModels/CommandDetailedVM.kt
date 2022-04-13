@@ -43,10 +43,12 @@ class CommandDetailedVM (
             if(currentCommandId != 0L) {
                 observeCommandByIdUseCase.invoke(currentCommandId).collect { command ->
                     currentCommand = command
-                    currentCommand?.let {
-                        val status = getCommandStatusToUpdate(it)
-                        if(it.statusCode != status.code) updateStatusCommand(status)
-                        return@collect
+
+                    if(command?.statusCode !in listOf(CommandStatusType.DELIVERED.code, CommandStatusType.PAYED.code, CommandStatusType.INCOMPLETE_PAYMENT.code)){
+                        currentCommand?.let {
+                            val status = getCommandStatusToUpdate(it)
+                            if(it.statusCode != status.code) updateStatusCommand(status)
+                        }
                     }
                     currentCommandMutableLiveData.postValue(command)
                 }

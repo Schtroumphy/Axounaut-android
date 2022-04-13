@@ -10,8 +10,7 @@ import java.time.LocalDate
 class CommandEntityMapper(
     private val articleWrapperMapper: ArticleWrapperEntityMapper,
     val clientMapper : AppClientEntityMapper,
-    ) :
-    Mapper<Command, CommandEntity> {
+) : Mapper<Command, CommandEntity> {
 
     override fun from(t: CommandEntity): Command {
         val command = Command(

@@ -83,7 +83,7 @@ class AddArticleVM (
         this.articleToEdit = articleToEdit
         setArticleName(articleToEdit?.label ?: "")
         setArticleCategory(getArticleCategoryFromCode(articleToEdit?.category))
-        setPrice(articleToEdit?.price ?: 0.0)
+        setPrice(articleToEdit?.price ?: 0)
         _timePreparingMutableLiveData.value = articleToEdit?.preparingTime ?: 0f
     }
 
@@ -122,7 +122,7 @@ class AddArticleVM (
         val articleToAdd = Article(
             id = articleToEdit?.id ?: 0L,
             label = _nameMutableLiveData.value ?: "Error",
-            price = _priceMutableLiveData.value?.toDouble() ?: 0.0,
+            price = _priceMutableLiveData.value?.toInt() ?: 0,
             preparingTime = _timePreparingMutableLiveData.value?: 0.5f,
             category = categoryLiveData.value?.code ?: ArticleCategory.SALTED.code,
             recipeIngredients = checkedItemsLD.value?.toRecipeWrapper(true) ?: mutableListOf()
@@ -167,8 +167,8 @@ class AddArticleVM (
         canResume()
     }
 
-    private fun setPrice(price : Double){
-        _priceMutableLiveData.value = price.toInt()
+    private fun setPrice(price : Int){
+        _priceMutableLiveData.value = price
     }
 
     fun setPrice(adding : Boolean = false){

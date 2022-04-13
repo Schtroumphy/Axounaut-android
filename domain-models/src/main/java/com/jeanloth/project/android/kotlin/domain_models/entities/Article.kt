@@ -5,7 +5,7 @@ import java.io.Serializable
 data class Article(
     val id : Long = 0,
     val label : String = "",
-    val price : Double = 0.0,
+    val price : Int = 0,
     val preparingTime : Float = 0f,
     var timeOrdered : Int = 0,
     var isHidden : Boolean = false,

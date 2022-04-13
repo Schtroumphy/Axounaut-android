@@ -11,7 +11,7 @@ data class ArticleWrapper(
 
 ) : Serializable  {
 
-    val totalArticleWrapperPrice : Double?
+    val totalArticleWrapperPrice : Int
     get() = count * article.price
 
     companion object {

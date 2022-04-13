@@ -12,7 +12,7 @@ class ArticleEntity(
     @Id
     var id: Long = 0,
     var label: String = "",
-    var price: Double = 0.0,
+    var price: Int = 0,
     val preparingTime : Float = 0F,
     val timeOrdered: Int = 0,
     var isHidden : Boolean = false,

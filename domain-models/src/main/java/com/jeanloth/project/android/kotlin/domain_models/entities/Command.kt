@@ -8,11 +8,11 @@ data class Command(
     var statusCode : Int = CommandStatusType.TO_DO.code,
     var client : AppClient? = null,
     var articleWrappers : List<ArticleWrapper> = mutableListOf(),
-    var reduction : Double? = 0.0,
-    var paymentAmount : Double? = null,
+    var reduction : Int? = 0,
+    var paymentAmount : Int? = null,
     var paymentTypeCode : String? = null
 ) : Serializable {
 
-    val totalPrice : Double
-        get() = this.articleWrappers.filter { it.statusCode != ArticleWrapperStatusType.CANCELED.code }.filter { it.count > 0 }.sumOf { it.totalArticleWrapperPrice ?: 0.0 }
+    val totalPrice : Int
+        get() = this.articleWrappers.filter { it.statusCode != ArticleWrapperStatusType.CANCELED.code }.filter { it.count > 0 }.sumOf { it.totalArticleWrapperPrice }
 }

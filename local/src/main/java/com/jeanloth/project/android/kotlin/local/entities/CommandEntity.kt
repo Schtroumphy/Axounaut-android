@@ -17,9 +17,9 @@ class CommandEntity(
     val deliveryDate : String? = null,
 
     var statusCode : Int = CommandStatusType.TO_DO.code,
-    var totalPrice : Double? = null,
-    var reduction : Double? = 0.0,
-    var paymentAmount : Double? = null,
+    var totalPrice : Int? = null,
+    var reduction : Int? = 0,
+    var paymentAmount : Int? = null,
     var paymentTypeCode : String? = null,
     var isHidden : Boolean = false
 

@@ -111,16 +111,30 @@ class CommandDetailFragment : Fragment() {
                 CommandStatusType.IN_PROGRESS.code, CommandStatusType.DONE.code -> {
                     binding.btDelivered.visibility = VISIBLE
                     binding.btDelivered.isEnabled = true
+                    binding.btCompletePayment.visibility = GONE
+                    binding.tvError.visibility = GONE
                 }
                 CommandStatusType.DELIVERED.code -> {
                     binding.btDelivered.visibility = GONE
                     binding.btPay.visibility = VISIBLE
                     binding.btEditCommand.visibility = GONE
+                    binding.btCompletePayment.visibility = GONE
+                    binding.tvError.visibility = GONE
                 }
-                CommandStatusType.PAYED.code, CommandStatusType.INCOMPLETE_PAYMENT.code, CommandStatusType.CANCELED.code -> {
+                CommandStatusType.PAYED.code, CommandStatusType.CANCELED.code -> {
                     binding.btDelivered.visibility = GONE
                     binding.btPay.visibility = GONE
                     binding.btEditCommand.visibility = GONE
+                    binding.btCompletePayment.visibility = GONE
+                    binding.tvError.visibility = GONE
+                }
+                CommandStatusType.INCOMPLETE_PAYMENT.code -> {
+                    binding.btDelivered.visibility = GONE
+                    binding.btPay.visibility = GONE
+                    binding.btEditCommand.visibility = GONE
+                    binding.btCompletePayment.visibility = VISIBLE
+                    binding.tvError.visibility = VISIBLE
+                    binding.tvError.text = getString(R.string.uncomplete_payment_error, it.totalPrice - (it.reduction ?: 0) - (it.paymentAmount ?: 0))
                 }
             }
 
@@ -171,9 +185,9 @@ class CommandDetailFragment : Fragment() {
 
     private fun fillPaymentInfo(it: Command) {
         binding.tvPaymentReceived.visibility = VISIBLE
-        binding.tvPaymentReceived.text = getString(R.string.received_payment_amount, it.paymentAmount?.toInt())
+        binding.tvPaymentReceived.text = getString(R.string.received_payment_amount, it.paymentAmount)
 
-        if(it.reduction != 0.0) {
+        if(it.reduction != 0) {
             binding.tvReduction.visibility = VISIBLE
             binding.tvReduction.text = getString(R.string.applied_reduction, it.reduction?.toInt())
         }

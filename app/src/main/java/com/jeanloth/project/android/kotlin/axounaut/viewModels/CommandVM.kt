@@ -101,10 +101,6 @@ class CommandVM (
         saveArticleWrapperUseCase.invoke(articleWrapper)
     }
 
-    fun setPaymentReceived(price : Double){
-        paymentReceivedMutableLiveData.postValue(price)
-    }
-
     fun updateStatusCommand(status: CommandStatusType) {
         Log.d(TAG, "Make command $status")
         saveCommandUseCase.updateCommandStatus(currentCommand!!, status)
@@ -113,41 +109,4 @@ class CommandVM (
     fun deleteArticleWrapperFromCurrentCommand(articleWrapper: ArticleWrapper) {
         deleteArticleWrapperUseCase.invoke(currentCommand!!.articleWrappers.find { it == articleWrapper }!!)
     }
-
-    fun updateStatusByStatus(statusCode: Int) {
-        val command = currentCommand!!
-        when (statusCode) {
-            CommandStatusType.TO_DO.code -> {
-                Log.d(TAG, "TODO")
-                if (command.articleWrappers.any { it.statusCode == ArticleWrapperStatusType.DONE.code || it.statusCode == ArticleWrapperStatusType.CANCELED.code }) {
-                    updateStatusCommand(CommandStatusType.IN_PROGRESS)
-                }
-            }
-            CommandStatusType.IN_PROGRESS.code -> {
-                Log.d(TAG, "In progress")
-                if (command.articleWrappers.notCanceled().all { it.statusCode == ArticleWrapperStatusType.DONE.code}) {
-                    updateStatusCommand(CommandStatusType.DONE)
-                } else if (command.articleWrappers.all { it.statusCode == ArticleWrapperStatusType.CANCELED.code }) {
-                    // TODO display dialog to canceled or delete command
-                }
-            }
-            CommandStatusType.DONE.code -> {
-                Log.d(TAG, "Terminé")
-                if (!command.articleWrappers.notCanceled().all { it.statusCode == ArticleWrapperStatusType.DONE.code}) {
-                    updateStatusCommand(CommandStatusType.IN_PROGRESS)
-                }
-            }
-            CommandStatusType.DELIVERED.code -> {
-                Log.d(TAG, "Livré")
-            }
-            CommandStatusType.PAYED.code -> {
-                Log.d(TAG, "Payé")
-            }
-            CommandStatusType.CANCELED.code -> {
-                Log.d(TAG, "Cancel")
-            }
-        }
-
-    }
-
 }

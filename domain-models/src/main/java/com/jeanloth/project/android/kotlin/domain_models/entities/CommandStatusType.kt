@@ -18,6 +18,7 @@ enum class CommandStatusType(val code : Int, val label : String) {
                         DELIVERED.code -> DELIVERED
                         CANCELED.code -> CANCELED
                         PAYED.code -> PAYED
+                        INCOMPLETE_PAYMENT.code -> INCOMPLETE_PAYMENT
                         else -> TO_DO
                 }
 
@@ -29,6 +30,7 @@ enum class CommandStatusType(val code : Int, val label : String) {
                         DELIVERED.label -> DELIVERED
                         CANCELED.label -> CANCELED
                         PAYED.label -> PAYED
+                        INCOMPLETE_PAYMENT.label -> INCOMPLETE_PAYMENT
                         else -> TO_DO
                 }
         }

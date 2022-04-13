@@ -30,6 +30,10 @@
     <string name="category">Catégorie</string>
     <string name="save">Sauvegarder</string>
 
+    <!-- Error strings -->
+    <string name="uncomplete_payment_error">Cette commande est en attente de paiement complet. \nIl manque %1$d€.</string>
+
+
     <!-- Article List Fragment -->
     <string name="no_articles_error">Aucun article n\'est enregistré.</string>
     <string name="article_name">%1$s</string>
@@ -116,13 +120,15 @@
     <string name="attachment_summary_on">Automatically download attachments for incoming emails
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
-    <string name="complete_payment">Paiement complet</string>
+    <string name="completed_payment">Paiement complet</string>
+    <string name="complete_payment">Compléter paiement</string>
     <string name="incomplete_payment_error">Le paiement est incomplet. En procédant au paiement, elle devra être complétée ultérieurement.</string>
     <string name="reduction">Réduction</string>
     <string name="round">Arrondir</string>
     <string name="recipe">Recette</string>
     <string name="no_analysis_available">Aucune analyse disponible pour le moment.</string>
     <string name="title_activity_analysis">AnalysisActivity</string>
+
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
