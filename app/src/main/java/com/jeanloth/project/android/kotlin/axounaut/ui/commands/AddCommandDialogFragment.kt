@@ -285,8 +285,6 @@ class AddCommandDialogFragment (
         if(!isEditMode)  binding.tvTotalPrice.text = getString(R.string.total_price,
             addCommandVM.allArticlesLiveData.value?.filter { it.count > 0 }?.map { it.count * it.article.price }?.sum().toString()
         )
-
-
     }
 
     private fun setupPreviousCloseButton() {
@@ -315,7 +313,8 @@ class AddCommandDialogFragment (
         javaClass.logD("Command to save $commandToSave")
 
         // Call VM to save Command
-        commandVM.saveCommand(commandToSave)
+        commandVM.saveCommand(commandToSave, true)
+
         dialog?.dismiss()
     }
 

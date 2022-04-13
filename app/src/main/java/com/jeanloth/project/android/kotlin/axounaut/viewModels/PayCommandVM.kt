@@ -55,12 +55,11 @@ class PayCommandVM(
                 }
             }
         }
-
     }
 
     fun saveCommand() {
         currentCommand?.apply {
-            paymentAmount = paymentReceivedLiveData().value
+            paymentAmount = paymentReceivedLiveData().value ?: 0
             reduction = reductionApplicated
             statusCode = when(statusAndPaymentReceivedMutableLiveData.value?.first){
                 PaymentStatus.COMPLETE -> CommandStatusType.PAYED.code

@@ -134,7 +134,7 @@ class CommandDetailFragment : Fragment() {
                     binding.btEditCommand.visibility = GONE
                     binding.btCompletePayment.visibility = VISIBLE
                     binding.tvError.visibility = VISIBLE
-                    binding.tvError.text = getString(R.string.uncomplete_payment_error, it.totalPrice - (it.reduction ?: 0) - (it.paymentAmount ?: 0))
+                    binding.tvError.text = getString(R.string.uncomplete_payment_error, it.dueAmount)
                 }
             }
 

@@ -125,7 +125,7 @@ class AddArticleVM (
             price = _priceMutableLiveData.value?.toInt() ?: 0,
             preparingTime = _timePreparingMutableLiveData.value?: 0.5f,
             category = categoryLiveData.value?.code ?: ArticleCategory.SALTED.code,
-            recipeIngredients = checkedItemsLD.value?.toRecipeWrapper(true) ?: mutableListOf()
+            recipeIngredients = checkedItemsLD.value?.toRecipeWrapper(articleToEdit != null) ?: mutableListOf()
         )
         Log.d(TAG, "Article to save : $articleToAdd")
         saveArticleUseCase.invoke(articleToAdd)

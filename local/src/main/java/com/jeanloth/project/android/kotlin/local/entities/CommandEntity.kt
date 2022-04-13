@@ -1,6 +1,7 @@
 package com.jeanloth.project.android.kotlin.local.entities
 
 import com.jeanloth.project.android.kotlin.domain_models.entities.CommandStatusType
+import com.jeanloth.project.android.kotlin.domain_models.entities.PaymentType
 import io.objectbox.BoxStore
 import io.objectbox.annotation.Backlink
 import io.objectbox.annotation.Id
@@ -18,9 +19,9 @@ class CommandEntity(
 
     var statusCode : Int = CommandStatusType.TO_DO.code,
     var totalPrice : Int? = null,
-    var reduction : Int? = 0,
-    var paymentAmount : Int? = null,
-    var paymentTypeCode : String? = null,
+    var reduction : Int = 0,
+    var paymentAmount : Int = 0,
+    var paymentTypeCode : String = PaymentType.CASH.code,
     var isHidden : Boolean = false
 
     //var client : AppClient? = null,

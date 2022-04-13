@@ -175,7 +175,7 @@ class PayCommandDialogFragment(
                 adapterView: AdapterView<*>?, view: View,
                 position: Int, id: Long
             ) {
-                payCommandVM.currentCommand?.paymentTypeCode = adapter.getItem(position)?.code
+                payCommandVM.currentCommand?.paymentTypeCode = adapter.getItem(position)?.code ?: PaymentType.CASH.code
                 binding.etPaymentReceived.clearFocus()
                 binding.etReduction.clearFocus()
             }
