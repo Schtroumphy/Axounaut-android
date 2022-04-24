@@ -14,7 +14,7 @@ data class Command(
 ) : Serializable {
 
     val totalPrice : Int
-        get() = this.articleWrappers.filter { it.statusCode != ArticleWrapperStatusType.CANCELED.code }.filter { it.count > 0 }.sumOf { it.totalArticleWrapperPrice }
+        get() = this.articleWrappers.filter { it.count > 0 }.sumOf { it.totalArticleWrapperPrice }
 
     val totalPriceWithReduction = totalPrice - reduction
 

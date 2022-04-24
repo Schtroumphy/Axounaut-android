@@ -44,7 +44,6 @@ class CommandListFragment : Fragment() {
         PAST(listOf(
                 CommandStatusType.DONE.code,
                 CommandStatusType.PAYED.code,
-                CommandStatusType.CANCELED.code,
                 CommandStatusType.DELIVERED.code,
                 CommandStatusType.INCOMPLETE_PAYMENT.code,
             )

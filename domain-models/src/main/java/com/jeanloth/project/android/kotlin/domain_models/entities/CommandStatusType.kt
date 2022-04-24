@@ -7,8 +7,7 @@ enum class CommandStatusType(val code : Int, val label : String) {
         DONE (3, "Terminée"),
         DELIVERED(4, "Livrée"),
         INCOMPLETE_PAYMENT(5, "Paiement incomplet"),
-        PAYED(6, "Payée"),
-        CANCELED(7, "Annulée");
+        PAYED(6, "Payée");
 
         companion object{
                 fun getCommandStatusByCode(code : Int) : CommandStatusType = when(code){
@@ -16,7 +15,6 @@ enum class CommandStatusType(val code : Int, val label : String) {
                         IN_PROGRESS.code -> IN_PROGRESS
                         DONE.code -> DONE
                         DELIVERED.code -> DELIVERED
-                        CANCELED.code -> CANCELED
                         PAYED.code -> PAYED
                         INCOMPLETE_PAYMENT.code -> INCOMPLETE_PAYMENT
                         else -> TO_DO
@@ -28,7 +26,6 @@ enum class CommandStatusType(val code : Int, val label : String) {
                         IN_PROGRESS.label -> IN_PROGRESS
                         DONE.label -> DONE
                         DELIVERED.label -> DELIVERED
-                        CANCELED.label -> CANCELED
                         PAYED.label -> PAYED
                         INCOMPLETE_PAYMENT.label -> INCOMPLETE_PAYMENT
                         else -> TO_DO

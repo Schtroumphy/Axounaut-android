@@ -59,9 +59,7 @@ class CommandDetailedVM (
     fun getCommandStatusToUpdate(command : Command) : CommandStatusType{
         if(command.articleWrappers.map { it.statusCode }.all { it == ArticleWrapperStatusType.TO_DO.code }){
             return CommandStatusType.TO_DO
-        } else if (command.articleWrappers.map { it.statusCode }.all { it  in
-                    listOf(ArticleWrapperStatusType.DONE.code, ArticleWrapperStatusType.CANCELED.code)
-            }){
+        } else if (command.articleWrappers.map { it.statusCode }.all { it  in listOf(ArticleWrapperStatusType.DONE.code,) }){
             return CommandStatusType.DONE
         } else {
             return CommandStatusType.IN_PROGRESS

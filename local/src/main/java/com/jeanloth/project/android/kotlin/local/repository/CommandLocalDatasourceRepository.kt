@@ -78,7 +78,6 @@ class CommandLocalDatasourceRepository(
             // update all article status not done
             command.articleWrappers.filter {
                 it.statusCode != ArticleWrapperStatusType.DONE.code }
-                .forEach { it.statusCode = ArticleWrapperStatusType.CANCELED.code }
         }
 
         val commandEntity = mapper.to(command)

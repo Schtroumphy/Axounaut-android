@@ -71,25 +71,11 @@ class CheckboxListAdapter(
             val articleLabel = itemView.context.getString(R.string.article_name, item.article.label)
             val quantity = itemView.context.getString(R.string.article_quantity, item.count)
 
-            binding.tvLabel.text= if(item.statusCode != ArticleWrapperStatusType.DONE.code && item.statusCode != ArticleWrapperStatusType.CANCELED.code) articleLabel else stringBuilderLabel(articleLabel)
-            binding.tvCbQuantity.text= if(item.statusCode != ArticleWrapperStatusType.DONE.code && item.statusCode != ArticleWrapperStatusType.CANCELED.code) quantity else stringBuilderLabel(quantity)
+            binding.tvLabel.text= if(item.statusCode != ArticleWrapperStatusType.DONE.code) articleLabel else stringBuilderLabel(articleLabel)
+            binding.tvCbQuantity.text= if(item.statusCode != ArticleWrapperStatusType.DONE.code) quantity else stringBuilderLabel(quantity)
             binding.cbItem.isChecked = item.statusCode == ArticleWrapperStatusType.DONE.code
             binding.cbItem.isEnabled = enableCheckBox
             binding.tvLabel.movementMethod = ScrollingMovementMethod()
-
-            binding.cbItem.visibility = if(item.statusCode == ArticleWrapperStatusType.CANCELED.code) INVISIBLE else VISIBLE
-            if(item.statusCode == ArticleWrapperStatusType.CANCELED.code) {
-                binding.tvLabel.setTextColor(getColor(itemView.context, R.color.red_002))
-                binding.tvCbQuantity.setTextColor(getColor(itemView.context, R.color.red_002))
-                binding.tvLabelCanceled.visibility = VISIBLE
-            } else {
-                binding.tvLabel.setTextColor(getColor(itemView.context, R.color.gray_2))
-                binding.tvLabelCanceled.visibility = INVISIBLE
-            }
-            binding.tvLabelCanceled.setOnClickListener {
-                if(binding.cbItem.isEnabled)
-                    binding.cbItem.isChecked = !binding.cbItem.isChecked
-            }
 
             binding.cbItem.setOnCheckedChangeListener{ _, isChecked ->
                 item.statusCode = if(isChecked) ArticleWrapperStatusType.DONE.code else ArticleWrapperStatusType.IN_PROGRESS.code

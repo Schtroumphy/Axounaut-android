@@ -20,7 +20,6 @@ import com.jeanloth.project.android.kotlin.axounaut.adapters.CheckboxListAdapter
 import com.jeanloth.project.android.kotlin.axounaut.databinding.FragmentCommandDetailBinding
 import com.jeanloth.project.android.kotlin.axounaut.extensions.SwipeToCancelCallback
 import com.jeanloth.project.android.kotlin.axounaut.extensions.displayDialog
-import com.jeanloth.project.android.kotlin.axounaut.extensions.notCanceled
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.CommandDetailedVM
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.MainVM
 import com.jeanloth.project.android.kotlin.domain_models.entities.*
@@ -121,7 +120,7 @@ class CommandDetailFragment : Fragment() {
                     binding.btCompletePayment.visibility = GONE
                     binding.tvError.visibility = GONE
                 }
-                CommandStatusType.PAYED.code, CommandStatusType.CANCELED.code -> {
+                CommandStatusType.PAYED.code -> {
                     binding.btDelivered.visibility = GONE
                     binding.btPay.visibility = GONE
                     binding.btEditCommand.visibility = GONE
@@ -153,10 +152,10 @@ class CommandDetailFragment : Fragment() {
         }
 
         binding.btDelivered.onClick {
-            val articlesNotCanceled = commandDetailedVM.currentCommandMutableLiveData.value!!.articleWrappers.notCanceled()
-            if(!articlesNotCanceled.map { it.statusCode }.any { it == ArticleWrapperStatusType.DONE.code}) {
+            val articles = commandDetailedVM.currentCommandMutableLiveData.value!!.articleWrappers
+            if(!articles.map { it.statusCode }.any { it == ArticleWrapperStatusType.DONE.code}) {
                 displayErrorDialog("")
-            } else if (articlesNotCanceled.any { it.statusCode != ArticleWrapperStatusType.DONE.code }) {
+            } else if (articles.any { it.statusCode != ArticleWrapperStatusType.DONE.code }) {
                 confirmUncompleteDeliveryDialog()
             } else {
                 commandDetailedVM.updateStatusCommand(CommandStatusType.DELIVERED)
