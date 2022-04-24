@@ -2,6 +2,7 @@ package com.jeanloth.project.android.kotlin.axounaut.adapters
 
 import android.text.SpannableStringBuilder
 import android.text.Spanned
+import android.text.method.ScrollingMovementMethod
 import android.text.style.StrikethroughSpan
 import android.view.LayoutInflater
 import android.view.View
@@ -10,10 +11,9 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat.getColor
 import androidx.recyclerview.widget.RecyclerView
 import com.jeanloth.project.android.kotlin.axounaut.R
+import com.jeanloth.project.android.kotlin.axounaut.databinding.ItemCheckboxListBinding
 import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleWrapper
 import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleWrapperStatusType
-import android.text.method.ScrollingMovementMethod
-import com.jeanloth.project.android.kotlin.axounaut.databinding.ItemCheckboxListBinding
 
 class CheckboxListAdapter(
     private var items : MutableList<ArticleWrapper>,
@@ -22,7 +22,7 @@ class CheckboxListAdapter(
 
     init {
         // Avoid error due to animateLayout change for direct parent of recyclerView causing this error : RecyclerView does not support scrolling to an absolute position. Use scrollToPosition instead
-        this.setHasStableIds(true)
+        //this.setHasStableIds(true)
     }
 
     var onCheckedItem : ((ArticleWrapper, Boolean) -> Unit)? = null
@@ -49,17 +49,18 @@ class CheckboxListAdapter(
         notifyDataSetChanged()
     }
 
-    fun refreshRecyclerView(position : Int){
-        notifyItemChanged(position)
+    fun restoreItem(item: ArticleWrapper, position: Int) {
+        items.add(position, item)
+        notifyItemInserted(position)
+    }
+
+    fun removeItem(position: Int) {
+        items.removeAt(position)
+        notifyItemRemoved(position)
     }
 
     fun updateArticleStatus(adapterPosition : Int) {
         onSwipeItem?.invoke(items[adapterPosition], adapterPosition)
-    }
-
-    fun onItemDelete(position : Int) {
-        items.removeAt(position)
-        notifyItemRemoved(position)
     }
 
     inner class ItemHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -71,11 +72,25 @@ class CheckboxListAdapter(
             val articleLabel = itemView.context.getString(R.string.article_name, item.article.label)
             val quantity = itemView.context.getString(R.string.article_quantity, item.count)
 
-            binding.tvLabel.text= if(item.statusCode != ArticleWrapperStatusType.DONE.code) articleLabel else stringBuilderLabel(articleLabel)
-            binding.tvCbQuantity.text= if(item.statusCode != ArticleWrapperStatusType.DONE.code) quantity else stringBuilderLabel(quantity)
+            binding.tvLabel.text= if(item.statusCode != ArticleWrapperStatusType.DONE.code && item.statusCode != ArticleWrapperStatusType.CANCELED.code) articleLabel else stringBuilderLabel(articleLabel)
+            binding.tvCbQuantity.text= if(item.statusCode != ArticleWrapperStatusType.DONE.code && item.statusCode != ArticleWrapperStatusType.CANCELED.code) quantity else stringBuilderLabel(quantity)
             binding.cbItem.isChecked = item.statusCode == ArticleWrapperStatusType.DONE.code
             binding.cbItem.isEnabled = enableCheckBox
             binding.tvLabel.movementMethod = ScrollingMovementMethod()
+
+            binding.cbItem.visibility = if(item.statusCode == ArticleWrapperStatusType.CANCELED.code) INVISIBLE else VISIBLE
+            if(item.statusCode == ArticleWrapperStatusType.CANCELED.code) {
+                binding.tvLabel.setTextColor(getColor(itemView.context, R.color.red_002))
+                binding.tvCbQuantity.setTextColor(getColor(itemView.context, R.color.red_002))
+                binding.tvLabelCanceled.visibility = VISIBLE
+            } else {
+                binding.tvLabel.setTextColor(getColor(itemView.context, R.color.gray_2))
+                binding.tvLabelCanceled.visibility = INVISIBLE
+            }
+            binding.tvLabelCanceled.setOnClickListener {
+                if(binding.cbItem.isEnabled)
+                    binding.cbItem.isChecked = !binding.cbItem.isChecked
+            }
 
             binding.cbItem.setOnCheckedChangeListener{ _, isChecked ->
                 item.statusCode = if(isChecked) ArticleWrapperStatusType.DONE.code else ArticleWrapperStatusType.IN_PROGRESS.code
