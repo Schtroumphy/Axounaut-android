@@ -79,15 +79,14 @@ class CommandDetailFragment : Fragment() {
             adapter = checkboxTextViewAdapter
         }
 
-        // Swipe to cancel an article
+        // Swipe to delete an article
         setupSwipeToDelete()
 
         /** --------------- Observers --------------- **/
 
         // Observe current command to detail
         commandDetailedVM.currentCommandLiveData().observe(viewLifecycleOwner) {
-            Log.d("[Command details]","current commend observed for id $currentCommandId : $it"
-            )
+            Log.d("[Command details]","current commend observed for id $currentCommandId : $it")
             if (it == null) { // Has been deleted
                 goBack()
                 return@observe
@@ -261,22 +260,23 @@ class CommandDetailFragment : Fragment() {
     }
 
     private fun displayCancelOrDeleteArticle(articleWrapper: ArticleWrapper, position: Int){
+        checkboxTextViewAdapter.removeItem(position)
         displayDialog(
             context = requireContext(),
             titleRef = R.string.cancel_dialog_title,
             contentRef = R.string.cancel_dialog_content,
             negativeButtonLabelRef = R.string.cancel_article,
             negativeAction =  {
-               checkboxTextViewAdapter.refreshRecyclerView(position)
+                checkboxTextViewAdapter.restoreItem(articleWrapper, position)
+                binding.rvCommandArticles.scrollToPosition(position);
             },
             positiveButtonLabelRef = R.string.delete_article,
             positiveAction = {
                 commandDetailedVM.deleteArticleWrapperFromCurrentCommand(articleWrapper)
-                //checkboxTextViewAdapter.onItemDelete(position)
             })
     }
 
-    fun displayAddCommandFragment(currentCommand: Command?) {
+    private fun displayAddCommandFragment(currentCommand: Command?) {
         AddCommandDialogFragment.newInstance(currentCommand).show(requireActivity().supportFragmentManager, "dialog")
     }
 
