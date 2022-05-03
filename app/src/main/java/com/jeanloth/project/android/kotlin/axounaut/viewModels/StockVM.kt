@@ -13,7 +13,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import java.time.DayOfWeek
 import java.time.LocalDate
-import java.util.*
 
 class StockVM (
     private val observeAllIngredientWrappersUseCase: ObserveAllIngredientWrappersUseCase,
@@ -25,9 +24,11 @@ class StockVM (
     private val ingredientWrapperMutableLiveData = MutableLiveData<List<IngredientWrapper>>(emptyList())
     fun observeIngredientWrappersLiveData() : LiveData<List<IngredientWrapper>> = ingredientWrapperMutableLiveData
 
-    var allNotDeliveredCommandMutableLiveData : MutableLiveData<List<RecipeWrapper>> = MutableLiveData(emptyList()) // ToDo and InProgress commands
+    var allRecipeOfNotDeliveredCommandMutableLiveData : MutableLiveData<List<RecipeWrapper>> = MutableLiveData(emptyList()) // ToDo and InProgress commands
 
     val previsionalWrappersMediatorLiveData = MediatorLiveData<List<PrevisionalWrapper>>()
+
+    private val DAYS_PERIOD_FOR_PREVISIONAL_NOT_DELIVERED = 7L
 
     lateinit var currentWeekFirstDate : LocalDate
     lateinit var currentWeekLastDate : LocalDate
@@ -43,15 +44,16 @@ class StockVM (
         }
 
         viewModelScope.launch {
+            // Not delivered date must be calculated from command to deliver from today to today + DAYS_PERIOD_FOR_PREVISIONAL_NOT_DELIVERED
             observeCommandsByStatusUseCase.invoke(listOf(CommandStatusType.TO_DO, CommandStatusType.IN_PROGRESS)).map {
-                it.filter { it.deliveryDate?.toLocalDate()?.isBefore(currentWeekLastDate) == true && it.deliveryDate?.toLocalDate()?.isAfter(currentWeekFirstDate) == true }
+                it.filter { it.deliveryDate?.toLocalDate()?.isAfter(LocalDate.now()) == true && it.deliveryDate?.toLocalDate()?.isBefore(LocalDate.now().plusDays(DAYS_PERIOD_FOR_PREVISIONAL_NOT_DELIVERED)) == true }
             }.collect {
                 val list : List<RecipeWrapper> = it.map { it.articleWrappers.map { it.article }.map { it.recipeIngredients }.flatten() }.flatten()
-                allNotDeliveredCommandMutableLiveData.postValue(list) // TODO map by recipe wrappers
+                allRecipeOfNotDeliveredCommandMutableLiveData.postValue(list) // TODO map by recipe wrappers
             }
         }
 
-        previsionalWrappersMediatorLiveData.addSource(allNotDeliveredCommandMutableLiveData){
+        previsionalWrappersMediatorLiveData.addSource(allRecipeOfNotDeliveredCommandMutableLiveData){
             buildPrevisionalWrapper()
         }
 
@@ -62,11 +64,18 @@ class StockVM (
 
     private fun buildPrevisionalWrapper(){
         val liste = mutableListOf<PrevisionalWrapper>()
-        allNotDeliveredCommandMutableLiveData.value?.forEach { rw ->
-            val actual = ingredientWrapperMutableLiveData.value?.find { it.ingredient.label == rw.ingredient.label }
+        allRecipeOfNotDeliveredCommandMutableLiveData.value?.forEach { rw ->
+            val actual = ingredientWrapperMutableLiveData.value?.find { it.ingredient.id == rw.ingredient.id }
 
-            if(actual != null) {
-                liste.add(PrevisionalWrapper(ingredient = actual.ingredient, actual = actual.quantity, needed = rw.quantity))
+            // Add unique provisional wrapper or update needed value
+            if(actual != null){
+                if(!liste.any { it.ingredient.id == rw.ingredient.id }) {
+                    liste.add(PrevisionalWrapper(ingredient = actual.ingredient, actual = actual.quantity, needed = rw.quantity))
+                } else {
+                    liste.find { it.ingredient.id == rw.ingredient.id }?.apply {
+                        needed += rw.quantity
+                    }
+                }
             }
         }
         previsionalWrappersMediatorLiveData.postValue(liste)
