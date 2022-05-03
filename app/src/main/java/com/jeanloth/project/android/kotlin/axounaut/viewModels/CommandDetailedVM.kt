@@ -2,22 +2,14 @@ package com.jeanloth.project.android.kotlin.axounaut.viewModels
 
 import android.util.Log
 import androidx.lifecycle.*
-import com.jeanloth.project.android.kotlin.axounaut.extensions.notCanceled
-import com.jeanloth.project.android.kotlin.axounaut.ui.commands.CommandListFragment
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.ObserveCommandByIdUseCase
-import com.jeanloth.project.android.kotlin.domain.usescases.usecases.article.ObserveCommandsUseCase
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.command.DeleteArticleWrapperUseCase
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.command.DeleteCommandUseCase
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.command.SaveArticleWrapperUseCase
 import com.jeanloth.project.android.kotlin.domain.usescases.usecases.command.SaveCommandUseCase
+import com.jeanloth.project.android.kotlin.domain_models.entities.*
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import java.lang.Exception
-import androidx.lifecycle.MediatorLiveData
-import com.jeanloth.project.android.kotlin.axounaut.extensions.toLocalDate
-import com.jeanloth.project.android.kotlin.domain.usescases.usecases.article.ObserveCommandsByStatusUseCase
-import com.jeanloth.project.android.kotlin.domain_models.entities.*
-import java.time.LocalDate
 
 class CommandDetailedVM (
     val currentCommandId: Long,
@@ -82,6 +74,11 @@ class CommandDetailedVM (
 
     fun updateStatusCommand(status: CommandStatusType) {
         Log.d(TAG, "Make command $status")
+        if(status == CommandStatusType.DELIVERED && currentCommand?.articleWrappers?.any { it.statusCode != ArticleWrapperStatusType.DONE.code } == true){
+            currentCommand?.articleWrappers?.filter { it.statusCode != ArticleWrapperStatusType.DONE.code }?.forEach {
+                it.statusCode = ArticleWrapperStatusType.CANCELED.code
+            }
+        }
         currentCommand?.let { saveCommandUseCase.updateCommandStatus(it, status) }
     }
 

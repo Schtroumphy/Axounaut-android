@@ -22,6 +22,8 @@ import com.jeanloth.project.android.kotlin.axounaut.viewModels.CommandVM
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.MainVM
 import com.jeanloth.project.android.kotlin.domain_models.entities.Command
 import com.jeanloth.project.android.kotlin.domain_models.entities.CommandStatusType
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import org.koin.android.viewmodel.ext.android.sharedViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
@@ -64,7 +66,7 @@ class CommandListFragment : Fragment() {
         setupHeader()
         // TODO Save in prefs the last filter on commands list and of no value,
         // set display mode to past by default
-        commandVM.setDisplayMode(CommandDisplayMode.PAST)
+        commandVM.setDisplayMode(CommandDisplayMode.TO_COME)
 
         // Set the adapter
         binding.rvCommandList.apply {
@@ -74,6 +76,13 @@ class CommandListFragment : Fragment() {
                     // Command to detail
                     goToCommandDetails(it)
                 }
+            }
+        }
+
+        lifecycleScope.launch {
+            commandVM.commandToDisplayStateFlow.collect {
+                Log.d("Command list fragment", "Commands to display : $it")
+                commandAdapter.setItems(it)
             }
         }
 

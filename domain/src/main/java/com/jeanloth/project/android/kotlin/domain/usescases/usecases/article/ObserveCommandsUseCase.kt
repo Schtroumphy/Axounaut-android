@@ -9,5 +9,4 @@ class ObserveCommandsUseCase(
 ) {
 
     fun invoke() : Flow<List<Command>> = commandContract.observeCommands()
-
 }

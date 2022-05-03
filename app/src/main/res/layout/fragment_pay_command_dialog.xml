@@ -293,7 +293,7 @@
     <com.google.android.material.button.MaterialButton
         android:id="@+id/bt_proceed_payment"
         style="@style/MaterialButtonStyle"
-        android:enabled="false"
+        android:enabled="true"
         android:paddingHorizontal="50dp"
         android:text="Procéder au paiement"
         app:layout_constraintBottom_toBottomOf="parent"

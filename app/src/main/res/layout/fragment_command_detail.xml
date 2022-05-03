@@ -65,14 +65,17 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_command_articles"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginStart="16dp"
-        android:padding="20dp"
+        android:paddingHorizontal="20dp"
+        android:paddingTop="20dp"
+        android:clipToPadding="false"
+        android:paddingBottom="20dp"
         app:layout_constraintBottom_toTopOf="@+id/tv_total_price"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_command_status"
         app:layout_constraintVertical_bias="0.0"
-        tools:itemCount="4"
+        tools:itemCount="13"
         tools:listitem="@layout/item_checkbox_list" />
 
     <TextView
@@ -83,7 +86,7 @@
         android:gravity="center"
         android:fontFamily="@font/roboto_light"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.7"
+        app:layout_constraintVertical_bias="0.8"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -135,8 +138,10 @@
 
     <Button
         android:id="@+id/bt_pay"
-        style="@style/CustomButton"
+        style="@style/CustomButtonGreen"
         android:text="@string/pay"
+        android:backgroundTint="@color/green_light_1"
+        app:tint="@color/green_light_1"
         android:visibility="gone"
         tools:visibility="visible"
         app:layout_constraintStart_toStartOf="parent"
@@ -148,7 +153,7 @@
         style="@style/CustomButton"
         android:text="@string/complete_payment"
         android:visibility="gone"
-        tools:visibility="visible"
+        tools:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />

@@ -25,9 +25,6 @@ class SimpleListAdapter(
     lateinit var binding: ItemDotListBinding
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemHolder {
-        val itemView = LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_dot_list, parent, false)
-
         binding = ItemDotListBinding.inflate(LayoutInflater.from(context), parent, false)
         return ItemHolder(binding)
     }
@@ -66,7 +63,6 @@ class SimpleListAdapter(
                 stringBuilderLabel(item.label, item.isCanceled)
             }
         }
-
     }
 
     fun stringBuilderLabel(label : String, isCanceled  : Boolean) : SpannableStringBuilder{

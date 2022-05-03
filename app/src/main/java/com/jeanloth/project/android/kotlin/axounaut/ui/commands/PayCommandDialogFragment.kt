@@ -87,7 +87,7 @@ class PayCommandDialogFragment(
         }
 
         binding.rgPayment.setOnCheckedChangeListener { _, i ->
-            binding.tilPaymentReceived.visibility = if(i == binding.rbPaymentYes.id) GONE else VISIBLE
+            binding.tilPaymentReceived.visibility = if(i == binding.rbPaymentYes.id) GONE else if(binding.etPaymentReceived.text?.isNotBlank() == true) VISIBLE else GONE
             if(i == binding.rbPaymentYes.id){
                 payCommandVM.setPaymentComplete()
                 paymentIsComplete = true
@@ -118,7 +118,7 @@ class PayCommandDialogFragment(
         }
 
         payCommandVM.statusAndPaymentReceivedLiveData().observe(viewLifecycleOwner){
-            if(it.first != PayCommandVM.PaymentStatus.UNKONWN) binding.tvIncompletePayment.visibility =  VISIBLE
+            if(it.first != PayCommandVM.PaymentStatus.UNKONWN && binding.etPaymentReceived.text?.isNotBlank() == true) binding.tvIncompletePayment.visibility =  VISIBLE
             when(it.first){
                 PayCommandVM.PaymentStatus.COMPLETE -> {
                     binding.tvIncompletePayment.text = "Le paiement est complet, le choix a été modifié en conséquence."

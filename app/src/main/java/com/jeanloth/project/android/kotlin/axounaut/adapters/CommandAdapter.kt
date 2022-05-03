@@ -98,8 +98,8 @@ class CommandAdapter(
                 ItemList(
                     articleLabel,
                     quantity,
-                    isDone = it.statusCode == ArticleWrapperStatusType.DONE.code || it.statusCode == ArticleWrapperStatusType.CANCELED.code,
-                    isCanceled = it.statusCode == ArticleWrapperStatusType.CANCELED.code
+                    isDone = it.statusCode == ArticleWrapperStatusType.DONE.code,
+                    isCanceled = it.statusCode == ArticleWrapperStatusType.CANCELED.code,
                 )
             )
         }
