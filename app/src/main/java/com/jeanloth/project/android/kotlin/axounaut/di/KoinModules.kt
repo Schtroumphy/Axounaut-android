@@ -28,7 +28,7 @@ import org.koin.dsl.module
 
 val appModule = module {
 
-    viewModel { MainVM(get()) }
+    viewModel { MainVM(get(), get()) }
     viewModel { ArticleVM( get(), get(), get()) }
     viewModel { AddArticleVM(get(), get(), get())}
     viewModel { ClientVM( get(), get(), get()) }

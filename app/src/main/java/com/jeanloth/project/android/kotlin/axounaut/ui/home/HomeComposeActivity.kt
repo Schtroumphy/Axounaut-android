@@ -2,10 +2,7 @@ package com.jeanloth.project.android.kotlin.axounaut.ui.home
 
 import android.content.Context
 import android.content.Intent
-import androidx.compose.ui.tooling.preview.Devices
-import com.jeanloth.project.android.kotlin.axounaut.theme.*
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -25,13 +22,14 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.BakeryDining
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.rounded.BakeryDining
 import androidx.compose.material.icons.rounded.Equalizer
 import androidx.compose.material.icons.rounded.List
 import androidx.compose.material.icons.rounded.People
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -39,8 +37,10 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -52,9 +52,14 @@ import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.jeanloth.project.android.kotlin.axounaut.Constants
 import com.jeanloth.project.android.kotlin.axounaut.MainActivity
 import com.jeanloth.project.android.kotlin.axounaut.R
+import com.jeanloth.project.android.kotlin.axounaut.theme.*
+import com.jeanloth.project.android.kotlin.axounaut.viewModels.MainVM
 import com.jeanloth.project.android.kotlin.domain_models.entities.Article
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class HomeComposeActivity : ComponentActivity() {
+
+    private val mainVM: MainVM by viewModel()
 
     @OptIn(ExperimentalAnimationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -79,7 +84,7 @@ class HomeComposeActivity : ComponentActivity() {
                     },
                     popExitTransition = { _, target ->
                         slideOutHorizontally(targetOffsetX = { -1000 }, animationSpec = springSpec)
-                    }) { HomePage(navController = navController) }
+                    }) { HomePage(navController = navController, mainVM) }
                 composable("main") { MainActivity() }
             }
         }
@@ -87,24 +92,24 @@ class HomeComposeActivity : ComponentActivity() {
 }
 
 @Composable
-fun HomePage(navController: NavController?) {
+fun HomePage(navController: NavController?, mainVM: MainVM) {
     val context = LocalContext.current
     AxounautTheme {
         Scaffold(
             floatingActionButton = {
                 FloatingActionButton(
                     onClick = { /* ... */ },
-                    backgroundColor = green_light_1,
-                    contentColor = white
+                    backgroundColor = gray_light,
+                    contentColor = ginger
                 ) {
-                    Icon(Icons.Filled.Add, "")
+                    Icon(Icons.Filled.Notifications, "")
                 }
             }
         ) {
             Column(
                 modifier = Modifier.background(orange_light)
             ) {
-                Header()
+                Header(mainVM)
                 Spacer(modifier = Modifier.height(15.dp))
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier
@@ -129,7 +134,13 @@ fun HomePage(navController: NavController?) {
 }
 
 @Composable
-fun Header() {
+fun Header(mainVM : MainVM) {
+
+    val totalCommandsCount by mainVM.allCommandCountLiveData().observeAsState()
+    val caState by mainVM.caLiveData().observeAsState()
+    val unPayedCommandSum by mainVM.unPayedCommandSumLiveData().observeAsState()
+    val allArticleState by mainVM.allArticleLiveData().observeAsState()
+
     Surface(
         color = MaterialTheme.colors.background,
         shape = RoundedCornerShape(bottomStart = 30.dp, bottomEnd = 30.dp),
@@ -141,12 +152,12 @@ fun Header() {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(20.dp),
+                .padding(start = 20.dp, end = 20.dp, top= 20.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Box(
                 Modifier
-                    .fillMaxHeight(0.3f)
+                    .fillMaxHeight(0.25f)
                     .fillMaxWidth()
                     .padding(15.dp)
             ) {
@@ -163,9 +174,9 @@ fun Header() {
                     .fillMaxWidth()
                     .padding(top = 15.dp)
             ) {
-                RoundedCounter("45", "Total commandes")
-                RoundedCounter("565,0€", "CA")
-                RoundedCounter("75,0€", "Réductions")
+                RoundedCounter(totalCommandsCount.toString(), "Total commandes")
+                RoundedCounter(stringResource(id = R.string.price_euro, caState.toString()), "CA")
+                RoundedCounter(stringResource(id = R.string.price_euro, unPayedCommandSum.toString()), "Non payés")
             }
             LazyRow(
                 modifier = Modifier
@@ -173,18 +184,19 @@ fun Header() {
                     .padding(15.dp),
                 horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                val liste = listOf(
-                    Article(0L, "Pain au choco", 30.5, 15F),
-                    Article(0L, "Pomme cannelle", 30.5, 1F),
-                    Article(0L, "Rolls Kanèls", 30.5, 42F),
-                    Article(0L, "Chocolat", 30.5, 65F),
-                    Article(0L, "Flan au coco", 30.5, 20F),
-                    Article(0L, "Petits pains", 30.5, 15F),
-                    Article(0L, "Petits pains fourrés boeuf", 30.5, 15F),
-                )
+                /*val liste = listOf(
+                    Article(0L, "Pain au choco", 30, 15F, timeOrdered = 2),
+                    Article(0L, "Pomme cannelle", 30, 1F, timeOrdered = 0),
+                    Article(0L, "Rolls Kanèls", 30, 42F, timeOrdered = 2),
+                    Article(0L, "Chocolat", 30, 65F, timeOrdered = 4),
+                    Article(0L, "Flan au coco", 30, 20F, timeOrdered = 6),
+                    Article(0L, "Petits pains", 30, 15F, timeOrdered = 10),
+                    Article(0L, "Petits pains fourrés boeuf", 30, 15F, timeOrdered = 5),
+                )*/
 
+                val liste = allArticleState ?: emptyList()
                 items(liste.sortedByDescending { it.timeOrdered }) { item ->
-                    ArticleBar(item)
+                    ArticleBar(item, liste.map { it.timeOrdered }.sum())
                 }
             }
         }
@@ -224,7 +236,7 @@ fun ArticleBar(article: Article, totalCount: Int = 100) {
                 .clip(RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp))
                 .background(gray_0)
                 .width(boxSize)
-                .fillMaxHeight(0.9f)
+                .fillMaxHeight(0.8f)
         ) {
 
             Box(
@@ -235,6 +247,17 @@ fun ArticleBar(article: Article, totalCount: Int = 100) {
                     .height((count * 100).dp)
                     .align(Alignment.BottomCenter)
             )
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier.requiredWidth(boxSize).fillMaxHeight(),
+            ){
+                Text(
+                    text = article.timeOrdered.toString(),
+                    fontSize = 12.sp,
+                    textAlign = TextAlign.Center,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
         }
         Text(
             text = article.label,
@@ -259,7 +282,9 @@ fun HomeBarItem(context : Context){
     ) {
         Row(
             horizontalArrangement = Arrangement.SpaceEvenly,
-            modifier = Modifier.fillMaxWidth().padding(all = 10.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(all = 10.dp)
         ) {
             // Go to commands
             HomeRoundedCard(Icons.Rounded.List) {
@@ -298,7 +323,9 @@ fun HomeRoundedCard(icon: ImageVector, onClickAction: (() -> Unit)){
         backgroundColor = gray_light,
         modifier = Modifier
     ){
-        Icon(icon, modifier = Modifier.clickable { onClickAction.invoke() }.padding(10.dp), contentDescription = "Localized description")
+        Icon(icon, modifier = Modifier
+            .clickable { onClickAction.invoke() }
+            .padding(10.dp), contentDescription = "Localized description")
     }
 }
 
@@ -349,7 +376,7 @@ fun HomeItem() {
 @Preview(showBackground = true, device = Devices.PIXEL_2)
 @Composable
 fun DefaultPreview() {
-    HomePage(navController = null)
+    //HomePage(navController = null, null)
 }
 
 @Preview(showBackground = true, device = Devices.PIXEL_2)
