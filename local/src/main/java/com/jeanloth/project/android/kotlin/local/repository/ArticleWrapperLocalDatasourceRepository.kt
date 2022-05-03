@@ -43,13 +43,21 @@ class ArticleWrapperLocalDatasourceRepository(
     }
 
     override fun deleteArticleWrapper(articleWrapper: ArticleWrapper): Boolean {
-        var result = dao.box.remove(mapper.to(articleWrapper))
+        val articleWrapperEntity = mapper.to(articleWrapper)
+
+        // Remove article wrapper entity
+        val result = dao.box.remove(mapper.to(articleWrapper))
         print("[ArticleWrapperLocalDSRepository] : delete AticleWrapper result : $result")
+
+        // Notify parent
+        val parent = commandDao.get(articleWrapperEntity.command.targetId)
+        parent.articleWrappers.remove(articleWrapperEntity)
+        commandDao.box.put(parent)
         return true
     }
 
     override fun observeArticleWrappersByCommandId(commandId: Long): Flow<List<ArticleWrapper>> {
-        var result = dao.observeAll{ it.equal(ArticleWrapperEntity_.commandId, commandId)}.map {
+        val result = dao.observeAll{ it.equal(ArticleWrapperEntity_.commandId, commandId)}.map {
             it.map {
                 mapper.from(it)
             }
