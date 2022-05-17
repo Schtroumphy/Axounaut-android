@@ -61,6 +61,13 @@ class PayCommandDialogFragment(
         return binding.root
     }
 
+    // TODO Monitor error display by enum type
+    enum class ErrorType(message: String){ // Todo convert to int : reference to strings.xml
+        NO_REDUCTION_ENTERED("Vous n'avez saisi aucune réduction"),
+        NO_PAYMENT_RECEIVED("Vous n'avez saisi aucun payment reçu"),
+        INCOMPLETE_PAYMENT("Le paiement est incomplet. En procédant...")
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         Log.d("[Pay command fragment]", "Current command id : ${payCommandVM.commandId}")
@@ -87,7 +94,7 @@ class PayCommandDialogFragment(
         }
 
         binding.rgPayment.setOnCheckedChangeListener { _, i ->
-            binding.tilPaymentReceived.visibility = if(i == binding.rbPaymentYes.id) GONE else if(binding.etPaymentReceived.text?.isNotBlank() == true) VISIBLE else GONE
+            binding.tilPaymentReceived.visibility = if(i == binding.rbPaymentYes.id) GONE else VISIBLE
             if(i == binding.rbPaymentYes.id){
                 payCommandVM.setPaymentComplete()
                 paymentIsComplete = true
@@ -189,14 +196,16 @@ class PayCommandDialogFragment(
 
     private fun updatePaymentReceived() {
         if(binding.etPaymentReceived.text.toString().toInt() <= 0 ) {
-            // TODO Display an error
+            // TODO Display an error : NO_PAYMENT_RECEIVED
+            return
         }
         payCommandVM.setPaymentReceived(binding.etPaymentReceived.text.toString().toInt())
     }
 
     private fun updateTotalPriceWithReduction() {
         if(binding.etReduction.text.toString().toInt() <= 0 ) {
-            // TODO Display an error
+            // TODO Display an error : NO_REDUCTION_ENTERED
+            return
         }
         payCommandVM.setReduction(binding.etReduction.text.toString().toInt())
     }

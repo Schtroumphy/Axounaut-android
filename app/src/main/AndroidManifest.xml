@@ -15,7 +15,6 @@
         <activity
             android:name=".ui.home.HomeComposeActivity"
             android:exported="true"
-            android:label="@string/title_activity_home_compose"
             android:theme="@style/Theme.Axounaut">
 
             <intent-filter>
