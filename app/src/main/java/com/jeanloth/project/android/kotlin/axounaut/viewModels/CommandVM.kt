@@ -21,7 +21,6 @@ import java.time.LocalDate
 
 class CommandVM (
     private val observeCommandsUseCase: ObserveCommandsUseCase,
-    private val observeCommandsByStatusUseCase: ObserveCommandsByStatusUseCase,
     private val saveCommandUseCase: SaveCommandUseCase,
     private val deleteCommandUseCase: DeleteCommandUseCase,
     private val deleteArticleWrapperUseCase: DeleteArticleWrapperUseCase,

@@ -10,16 +10,16 @@ class CommandRepository(
     private val localCommandDatasourceRepository : LocalCommandDatasourceContract
 ) : CommandContract{
 
-    override fun getAllCommands(): List<Command> {
-        return localCommandDatasourceRepository.getAllCommands()
-    }
-
-    override fun observeCommands(): Flow<List<Command>> {
+    override fun observeAllCommands(): Flow<List<Command>> {
         return localCommandDatasourceRepository.observeAllCommands()
     }
 
     override fun observeCommandsByStatus(statuses: List<CommandStatusType>): Flow<List<Command>> {
         return localCommandDatasourceRepository.observeCommandsByStatus(statuses)
+    }
+
+    override fun getCommandsByStatus(statuses: List<CommandStatusType>): List<Command> {
+        return localCommandDatasourceRepository.getCommandsByStatus(statuses)
     }
 
     override fun observeCommandById(commandId: Long): Flow<Command?> {

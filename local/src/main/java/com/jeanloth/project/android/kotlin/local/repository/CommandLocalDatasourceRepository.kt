@@ -7,6 +7,7 @@ import com.jeanloth.project.android.kotlin.local.contracts.LocalCommandDatasourc
 import com.jeanloth.project.android.kotlin.local.database.ArticleDAO
 import com.jeanloth.project.android.kotlin.local.database.ArticleWrapperDAO
 import com.jeanloth.project.android.kotlin.local.database.CommandDAO
+import com.jeanloth.project.android.kotlin.local.entities.ArticleEntity
 import com.jeanloth.project.android.kotlin.local.entities.CommandEntity
 import com.jeanloth.project.android.kotlin.local.entities.CommandEntity_
 import com.jeanloth.project.android.kotlin.local.mappers.AppClientEntityMapper
@@ -51,6 +52,14 @@ class CommandLocalDatasourceRepository(
             it.map {
                 mapper.from(it)
             }
+        }
+    }
+
+    override fun getCommandsByStatus(statuses: List<CommandStatusType>): List<Command> {
+        val codes = statuses.map { it.code }
+        return dao.all.map { mapper.from(it as CommandEntity) }.filter {
+            codes.contains(it.statusCode
+            )
         }
     }
 

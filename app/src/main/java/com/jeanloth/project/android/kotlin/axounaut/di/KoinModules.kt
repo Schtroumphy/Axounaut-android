@@ -33,7 +33,7 @@ val appModule = module {
     viewModel { AddArticleVM(get(), get(), get())}
     viewModel { ClientVM( get(), get(), get()) }
     viewModel { AddCommandVM() }
-    viewModel { CommandVM(get(), get(), get(), get(), get(), get(), get()) }
+    viewModel { CommandVM(get(), get(), get(), get(), get(), get()) }
     viewModel { (commandId: Long) -> PayCommandVM(commandId = commandId, get(), get()) }
     viewModel { (currentCommandId: Long) -> CommandDetailedVM(currentCommandId = currentCommandId, get(), get(), get(), get(), get()) }
     viewModel { StockVM(get(), get(), get(), get()) }
@@ -49,12 +49,13 @@ val appModule = module {
     factory{ DeleteClientsUseCase(get()) }
 
     factory{ SaveCommandUseCase(get()) }
-    factory{ GetAllCommandsUseCase(get()) }
+    factory{ ObserveAllCommandsUseCase(get()) }
     factory{ GetCommandByIdUseCase(get()) }
     factory{ ObserveCommandsUseCase(get()) }
-    factory{ ObserveCommandsByStatusUseCase(get()) }
+     factory{ GetCommandsByStatusCodeUseCase(get()) }
     factory{ DeleteCommandUseCase(get()) }
     factory{ ObserveCommandByIdUseCase(get()) }
+    factory{ ObserveCommandsByStatusUseCase(get()) }
 
     factory{ SaveArticleWrapperUseCase(get()) }
     factory{ ObserveArticleWrappersByCommandIdUseCase(get()) }

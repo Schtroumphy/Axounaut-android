@@ -12,6 +12,8 @@ interface LocalCommandDatasourceContract {
 
     fun observeCommandsByStatus(statuses : List<CommandStatusType>) : Flow<List<Command>>
 
+    fun getCommandsByStatus(statuses : List<CommandStatusType>) : List<Command>
+
     fun observeCommandById(commandId : Long) : Flow<Command?>
 
     fun saveCommand(command: Command) : Long

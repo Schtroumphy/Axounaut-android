@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.Spring
@@ -12,27 +13,30 @@ import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.rounded.BakeryDining
-import androidx.compose.material.icons.rounded.Equalizer
-import androidx.compose.material.icons.rounded.List
-import androidx.compose.material.icons.rounded.People
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.material.icons.rounded.*
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -54,7 +58,11 @@ import com.jeanloth.project.android.kotlin.axounaut.MainActivity
 import com.jeanloth.project.android.kotlin.axounaut.R
 import com.jeanloth.project.android.kotlin.axounaut.theme.*
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.MainVM
+import com.jeanloth.project.android.kotlin.axounaut.workers.AxounautScheduler
+import com.jeanloth.project.android.kotlin.domain_models.entities.AppMessage
 import com.jeanloth.project.android.kotlin.domain_models.entities.Article
+import com.jeanloth.project.android.kotlin.domain_models.entities.MessagePriority
+import com.jeanloth.project.android.kotlin.domain_models.entities.MessageType
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class HomeComposeActivity : ComponentActivity() {
@@ -64,6 +72,8 @@ class HomeComposeActivity : ComponentActivity() {
     @OptIn(ExperimentalAnimationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        AxounautScheduler.launchNotificationWorker(this)
+
         setContent {
             val navController = rememberAnimatedNavController()
 
@@ -91,23 +101,33 @@ class HomeComposeActivity : ComponentActivity() {
     }
 }
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun HomePage(navController: NavController?, mainVM: MainVM) {
     val context = LocalContext.current
+
+    var messageCenterIsOpenState = remember { mutableStateOf(false) }
+
     AxounautTheme {
         Scaffold(
             floatingActionButton = {
-                FloatingActionButton(
-                    onClick = { /* ... */ },
-                    backgroundColor = gray_light,
-                    contentColor = ginger
-                ) {
-                    Icon(Icons.Filled.Notifications, "")
+                AnimatedVisibility(visible = !messageCenterIsOpenState.value) {
+                    FloatingActionButton(
+                        onClick = {
+                            messageCenterIsOpenState.value = true
+                        },
+                        backgroundColor = gray_light,
+                        contentColor = ginger
+                    ) {
+                        Icon(Icons.Filled.Notifications, "")
+                    }
                 }
             }
         ) {
             Column(
-                modifier = Modifier.background(orange_light)
+                modifier = Modifier
+                    .background(orange_light)
+                    .fillMaxSize()
             ) {
                 Header(mainVM)
                 Spacer(modifier = Modifier.height(15.dp))
@@ -116,17 +136,18 @@ fun HomePage(navController: NavController?, mainVM: MainVM) {
                         .fillMaxWidth()
                         .padding(horizontal = 10.dp, vertical = 0.dp)
                 ) {
-                    /*HomeCard("Mes commandes") {
-                        context.startActivity(Intent(context, MainActivity::class.java))
-                    }
-                    HomeCard("Mon stock") {
-                        context.startActivity(Intent(context, MainActivity::class.java).apply {
-                            putExtra(Constants.FRAGMENT_TO_SHOW, Constants.ARTICLE)
-                        })
-                    }*/
                     HomeBarItem(context)
                 }
-                HomeItem()
+                val messages = listOf(
+                    AppMessage(0, "X Commandes restantes"),
+                    AppMessage(0, "Courses à faire !", MessageType.REMINDER),
+                    AppMessage(0, "Inventaire à vérifier", MessageType.STOCK)
+                )
+                AnimatedVisibility(visible = messageCenterIsOpenState.value) {
+                    MessageCenter(messages){
+                        messageCenterIsOpenState.value = false
+                    }
+                }
             }
         }
 
@@ -139,7 +160,7 @@ fun Header(mainVM : MainVM) {
     val totalCommandsCount by mainVM.allCommandCountLiveData().observeAsState()
     val caState by mainVM.caLiveData().observeAsState()
     val unPayedCommandSum by mainVM.unPayedCommandSumLiveData().observeAsState()
-    val allArticleState by mainVM.allArticleLiveData().observeAsState()
+    val allArticleData by mainVM.allArticleLiveData().observeAsState()
 
     Surface(
         color = MaterialTheme.colors.background,
@@ -152,7 +173,7 @@ fun Header(mainVM : MainVM) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 20.dp, end = 20.dp, top= 20.dp),
+                .padding(start = 20.dp, end = 20.dp, top = 20.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Box(
@@ -184,17 +205,7 @@ fun Header(mainVM : MainVM) {
                     .padding(15.dp),
                 horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                /*val liste = listOf(
-                    Article(0L, "Pain au choco", 30, 15F, timeOrdered = 2),
-                    Article(0L, "Pomme cannelle", 30, 1F, timeOrdered = 0),
-                    Article(0L, "Rolls Kanèls", 30, 42F, timeOrdered = 2),
-                    Article(0L, "Chocolat", 30, 65F, timeOrdered = 4),
-                    Article(0L, "Flan au coco", 30, 20F, timeOrdered = 6),
-                    Article(0L, "Petits pains", 30, 15F, timeOrdered = 10),
-                    Article(0L, "Petits pains fourrés boeuf", 30, 15F, timeOrdered = 5),
-                )*/
-
-                val liste = allArticleState ?: emptyList()
+                val liste = allArticleData ?: emptyList()
                 items(liste.sortedByDescending { it.timeOrdered }) { item ->
                     ArticleBar(item, liste.map { it.timeOrdered }.sum())
                 }
@@ -230,7 +241,7 @@ fun RoundedCounter(count: String, description: String, isCircle: Boolean = false
 fun ArticleBar(article: Article, totalCount: Int = 100) {
     val count = (article.timeOrdered) / totalCount.toFloat()
     val boxSize = 65.dp
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.SpaceEvenly) {
         Box(
             modifier = Modifier
                 .clip(RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp))
@@ -249,7 +260,9 @@ fun ArticleBar(article: Article, totalCount: Int = 100) {
             )
             Box(
                 contentAlignment = Alignment.Center,
-                modifier = Modifier.requiredWidth(boxSize).fillMaxHeight(),
+                modifier = Modifier
+                    .requiredWidth(boxSize)
+                    .fillMaxHeight(),
             ){
                 Text(
                     text = article.timeOrdered.toString(),
@@ -330,53 +343,96 @@ fun HomeRoundedCard(icon: ImageVector, onClickAction: (() -> Unit)){
 }
 
 @Composable
-fun HomeCard(title: String, onClickAction: (() -> Unit)) {
+fun MessageCenter(
+    messages: List<AppMessage>,
+    onMessageClick : (() -> Unit)
+){
     Card(
-        shape = RoundedCornerShape(18.dp),
+        shape = RoundedCornerShape(26.dp),
         elevation = 15.dp,
         backgroundColor = white,
         modifier = Modifier
+            .padding(horizontal = 20.dp, vertical = 10.dp)
             .fillMaxWidth()
-            .clickable { onClickAction.invoke() }
-
-    ) {
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier.fillMaxWidth()
+            .clickable {
+                onMessageClick.invoke()
+            }
+    ){
+        LazyColumn(
+            Modifier.padding(vertical = 5.dp)
         ) {
-            Text(
-                text = title,
-                fontFamily = Typography.body1.fontFamily,
-                modifier = Modifier.padding(15.dp)
-            )
-            Image(
-                painter = painterResource(id = R.drawable.ic_right_arrow),
-                contentDescription = "Right arrow",
-                contentScale = ContentScale.Fit,
-                modifier = Modifier
-                    .align(Alignment.CenterVertically)
-                    .padding(end = 15.dp)
-            )
-
+            itemsIndexed(messages) { index, message ->
+                MessageItem(message, index == messages.size - 1)
+            }
         }
     }
 }
 
 @Composable
-fun HomeItem() {
-    Box(
-        modifier = Modifier
-            .fillMaxHeight()
-            .background(blue_001)
-    ) {
-        // TODO
+fun MessageItem( message: AppMessage, isLastIndex : Boolean = false){
+    val icon = when(message.type){
+        MessageType.COMMAND -> Icons.Rounded.Sort
+        MessageType.REMINDER -> Icons.Rounded.DateRange
+        MessageType.STOCK -> Icons.Rounded.Inventory2
+    }
+
+    val color = when(message.type.priority){
+        MessagePriority.LOW -> green_app
+        MessagePriority.MEDIUM -> Color.Yellow
+        MessagePriority.HIGH -> Color.Red
+    }
+    Column {
+        Row(
+            modifier = Modifier.padding(horizontal = 15.dp),
+            horizontalArrangement = Arrangement.SpaceAround,
+            verticalAlignment = Alignment.CenterVertically
+        ){
+            Icon(icon, modifier = Modifier
+                .size(32.dp)
+                .clip(CircleShape)
+                .background(color)
+                .padding(6.dp), contentDescription = "Message icon")
+            Text(message.message,
+                Modifier
+                    .weight(1f)
+                    .padding(start = 15.dp), textAlign = TextAlign.Start, fontSize = 10.sp )
+            Icon(
+                Icons.Rounded.DoubleArrow,
+                modifier = Modifier
+                    .rotate(90f)
+                    .size(32.dp)
+                    .padding(6.dp), contentDescription = "Message icon"
+            )
+
+        }
+        if(!isLastIndex) {
+            Canvas(modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 6.dp)) {
+                val canvasWidth = size.width
+                val pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 0f)
+
+                drawLine(
+                    start = Offset(x = 0f, y = 0f),
+                    end = Offset(x = canvasWidth, y = 0f),
+                    color = Color.LightGray,
+                    strokeWidth = 1F,
+                    pathEffect = pathEffect
+                )
+            }
+        }
     }
 }
 
 @Preview(showBackground = true, device = Devices.PIXEL_2)
 @Composable
 fun DefaultPreview() {
-    //HomePage(navController = null, null)
+    val messages = listOf(
+        AppMessage(0, "X Commandes restantes"),
+        AppMessage(0, "Courses à faire !", MessageType.REMINDER),
+        AppMessage(0, "Inventaire à vérifier", MessageType.STOCK)
+    )
+    //MessageCenter(messages, mutabeStateOf(false))
 }
 
 @Preview(showBackground = true, device = Devices.PIXEL_2)

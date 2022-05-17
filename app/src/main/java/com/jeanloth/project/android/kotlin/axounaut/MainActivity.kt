@@ -34,6 +34,8 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Launch scheduler
+
         navController = findNavController(R.id.nav_host_fragment)
 
         when (intent.getStringExtra(FRAGMENT_TO_SHOW)) {

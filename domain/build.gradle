@@ -12,6 +12,7 @@ dependencies {
     implementation project(':domain-models')
     implementation project(':data')
 
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.1'
+    // Kotlin coroutines
     implementation "org.jetbrains.kotlin:kotlin-stdlib:1.5.0"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.1"
 }

@@ -36,6 +36,7 @@ val green_light_1 = Color(0xFF6D906A)
 val green_light_2 = Color(0xFF5A7758)
 val green_dark_1 = Color(0xFF0E5E20)
 val green_dark_2 = Color(0xFF1C5C2A)
+val green_app = Color(0xFF67A074)
 
 val gray_light = Color(0xFFE9EAE7)
 val gray_0 = Color(0xFFEDEFE9)

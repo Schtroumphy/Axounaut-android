@@ -136,6 +136,8 @@ dependencies {
     implementation "androidx.constraintlayout:constraintlayout-compose:1.0.0-beta02"
     implementation 'androidx.compose.runtime:runtime-livedata:1.0.0-beta01'
     implementation 'androidx.compose.runtime:runtime-livedata:1.0.0-beta07'
+    //Work Manager with coroutines
+    implementation("androidx.work:work-runtime-ktx:2.7.1")
 
     testImplementation 'junit:junit:4.+'
     testImplementation "com.google.truth:truth:1.1.3"
