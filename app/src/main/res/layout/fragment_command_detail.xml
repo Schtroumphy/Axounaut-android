@@ -85,9 +85,7 @@
         android:text="@string/total_price"
         android:gravity="center"
         android:fontFamily="@font/roboto_light"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.8"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/tv_payment_received"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
@@ -97,8 +95,9 @@
         android:text="@string/received_payment_amount"
         android:gravity="center"
         android:visibility="gone"
+        tools:visibility="visible"
         android:fontFamily="@font/roboto_medium"
-        app:layout_constraintTop_toBottomOf="@id/tv_total_price"
+        app:layout_constraintBottom_toTopOf="@id/tv_reduction"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
@@ -108,9 +107,10 @@
         android:text="@string/applied_reduction"
         android:gravity="center"
         android:visibility="gone"
+        tools:visibility="visible"
         android:textColor="@color/orange_003"
         android:fontFamily="@font/roboto_light"
-        app:layout_constraintTop_toBottomOf="@id/tv_payment_received"
+        app:layout_constraintBottom_toTopOf="@id/tv_error"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
@@ -123,8 +123,15 @@
         tools:visibility="visible"
         android:textColor="@color/red_001"
         android:fontFamily="@font/roboto_light"
-        app:layout_constraintTop_toBottomOf="@id/tv_reduction"
+        app:layout_constraintBottom_toTopOf="@id/horizontal_guideline1"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/horizontal_guideline1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.9" />
 
     <Button
         android:id="@+id/bt_delivered"
@@ -143,7 +150,7 @@
         android:backgroundTint="@color/green_light_1"
         app:tint="@color/green_light_1"
         android:visibility="gone"
-        tools:visibility="visible"
+        tools:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />
@@ -153,7 +160,7 @@
         style="@style/CustomButton"
         android:text="@string/complete_payment"
         android:visibility="gone"
-        tools:visibility="gone"
+        tools:visibility="visible"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />

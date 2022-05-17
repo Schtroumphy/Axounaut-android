@@ -258,7 +258,7 @@
         android:id="@+id/tv_incomplete_payment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="30dp"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
         android:fontFamily="@font/roboto_light"
         android:gravity="center"
         android:letterSpacing="0.2"
