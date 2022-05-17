@@ -8,5 +8,5 @@ class ObserveCommandsUseCase(
     private val commandContract: CommandContract
 ) {
 
-    fun invoke() : Flow<List<Command>> = commandContract.observeCommands()
+    fun invoke() : Flow<List<Command>> = commandContract.observeAllCommands()
 }

@@ -6,11 +6,11 @@ import kotlinx.coroutines.flow.Flow
 
 interface CommandContract {
 
-    fun getAllCommands() : List<Command>
-
-    fun observeCommands() : Flow<List<Command>>
+    fun observeAllCommands() : Flow<List<Command>>
 
     fun observeCommandsByStatus(statuses : List<CommandStatusType>) : Flow<List<Command>>
+
+    fun getCommandsByStatus(statuses : List<CommandStatusType>) : List<Command>
 
     fun observeCommandById(commandId : Long) : Flow<Command?>
 
