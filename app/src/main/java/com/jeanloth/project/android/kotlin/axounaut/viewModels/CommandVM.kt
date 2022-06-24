@@ -1,28 +1,21 @@
 package com.jeanloth.project.android.kotlin.axounaut.viewModels
 
-import android.util.Log
 import androidx.lifecycle.*
-import com.jeanloth.project.android.kotlin.axounaut.ui.commands.CommandListFragment
-import com.jeanloth.project.android.kotlin.domain.usescases.usecases.ObserveCommandByIdUseCase
-import com.jeanloth.project.android.kotlin.domain.usescases.usecases.article.ObserveCommandsUseCase
-import com.jeanloth.project.android.kotlin.domain.usescases.usecases.command.DeleteArticleWrapperUseCase
-import com.jeanloth.project.android.kotlin.domain.usescases.usecases.command.DeleteCommandUseCase
-import com.jeanloth.project.android.kotlin.domain.usescases.usecases.command.SaveArticleWrapperUseCase
-import com.jeanloth.project.android.kotlin.domain.usescases.usecases.command.SaveCommandUseCase
-import kotlinx.coroutines.launch
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.viewmodel.compose.viewModel
+import com.jeanloth.project.android.kotlin.axounaut.datastore.CommandPrefsManager
 import com.jeanloth.project.android.kotlin.axounaut.extensions.toLocalDate
-import com.jeanloth.project.android.kotlin.domain.usescases.usecases.article.ObserveCommandsByStatusUseCase
-import com.jeanloth.project.android.kotlin.domain.usescases.usecases.article.SaveArticleUseCase
-import com.jeanloth.project.android.kotlin.domain_models.entities.*
-import kotlinx.coroutines.flow.*
+import com.jeanloth.project.android.kotlin.domain.usescases.usecases.article.ObserveCommandsUseCase
+import com.jeanloth.project.android.kotlin.domain_models.entities.Command
+import com.jeanloth.project.android.kotlin.domain_models.entities.CommandDisplayMode
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 class CommandVM (
     private val observeCommandsUseCase: ObserveCommandsUseCase,
-    private val saveCommandUseCase: SaveCommandUseCase,
-): ViewModel() {
+    private val commandPrefsManager: CommandPrefsManager
+    ): ViewModel() {
 
     val TAG = "[Command VM]"
 
@@ -38,77 +31,44 @@ class CommandVM (
             }
         }
 
+        commandToDisplayMediatorLiveData.addSource(allCommandMutableLiveData) { commands: List<Command> ->
+            filterCommandsByMode(commands = commands)
+        }
+
+        commandToDisplayMediatorLiveData.addSource(displayModeMutableLiveData) { mode : CommandDisplayMode ->
+            filterCommandsByMode(mode = mode)
+
+        }
+    }
+
+    private fun filterCommandsByMode(commands: List<Command>? = null, mode: CommandDisplayMode? = null ){
+        val commands = commands ?: allCommandMutableLiveData.value ?: emptyList()
+        val modeToFilter = mode ?: displayModeMutableLiveData.value ?: CommandDisplayMode.TO_COME
+
+        val commandToDisplay = commands.filter { it.statusCode in modeToFilter.statusCode }.apply {
+            when (modeToFilter) {
+                CommandDisplayMode.TO_COME -> filter {
+                    it.deliveryDate?.toLocalDate()!!.isAfter(LocalDate.now())
+                }
+                else -> this.sortedBy { it.deliveryDate?.toLocalDate() }
+            }
+        }
+        commandToDisplayMediatorLiveData.setValue(commandToDisplay)
+    }
+
+    fun retrieveSaveMode(){
+        // Set display mode by stored mode in datastore at initialization
         viewModelScope.launch {
-            observeCommandsUseCase.invoke().stateIn(this, SharingStarted.Lazily, emptyList()).combine(displayModeSF){ commands, mode ->
-
-                val commandToDisplay: List<Command> = commands.filter { it.statusCode in mode.statusCode }.apply {
-                    when (mode) {
-                        CommandListFragment.CommandDisplayMode.TO_COME -> filter {
-                            it.deliveryDate?.toLocalDate()!!.isAfter(LocalDate.now())
-                        }
-                        else -> this.sortedBy { it.deliveryDate?.toLocalDate() }
-                    }
-                }
-                commandToDisplay
-            }.collect {
-                commandToDisplayMutableStateFlow.emit(it)
+            commandPrefsManager.getLastCommandFilter().collect {
+                displayModeMutableLiveData.value = CommandDisplayMode.fromVal(it)
             }
-        }
-
-        commandToDisplayMediatorLiveData.addSource(allCommandMutableLiveData) { value: List<Command> ->
-            commandToDisplayMediatorLiveData.setValue(value)
-        }
-        commandToDisplayMediatorLiveData.addSource(displayModeMutableLiveData) { value: CommandListFragment.CommandDisplayMode ->
-            val commandToDisplay: List<Command>
-            val commands = allCommandMutableLiveData.value ?: emptyList()
-
-            commandToDisplay = commands.filter { it.statusCode in value.statusCode }.apply {
-                when (value) {
-                    CommandListFragment.CommandDisplayMode.TO_COME -> filter {
-                        it.deliveryDate?.toLocalDate()!!.isAfter(LocalDate.now())
-                    }
-                    else -> this.sortedBy { it.deliveryDate?.toLocalDate() }
-                }
-            }
-            commandToDisplayMediatorLiveData.setValue(commandToDisplay)
         }
     }
 
-    fun setDisplayMode(displayMode: CommandListFragment.CommandDisplayMode) {
-        displayModeMutableLiveData.value = displayMode
+    fun setDisplayMode(displayMode: CommandDisplayMode) {
         viewModelScope.launch {
-            displayModeSF.emit(displayMode)
+            displayModeMutableLiveData.value = displayMode
+            commandPrefsManager.saveLastCommandFilter(displayMode)
         }
-    }
-
-    fun saveCommand(command: Command, isNewCommand : Boolean = false){
-        saveCommandUseCase.invoke(command)
-
-        if(isNewCommand){
-            // Update time orderer for eachArticle
-            command.articleWrappers.forEach {
-                it.article.apply {
-                    timeOrdered += it.count
-                }
-                saveArticleUseCase.invoke(it.article)
-            }
-        }
-    }
-
-    fun removeCommand(){
-        deleteCommandUseCase.invoke(currentCommand!!)
-    }
-
-    fun saveArticleWrapper(articleWrapper : ArticleWrapper) {
-        saveArticleWrapperUseCase.invoke(articleWrapper)
-    }
-
-    fun updateStatusCommand(status: CommandStatusType) {
-        Log.d(TAG, "Make command $status")
-        saveCommandUseCase.updateCommandStatus(currentCommand!!, status)
-    }
-
-    fun deleteArticleWrapperFromCurrentCommand(articleWrapper: ArticleWrapper) {
-        deleteArticleWrapperUseCase.invoke(currentCommand!!.articleWrappers.find { it == articleWrapper }!!)
     }
 }

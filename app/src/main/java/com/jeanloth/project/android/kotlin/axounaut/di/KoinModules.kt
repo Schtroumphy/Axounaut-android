@@ -1,6 +1,7 @@
 package com.jeanloth.project.android.kotlin.axounaut.di
 
 import android.content.Context
+import com.jeanloth.project.android.kotlin.axounaut.datastore.CommandPrefsManager
 import com.jeanloth.project.android.kotlin.axounaut.datastore.StockManager
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.*
 import com.jeanloth.project.android.kotlin.data.contracts.*
@@ -103,6 +104,7 @@ val appModule = module {
 
     // Other
     single { StockManager(get())}
+    single { CommandPrefsManager(get())}
 }
 
 fun provideBoxStore(context : Context) : BoxStore? {
