@@ -77,11 +77,6 @@ class AddCommandDialogFragment (
     private val clientVM : ClientVM by sharedViewModel()
     private val articleVM : ArticleVM by viewModel()
     private val addCommandVM : AddCommandVM by viewModel()
-    private val commandVM : CommandVM by viewModel{
-        parametersOf(
-            0L
-        )
-    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -313,7 +308,7 @@ class AddCommandDialogFragment (
         javaClass.logD("Command to save $commandToSave")
 
         // Call VM to save Command
-        commandVM.saveCommand(commandToSave, true)
+        addCommandVM.saveCommand(commandToSave, true)
 
         dialog?.dismiss()
     }

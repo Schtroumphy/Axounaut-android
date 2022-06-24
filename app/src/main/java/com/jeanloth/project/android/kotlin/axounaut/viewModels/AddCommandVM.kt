@@ -5,15 +5,21 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.jeanloth.project.android.kotlin.domain.usescases.usecases.article.SaveArticleUseCase
+import com.jeanloth.project.android.kotlin.domain.usescases.usecases.command.SaveCommandUseCase
 import com.jeanloth.project.android.kotlin.domain_models.entities.AppClient
 import com.jeanloth.project.android.kotlin.domain_models.entities.Article
 import com.jeanloth.project.android.kotlin.domain_models.entities.ArticleWrapper
+import com.jeanloth.project.android.kotlin.domain_models.entities.Command
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class AddCommandVM : ViewModel() {
+class AddCommandVM(
+    private val saveCommandUseCase: SaveCommandUseCase,
+    private val saveArticleUseCase: SaveArticleUseCase,
+) : ViewModel() {
 
     private var deliveryDateLiveData : MutableLiveData<String> = MutableLiveData("")
     var clientLiveData : MutableLiveData<AppClient?> = MutableLiveData(null)
@@ -59,6 +65,21 @@ class AddCommandVM : ViewModel() {
         //articlesLiveData.value = articleWrapper
         allArticlesLiveData = allArticlesLiveData
         canResume()
+    }
+
+
+    fun saveCommand(command: Command, isNewCommand : Boolean = false){
+        saveCommandUseCase.invoke(command)
+
+        if(isNewCommand){
+            // Update time orderer for eachArticle
+            command.articleWrappers.forEach {
+                it.article.apply {
+                    timeOrdered += it.count
+                }
+                saveArticleUseCase.invoke(it.article)
+            }
+        }
     }
 
 }

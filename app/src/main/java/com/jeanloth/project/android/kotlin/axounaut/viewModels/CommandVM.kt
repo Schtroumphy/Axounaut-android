@@ -22,25 +22,13 @@ import java.time.LocalDate
 class CommandVM (
     private val observeCommandsUseCase: ObserveCommandsUseCase,
     private val saveCommandUseCase: SaveCommandUseCase,
-    private val deleteCommandUseCase: DeleteCommandUseCase,
-    private val deleteArticleWrapperUseCase: DeleteArticleWrapperUseCase,
-    private val saveArticleWrapperUseCase: SaveArticleWrapperUseCase,
-    private val saveArticleUseCase: SaveArticleUseCase
 ): ViewModel() {
 
-    var commands : List<Command> = emptyList()
-    var currentCommand : Command? = null
-
-    val TAG= "[Command VM]"
+    val TAG = "[Command VM]"
 
     var allCommandMutableLiveData : MutableLiveData<List<Command>> = MutableLiveData(emptyList())
-    var displayModeMutableLiveData : MutableLiveData<CommandListFragment.CommandDisplayMode> = MutableLiveData(CommandListFragment.CommandDisplayMode.IN_PROGRESS)
-    var displayModeSF : MutableStateFlow<CommandListFragment.CommandDisplayMode> = MutableStateFlow(CommandListFragment.CommandDisplayMode.IN_PROGRESS)
-
+    var displayModeMutableLiveData : MutableLiveData<CommandDisplayMode> = MutableLiveData(CommandDisplayMode.IN_PROGRESS)
     val commandToDisplayMediatorLiveData = MediatorLiveData<List<Command>>()
-    var commandToDisplayMutableStateFlow : MutableStateFlow<List<Command>> = MutableStateFlow(
-        emptyList())
-    val commandToDisplayStateFlow : StateFlow<List<Command>> = commandToDisplayMutableStateFlow.asStateFlow()
 
     init {
 
@@ -100,7 +88,7 @@ class CommandVM (
             // Update time orderer for eachArticle
             command.articleWrappers.forEach {
                 it.article.apply {
-                    timeOrdered += 1
+                    timeOrdered += it.count
                 }
                 saveArticleUseCase.invoke(it.article)
             }

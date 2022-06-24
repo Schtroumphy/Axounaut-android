@@ -10,7 +10,6 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat.getColor
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -20,10 +19,7 @@ import com.jeanloth.project.android.kotlin.axounaut.adapters.CommandAdapter
 import com.jeanloth.project.android.kotlin.axounaut.databinding.FragmentCommandListBinding
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.CommandVM
 import com.jeanloth.project.android.kotlin.axounaut.viewModels.MainVM
-import com.jeanloth.project.android.kotlin.domain_models.entities.Command
-import com.jeanloth.project.android.kotlin.domain_models.entities.CommandStatusType
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
+import com.jeanloth.project.android.kotlin.domain_models.entities.CommandDisplayMode
 import org.koin.android.viewmodel.ext.android.sharedViewModel
 import org.koin.android.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
@@ -40,16 +36,13 @@ class CommandListFragment : Fragment() {
 
     private lateinit var binding : FragmentCommandListBinding
 
-    enum class CommandDisplayMode(val statusCode: List<Int>) {
-        IN_PROGRESS(listOf(CommandStatusType.IN_PROGRESS.code, CommandStatusType.DONE.code)),
-        TO_COME(listOf(CommandStatusType.TO_DO.code)),
-        PAST(listOf(
-                CommandStatusType.DONE.code,
-                CommandStatusType.PAYED.code,
-                CommandStatusType.DELIVERED.code,
-                CommandStatusType.INCOMPLETE_PAYMENT.code,
-            )
-        ),
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        commandVM.retrieveSaveMode()
+
+        // Set the adapter + recyclerView
+        commandAdapter = CommandAdapter(emptyList(), requireContext())
     }
 
     override fun onCreateView(
@@ -57,18 +50,36 @@ class CommandListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentCommandListBinding.inflate(layoutInflater, container, false)
+        setupHeader()
+
+        // Observe live data
+        commandVM.commandToDisplayMediatorLiveData.observe(viewLifecycleOwner) {
+            Log.d("[Command list Fragment", "Command observed : ${it.size}")
+            commandAdapter.setItems(it)
+            binding.tvErrorNoCommands.visibility = if (it.isEmpty()) VISIBLE else GONE
+            if(it.isEmpty()){
+                binding.tvErrorNoCommands.text = getString( when(commandVM.displayModeMutableLiveData.value) {
+                    CommandDisplayMode.IN_PROGRESS -> R.string.no_loading_command_error
+                    CommandDisplayMode.TO_COME -> R.string.no_to_come_command_error
+                    CommandDisplayMode.PAST -> R.string.no_command_error
+                    else -> R.string.no_loading_command_error
+                })
+            }
+            commandVM.displayModeMutableLiveData.value?.let { mode ->
+                when(mode) {
+                    CommandDisplayMode.IN_PROGRESS -> binding.fabLoading.changeFabColors()
+                    CommandDisplayMode.TO_COME -> binding.fabComing.changeFabColors()
+                    CommandDisplayMode.PAST -> binding.fabAll.changeFabColors()
+                }
+            }
+        }
+
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupHeader()
-        // TODO Save in prefs the last filter on commands list and of no value,
-        // set display mode to past by default
-        commandVM.setDisplayMode(CommandDisplayMode.TO_COME)
-
-        // Set the adapter
         binding.rvCommandList.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = commandAdapter.apply {
@@ -76,29 +87,6 @@ class CommandListFragment : Fragment() {
                     // Command to detail
                     goToCommandDetails(it)
                 }
-            }
-        }
-
-        lifecycleScope.launch {
-            commandVM.commandToDisplayStateFlow.collect {
-                Log.d("Command list fragment", "Commands to display : $it")
-                commandAdapter.setItems(it)
-            }
-        }
-
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            commandVM.commandToDisplayMediatorLiveData.observe(viewLifecycleOwner) {
-                Log.d("[Command list Fragment", "Command observed : ${it.size}")
-                commandAdapter.setItems(it)
-                binding.tvErrorNoCommands.visibility = if (it.isEmpty()) VISIBLE else GONE
-                if (it.isEmpty()) binding.tvErrorNoCommands.text = getString(
-                    when (commandVM.displayModeMutableLiveData.value) {
-                        CommandDisplayMode.IN_PROGRESS -> R.string.no_loading_command_error
-                        CommandDisplayMode.TO_COME -> R.string.no_to_come_command_error
-                        CommandDisplayMode.PAST -> R.string.no_command_error
-                        else -> R.string.no_loading_command_error
-                    }
-                )
             }
         }
 
@@ -138,7 +126,6 @@ class CommandListFragment : Fragment() {
         mainVM.setHeaderTitle("Commandes")
         val mainActivity = requireActivity() as MainActivity
         mainActivity.replaceHeaderLogoByBackButton(false)
-        commandAdapter = CommandAdapter(emptyList(), requireContext())
     }
 
     private fun goToCommandDetails(commandId: Long) {

@@ -32,8 +32,8 @@ val appModule = module {
     viewModel { ArticleVM( get(), get(), get()) }
     viewModel { AddArticleVM(get(), get(), get())}
     viewModel { ClientVM( get(), get(), get()) }
-    viewModel { AddCommandVM() }
-    viewModel { CommandVM(get(), get(), get(), get(), get(), get()) }
+    viewModel { AddCommandVM( get(), get()) }
+    viewModel { CommandVM(get(), get()) }
     viewModel { (commandId: Long) -> PayCommandVM(commandId = commandId, get(), get()) }
     viewModel { (currentCommandId: Long) -> CommandDetailedVM(currentCommandId = currentCommandId, get(), get(), get(), get(), get()) }
     viewModel { StockVM(get(), get(), get(), get()) }

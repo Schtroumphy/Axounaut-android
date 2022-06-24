@@ -20,6 +20,4 @@ class StockManager(val context: Context) {
             stockPrefs[STOCK_LAST_UPDATE_DATE] = date
         }
     }
-
-
 }
