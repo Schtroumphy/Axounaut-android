@@ -25,7 +25,6 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var navController: NavController
     private val mainVM: MainVM by viewModel()
-    private val addArticleVM : AddArticleVM by viewModel()
 
     private lateinit var binding: ActivityMainBinding
 
@@ -33,9 +32,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        // Launch scheduler
-
         navController = findNavController(R.id.nav_host_fragment)
 
         when (intent.getStringExtra(FRAGMENT_TO_SHOW)) {
@@ -55,7 +51,6 @@ class MainActivity : AppCompatActivity() {
                 binding.tvHeaderSubtitle.visibility = VISIBLE
                 binding.tvHeaderSubtitle.text = it.second
             }
-
         }
 
         binding.btTbMenuMore.setOnClickListener {
@@ -67,7 +62,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.ivHeaderLogo.onClick {
-            // Go to home
             finish()
         }
 

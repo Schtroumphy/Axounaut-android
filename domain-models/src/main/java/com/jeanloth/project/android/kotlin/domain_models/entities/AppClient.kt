@@ -13,8 +13,8 @@ data class AppClient(
     }
 }
 
-fun AppClient.toNameString() : String{
-    return "${this.firstname} ${this.lastname?.toUpperCase()}"
+fun AppClient?.toNameString() : String {
+    return "${this?.firstname} ${this?.lastname?.toUpperCase()}"
 }
 
 fun List<AppClient>.getClientFromName(firstname : String, lastname : String) : AppClient? = this.firstOrNull { it.firstname == firstname && it.lastname == lastname  }
