@@ -6,6 +6,11 @@ Application de gestion de commandes pour la vente de viennoiseries.
 - Dashboard d'accueil 
 - Gestion du stock
 
+## Démo : Création de commande 
+<p float="center">
+<img src="https://user-images.githubusercontent.com/42738178/186657140-177030ce-82fe-49c5-b5ca-24774efce7e9.gif" width="350" />
+</p>
+
 ## Quelques écrans 
 
 <p float="center">
